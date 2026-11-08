@@ -10,9 +10,11 @@
 
 <section class="grid-bg border-b-[2.5px] border-ink bg-blue">
 	<div class="mx-auto max-w-6xl px-5 py-16 md:px-8">
-		<span class="brutal-tag bg-cream">Personal blog</span>
-		<h1 class="mt-5 font-display text-5xl font-black text-cream">Blog</h1>
-		<p class="mt-4 max-w-xl text-lg text-cream/90">
+		<span class="rise-in brutal-tag bg-cream">Personal blog</span>
+		<h1 class="rise-in mt-5 font-display text-5xl font-black text-cream" style="--delay: 80ms">
+			Blog
+		</h1>
+		<p class="rise-in mt-4 max-w-xl text-lg text-cream/90" style="--delay: 160ms">
 			The everyday stuff — thoughts, projects, whatever's on our minds, from both of us.
 		</p>
 	</div>

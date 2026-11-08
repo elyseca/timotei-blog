@@ -3,8 +3,22 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import Nav from '$lib/components/Nav.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import { onNavigate } from '$app/navigation';
+	import { prefersReducedMotion } from 'svelte/motion';
 
 	let { children } = $props();
+
+	// Cross-fade between pages where the browser supports view transitions.
+	onNavigate((navigation) => {
+		if (!document.startViewTransition || prefersReducedMotion.current) return;
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>

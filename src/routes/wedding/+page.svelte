@@ -10,30 +10,37 @@
 
 <section class="grid-bg border-b-[2.5px] border-ink bg-teal">
 	<div class="mx-auto max-w-6xl px-5 py-16 md:px-8">
-		<span class="brutal-tag bg-cream">Our wedding</span>
-		<h1 class="mt-5 font-display text-5xl font-black md:text-6xl">{metadata.title}</h1>
-		<p class="mt-4 font-mono text-sm font-bold tracking-wide text-ink/70 uppercase">
+		<span class="rise-in brutal-tag bg-cream">Our wedding</span>
+		<h1 class="rise-in mt-5 font-display text-5xl font-black md:text-6xl" style="--delay: 80ms">
+			{metadata.title}
+		</h1>
+		<p
+			class="rise-in mt-4 font-mono text-sm font-bold tracking-wide text-ink/70 uppercase"
+			style="--delay: 140ms"
+		>
 			{formatDate(metadata.date)}
 			{#if metadata.location}
 				· {metadata.location}
 			{/if}
 		</p>
-		<p class="mt-4 max-w-xl text-lg text-ink/80">{metadata.excerpt}</p>
+		<p class="rise-in mt-4 max-w-xl text-lg text-ink/80" style="--delay: 200ms">
+			{metadata.excerpt}
+		</p>
 	</div>
 </section>
 
 <article class="mx-auto max-w-3xl px-5 py-14 md:px-8">
 	{#if metadata.cover}
-		<div class="brutal-box overflow-hidden">
+		<div class="rise-in brutal-box overflow-hidden" style="--delay: 240ms">
 			<img src={metadata.cover} alt="" class="aspect-video w-full object-cover" />
 		</div>
 	{/if}
 
-	<div class="post-prose prose prose-lg mt-10 max-w-none">
+	<div class="rise-in post-prose prose prose-lg mt-10 max-w-none" style="--delay: 320ms">
 		<WeddingContent />
 	</div>
 
-	<div class="mt-10">
+	<div class="reveal mt-10">
 		<h2 class="font-display text-2xl font-black">The video</h2>
 		<div class="mt-4">
 			<VideoEmbed src={metadata.video} />
@@ -45,8 +52,14 @@
 			<h2 class="font-display text-2xl font-black">Photos</h2>
 			<div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
 				{#each metadata.gallery as photo, i (photo + i)}
-					<div class="brutal-box overflow-hidden">
-						<img src={photo} alt="" class="aspect-square w-full object-cover" />
+					<div
+						class="brutal-box group reveal overflow-hidden transition-[translate,box-shadow] duration-200 ease-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-lg"
+					>
+						<img
+							src={photo}
+							alt=""
+							class="aspect-square w-full object-cover transition-[scale] duration-500 ease-out group-hover:scale-105"
+						/>
 					</div>
 				{/each}
 			</div>

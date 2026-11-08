@@ -58,29 +58,32 @@
 		class="mx-auto grid max-w-6xl gap-12 px-5 py-16 md:grid-cols-[1.1fr_0.9fr] md:items-center md:px-8 md:py-24"
 	>
 		<div>
-			<h1 class="font-display text-5xl font-black text-cream md:text-6xl">
+			<h1 class="rise-in font-display text-5xl font-black text-cream md:text-6xl">
 				Hi, we're Gabe &amp; Elyse.
 			</h1>
-			<p class="mt-5 max-w-md text-lg text-cream/90">
+			<p class="rise-in mt-5 max-w-md text-lg text-cream/90" style="--delay: 100ms">
 				This is our little corner of the internet — trips we've taken, the everyday stuff in
 				between, and whatever else is on our minds. No feed, no algorithm, just us.
 			</p>
-			<div class="mt-8 flex flex-wrap gap-3">
+			<div class="rise-in mt-8 flex flex-wrap gap-3" style="--delay: 200ms">
 				<a href="/travel" class="brutal-btn bg-lime">See our travels</a>
 				<a href="/blog" class="brutal-btn bg-cream">Read the blog</a>
 			</div>
 		</div>
 
-		<div class="relative mx-auto w-full max-w-sm">
+		<div class="rise-in relative mx-auto w-full max-w-sm" style="--delay: 150ms">
 			<span
-				class="absolute -top-5 -left-5 rotate-[-8deg] font-display text-3xl text-lime select-none"
+				class="float absolute -top-5 -left-5 rotate-[-8deg] font-display text-3xl text-lime select-none"
 				aria-hidden="true">✦</span
 			>
 			<span
-				class="absolute -right-4 -bottom-6 rotate-[10deg] font-display text-4xl text-mustard select-none"
+				class="float absolute -right-4 -bottom-6 rotate-[10deg] font-display text-4xl text-mustard select-none"
+				style="--delay: -2s"
 				aria-hidden="true">✦</span
 			>
-			<div class="brutal-box rotate-[-2deg] overflow-hidden bg-white p-3">
+			<div
+				class="brutal-box rotate-[-2deg] overflow-hidden bg-white p-3 transition-[rotate,scale] duration-300 ease-out hover:scale-[1.02] hover:rotate-1"
+			>
 				<img
 					src="/images/placeholder-couple.svg"
 					alt="Gabe and Elyse"
@@ -96,7 +99,9 @@
 	<h2 class="font-display text-3xl font-black">Where to start</h2>
 	<div class="mt-8 grid gap-5 md:grid-cols-3">
 		{#each explore as item (item.href)}
-			<div class="brutal-box flex flex-col gap-6 p-6 {item.bg}">
+			<div
+				class="brutal-box reveal flex flex-col gap-6 p-6 transition-[translate,box-shadow] duration-200 ease-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-lg {item.bg}"
+			>
 				<span class="font-mono text-sm font-bold">{item.num}</span>
 				<div>
 					<h3 class="font-display text-2xl font-black">{item.title}</h3>
