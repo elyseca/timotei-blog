@@ -5,21 +5,15 @@
 	let { post }: { post: Post } = $props();
 
 	const accent: Record<Post['category'], string> = {
-		travel: 'bg-mustard',
-		gabe: 'bg-blue',
-		elyse: 'bg-coral'
+		travel: 'bg-mustard'
 	};
 
 	const label: Record<Post['category'], string> = {
-		travel: 'Travel',
-		gabe: 'Gabe',
-		elyse: 'Elyse'
+		travel: 'Travel'
 	};
 
 	const sectionHref: Record<Post['category'], string> = {
-		travel: 'travel',
-		gabe: 'blog',
-		elyse: 'blog'
+		travel: 'travel'
 	};
 </script>
 

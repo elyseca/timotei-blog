@@ -4,9 +4,7 @@
 	let { data } = $props();
 
 	const sectionHref: Record<Post['category'], string> = {
-		travel: 'travel',
-		gabe: 'blog',
-		elyse: 'blog'
+		travel: 'travel'
 	};
 
 	const explore: {
@@ -26,12 +24,12 @@
 			post: data.travel
 		},
 		{
-			href: '/blog',
+			href: '/recipes',
 			num: '02',
-			title: 'Blog',
-			blurb: 'Whatever is on our minds lately.',
-			bg: 'bg-blue',
-			post: data.blog
+			title: 'Recipes',
+			blurb: 'Our recipe book, with meal plans and grocery lists.',
+			bg: 'bg-coral',
+			post: undefined
 		},
 		{
 			href: '/wedding',
@@ -48,7 +46,7 @@
 	<title>timotei.blog</title>
 	<meta
 		name="description"
-		content="A personal blog for Gabe and Elyse — travels, everyday life, and everything in between."
+		content="A personal site for Gabe and Elyse — travels, recipes, and our wedding."
 	/>
 </svelte:head>
 
@@ -62,12 +60,12 @@
 				Hi, we're Gabe &amp; Elyse.
 			</h1>
 			<p class="rise-in mt-5 max-w-md text-lg text-cream/90" style="--delay: 100ms">
-				This is our little corner of the internet — trips we've taken, the everyday stuff in
-				between, and whatever else is on our minds. No feed, no algorithm, just us.
+				This is our little corner of the internet — trips we've taken, the recipes we cook on
+				repeat, and the story of our wedding. No feed, no algorithm, just us.
 			</p>
 			<div class="rise-in mt-8 flex flex-wrap gap-3" style="--delay: 200ms">
 				<a href="/travel" class="brutal-btn bg-lime">See our travels</a>
-				<a href="/blog" class="brutal-btn bg-cream">Read the blog</a>
+				<a href="/recipes" class="brutal-btn bg-cream">Open the recipe book</a>
 			</div>
 		</div>
 
@@ -108,7 +106,7 @@
 					<p class="mt-1 text-sm text-ink/80">{item.blurb}</p>
 				</div>
 
-				{#if item.href !== '/wedding'}
+				{#if item.href === '/travel'}
 					<div class="mt-auto border-t-2 border-ink/20 pt-4">
 						<p class="font-mono text-xs font-bold tracking-wide text-ink/60 uppercase">Latest</p>
 						{#if item.post}
@@ -130,7 +128,11 @@
 					href={item.href}
 					class="font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
 				>
-					{item.href === '/wedding' ? 'View the wedding →' : 'Browse all →'}
+					{item.href === '/wedding'
+						? 'View the wedding →'
+						: item.href === '/recipes'
+							? 'Open the recipe book →'
+							: 'Browse all →'}
 				</a>
 			</div>
 		{/each}

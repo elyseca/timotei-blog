@@ -1,6 +1,6 @@
 import type { Component } from 'svelte';
 
-export type Category = 'travel' | 'gabe' | 'elyse';
+export type Category = 'travel';
 
 export interface PostMeta {
 	title: string;
@@ -54,24 +54,4 @@ export async function loadPostComponent(category: Category, slug: string) {
 	const importer = componentModules[path];
 	if (!importer) return undefined;
 	return await importer();
-}
-
-const BLOG_CATEGORIES: Category[] = ['gabe', 'elyse'];
-
-export function getBlogPosts(): Post[] {
-	return BLOG_CATEGORIES.flatMap((c) => getAllPosts(c)).sort((a, b) =>
-		a.meta.date < b.meta.date ? 1 : -1
-	);
-}
-
-export function getLatestBlogPost(): Post | undefined {
-	return getBlogPosts()[0];
-}
-
-export async function loadBlogPost(slug: string) {
-	for (const category of BLOG_CATEGORIES) {
-		const post = await loadPostComponent(category, slug);
-		if (post) return { ...post, category };
-	}
-	return undefined;
 }

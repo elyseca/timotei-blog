@@ -108,6 +108,80 @@
 		background: white;
 	}
 
+	/* Form controls in the same thick-border style */
+	.brutal-field {
+		width: 100%;
+		border: 2.5px solid var(--color-ink);
+		border-radius: 0.6rem;
+		background: white;
+		padding: 0.55rem 0.8rem;
+		font-size: 0.95rem;
+	}
+
+	.brutal-field:focus-visible {
+		outline: 3px solid var(--color-purple);
+		outline-offset: 2px;
+	}
+
+	/* Toggle pill: pass aria-pressed to switch it on */
+	.brutal-chip {
+		display: inline-block;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		border: 2px solid var(--color-ink);
+		border-radius: 999px;
+		padding: 0.35rem 0.85rem;
+		background: white;
+		transition:
+			translate 120ms ease,
+			box-shadow 120ms ease;
+	}
+
+	.brutal-chip:hover {
+		translate: -1px -1px;
+		box-shadow: var(--shadow-hard-sm);
+	}
+
+	.brutal-chip[aria-pressed='true'] {
+		background: var(--color-ink);
+		color: var(--color-cream);
+	}
+
+	/* White box with a green tick (not the browser's black fill) */
+	.brutal-check {
+		appearance: none;
+		flex: none;
+		display: inline-grid;
+		place-content: center;
+		width: 1.3rem;
+		height: 1.3rem;
+		border: 2.5px solid var(--color-ink);
+		border-radius: 0.3rem;
+		background: white;
+	}
+
+	.brutal-check::after {
+		content: '';
+		width: 0.85rem;
+		height: 0.85rem;
+		transform: scale(0);
+		transition: transform 100ms ease;
+		background: no-repeat center / contain
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 8.5l3.5 3.5 7.5-8' fill='none' stroke='%231E7B3A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	}
+
+	.brutal-check:checked::after {
+		transform: scale(1);
+	}
+
+	.brutal-check:focus-visible {
+		outline: 3px solid var(--color-purple);
+		outline-offset: 2px;
+	}
+
 	.grid-bg {
 		background-image:
 			linear-gradient(rgba(20, 20, 20, 0.08) 1.5px, transparent 1.5px),

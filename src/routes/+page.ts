@@ -1,8 +1,7 @@
-import { getLatest, getLatestBlogPost } from '$lib/posts';
+import { getLatest } from '$lib/posts';
 
 export function load() {
 	return {
-		travel: getLatest('travel'),
-		blog: getLatestBlogPost()
+		travel: getLatest('travel')
 	};
 }

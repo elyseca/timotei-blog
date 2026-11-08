@@ -7,7 +7,7 @@
 		{ href: '/', label: 'Home' },
 		{ href: '/wedding', label: 'Wedding' },
 		{ href: '/travel', label: 'Travel' },
-		{ href: '/blog', label: 'Blog' }
+		{ href: '/recipes', label: 'Recipes' }
 	];
 
 	let open = $state(false);
