@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { S, byId, allRecipes } from '$lib/recipes/store.svelte';
-	import { buildPlans, proteinOf } from '$lib/recipes/engine';
-	import { choosePlan, toggleExclude, toggleFilter } from '$lib/recipes/plan';
+	import { buildPlans, haveOptions, proteinOf } from '$lib/recipes/engine';
+	import { choosePlan, toggleExclude, toggleFilter, toggleHave } from '$lib/recipes/plan';
 	import type { Recipe } from '$lib/recipes/types';
 	import Controls from './Controls.svelte';
 
@@ -12,10 +12,25 @@
 		buildPlans(allRecipes(), S.perPlan, S.shuffle, {
 			exclude: [...S.filters.exclude],
 			plant: S.filters.plant,
-			fresh: S.filters.fresh
-		}) as { name: string; why: string; ids: string[]; shared: string[] }[]
+			fresh: S.filters.fresh,
+			have: [...S.filters.have]
+		}) as { name: string; why: string; ids: string[]; shared: string[]; uses: string[] }[]
 	);
 	const short = $derived(plans.length > 0 && plans[0].ids.length < S.perPlan);
+	// Ingredients already in the kitchen: plans lean towards recipes that use them.
+	const options = $derived(haveOptions(allRecipes()) as string[]);
+	let q = $state('');
+	let open = $state(false);
+	const found = $derived(
+		options
+			.filter((o) => !S.filters.have.includes(o) && o.includes(q.trim().toLowerCase()))
+			.slice(0, 8)
+	);
+	function add(name: string) {
+		toggleHave(name);
+		q = '';
+		open = false;
+	}
 	const accents = ['bg-mustard', 'bg-blue text-cream', 'bg-teal'];
 </script>
 
@@ -46,9 +61,51 @@
 				onclick={() => toggleFilter('fresh')}>Fresh ingredients only</button
 			>
 		</div>
-		<p class="mt-3 text-xs text-ink/60">
-			Plans never include three soups or stews. Fresh ingredients means no frozen items.
-		</p>
+		<div class="mt-5 flex flex-wrap items-center gap-2">
+			<span class="font-mono text-xs font-bold tracking-wide uppercase">Have on hand</span>
+			{#each S.filters.have as h (h)}
+				<button type="button" class="brutal-chip" aria-pressed="true" onclick={() => toggleHave(h)}>
+					{h} ×
+				</button>
+			{/each}
+			<div class="relative">
+				<input
+					type="search"
+					class="brutal-field w-56"
+					placeholder="Search ingredients"
+					aria-label="Search ingredients you have"
+					autocomplete="off"
+					bind:value={q}
+					oninput={() => (open = true)}
+					onfocus={() => (open = true)}
+					onblur={() => (open = false)}
+					onkeydown={(e) => {
+						if (e.key === 'Enter' && found.length) {
+							e.preventDefault();
+							add(found[0]);
+						}
+					}}
+				/>
+				{#if open && found.length}
+					<ul
+						class="brutal-box absolute top-full left-0 z-20 mt-1 max-h-60 w-full overflow-y-auto bg-white"
+					>
+						{#each found as o (o)}
+							<li>
+								<button
+									type="button"
+									class="w-full px-3 py-1.5 text-left text-sm hover:bg-lime"
+									onmousedown={(e) => e.preventDefault()}
+									onclick={() => add(o)}
+								>
+									{o}
+								</button>
+							</li>
+						{/each}
+					</ul>
+				{/if}
+			</div>
+		</div>
 	</div>
 </section>
 
@@ -66,7 +123,6 @@
 				<article class="brutal-box reveal flex flex-col overflow-hidden bg-white">
 					<div class="border-b-[2.5px] border-ink p-5 {accents[i % accents.length]}">
 						<h3 class="font-display text-xl font-black">{p.name}</h3>
-						<p class="mt-1 text-sm opacity-85">{p.why}</p>
 					</div>
 					<ol class="flex flex-1 flex-col gap-3 p-5">
 						{#each p.ids.map(byId).filter((r): r is Recipe => !!r) as r (r.id)}
@@ -84,6 +140,9 @@
 						{/each}
 					</ol>
 					<div class="flex flex-col gap-3 border-t-[2.5px] border-ink bg-cream-2 p-5">
+						{#if p.uses.length}
+							<p class="text-xs text-ink/70">Uses: {p.uses.join(', ')}</p>
+						{/if}
 						{#if p.shared.length}
 							<p class="text-xs text-ink/70">Shared ingredients: {p.shared.join(', ')}</p>
 						{/if}

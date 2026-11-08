@@ -1,13 +1,6 @@
 <script lang="ts">
 	import { S } from '$lib/recipes/store.svelte';
-	import {
-		setHousehold,
-		setServingsPer,
-		setPerPlan,
-		mealsOf,
-		daysText,
-		ppl
-	} from '$lib/recipes/plan';
+	import { setHousehold, setServingsPer, setPerPlan, mealsOf } from '$lib/recipes/plan';
 	import { WEEK_MEALS } from '$lib/recipes/engine';
 	import Stepper from './Stepper.svelte';
 
@@ -50,12 +43,7 @@
 	{/if}
 </div>
 {#if withCount}
-	<p class="mt-4 text-sm text-ink/80">
-		{S.perPlan}
-		{S.perPlan === 1 ? 'recipe' : 'recipes'} · {total} servings ÷ {ppl(S.household)} =
-		<strong>{meals} meals each</strong>, about {daysText(meals)} of lunch and dinner{meals >
-		WEEK_MEALS
-			? ' (more than a week)'
-			: ''}.
+	<p class="mt-4 font-mono text-xs font-bold tracking-wide uppercase">
+		{total} servings · {meals} meals each{meals > WEEK_MEALS ? ' (over a week)' : ''}
 	</p>
 {/if}

@@ -393,14 +393,96 @@ export function isSoup(r) {
 	return !!r.stew || /soup|stew|chili/i.test(r.title);
 }
 
+/* ---- combos: a protein, a veg side and a carb cooked together as one meal ---- */
+export const comboId = (ids) => 'combo:' + ids.join('+');
+
+/** A virtual recipe for the chosen parts. Amounts are per serving, so the plan can scale them. */
+export function makeCombo(all, ids) {
+	const rs = ids.map((id) => all.find((r) => r.id === id));
+	if (rs.length < 2 || rs.some((r) => !r)) return undefined;
+	return {
+		id: comboId(ids),
+		title: rs.map((r) => r.title).join(' + '),
+		blurb: '',
+		section: 'Combos',
+		kind: 'Main',
+		meal: ['everyday'],
+		by: '',
+		servings: 1,
+		parts: ids,
+		freezer: false,
+		veg: rs.every((r) => r.veg),
+		ing: rs.flatMap((r) =>
+			r.ing.map((x) => ({ ...x, qty: x.qty == null ? null : x.qty / r.servings }))
+		),
+		steps: rs.flatMap((r) =>
+			r.steps.map((st) => [r.title, Array.isArray(st) ? st[0] + '. ' + st[1] : st])
+		),
+		notes: []
+	};
+}
+
+const everyday = (all, kind) =>
+	all.filter((r) => r.kind === kind && (r.meal || []).includes('everyday'));
+export const comboParts = (all) => ({
+	protein: everyday(all, 'Protein'),
+	veg: everyday(all, 'Side'),
+	carb: everyday(all, 'Carb')
+});
+
+/** Every full protein + veg + carb combination. */
+export function comboList(all) {
+	const { protein, veg, carb } = comboParts(all);
+	const out = [];
+	for (const p of protein)
+		for (const v of veg) for (const c of carb) out.push(makeCombo(all, [p.id, v.id, c.id]));
+	return out;
+}
+
+/** Combos that share the most ingredients with what is already planned (and what is on hand). */
+export function suggestCombos(all, planned, have, n) {
+	n = n || 3;
+	const base = new Set(have || []);
+	planned.forEach((r) => coreSet(r).forEach((c) => base.add(c)));
+	const ids = new Set(planned.map((r) => r.id));
+	const scored = comboList(all)
+		.filter((r) => !ids.has(r.id))
+		.map((r) => {
+			const cores = coreSet(r);
+			const shared = [...cores].filter((c) => base.has(c));
+			return { r, shared, score: shared.length - (cores.size - shared.length) * 0.15 };
+		})
+		.sort((a, b) => b.score - a.score || (a.r.id < b.r.id ? -1 : 1));
+	const out = [];
+	const proteins = new Set();
+	for (const c of scored) {
+		const p = c.r.parts[0];
+		if (proteins.has(p)) continue; // a different protein each time
+		proteins.add(p);
+		out.push(c);
+		if (out.length >= n) break;
+	}
+	return out;
+}
+
+/** Ingredients (minus pantry staples) a visitor can say they already have, for the plan picker. */
+export function haveOptions(all) {
+	const out = new Set();
+	planPool(all).forEach((r) => coreSet(r).forEach((c) => out.add(c)));
+	return [...out].sort();
+}
+
 export function buildPlans(all, n, shuffle, opts) {
 	n = Math.max(1, n || 3);
 	shuffle = shuffle || 0;
 	opts = opts || {};
-	let pool = planPool(all).filter((r) => !(opts.exclude || []).includes(proteinOf(r)));
+	let pool = planPool(all)
+		.concat(comboList(all))
+		.filter((r) => !(opts.exclude || []).includes(proteinOf(r)));
 	if (opts.plant) pool = pool.filter((r) => proteinOf(r) === 'Plant-based');
 	if (opts.fresh) pool = pool.filter((r) => !r.ing.some((x) => x.dept === 'frozen'));
 	const maxSoups = Math.max(1, Math.min(2, n - 1)); // never three soups
+	const maxCombos = n >= 4 ? 2 : 1;
 	const cores = new Map(pool.map((r) => [r.id, coreSet(r)]));
 	const pair = (a, b) => {
 		let c = 0;
@@ -410,13 +492,18 @@ export function buildPlans(all, n, shuffle, opts) {
 		return c;
 	};
 	const hub = (r) => pool.reduce((t, o) => t + (o === r ? 0 : pair(r, o)), 0);
+	const have = new Set(opts.have || []);
+	const matches = (r) => [...have].filter((h) => cores.get(r.id).has(h)).length;
 	const used = new Map();
 	function pick(sub, o) {
 		const chosen = [],
 			cand = sub.slice();
 		while (chosen.length < n && cand.length) {
 			const soups = chosen.filter(isSoup).length;
-			const ok = cand.filter((r) => !(isSoup(r) && soups >= maxSoups));
+			const combos = chosen.filter((r) => r.parts).length;
+			const ok = cand.filter(
+				(r) => !(isSoup(r) && soups >= maxSoups) && !(r.parts && combos >= maxCombos)
+			);
 			if (!ok.length) break;
 			let best = null,
 				bs = -1e9;
@@ -426,7 +513,9 @@ export function buildPlans(all, n, shuffle, opts) {
 				if (o.distinct && chosen.some((c) => proteinOf(c) === proteinOf(r))) s -= 3;
 				if (o.freezer && r.freezer) s += 4;
 				if (o.veg && r.veg && !chosen.some((c) => c.veg)) s += 2;
+				s += matches(r) * 6; // ingredients already on hand
 				s -= (used.get(r.id) || 0) * 3;
+				if (r.parts) s -= r.parts.reduce((t, id) => t + (used.get(id) || 0), 0) * 6; // vary the combos
 				s += (((hashStr(r.id) + shuffle * 37) % 10) / 10) * 1.2;
 				if (s > bs) {
 					bs = s;
@@ -437,6 +526,7 @@ export function buildPlans(all, n, shuffle, opts) {
 			cand.splice(cand.indexOf(best), 1);
 		}
 		chosen.forEach((r) => used.set(r.id, (used.get(r.id) || 0) + 1));
+		chosen.forEach((r) => (r.parts || []).forEach((id) => used.set(id, (used.get(id) || 0) + 1)));
 		return chosen;
 	}
 	const freezer = pool.filter((r) => r.freezer);
@@ -478,7 +568,8 @@ export function buildPlans(all, n, shuffle, opts) {
 				.sort((a, b) => b[1] - a[1])
 				.map((e) => e[0])
 				.slice(0, 4);
-			return { key: d.key, name: d.name, why: d.why, ids: rs.map((r) => r.id), shared };
+			const uses = [...have].filter((h) => rs.some((r) => cores.get(r.id).has(h)));
+			return { key: d.key, name: d.name, why: d.why, ids: rs.map((r) => r.id), shared, uses };
 		})
 		.filter((p) => {
 			const k = p.ids.slice().sort().join('|');

@@ -18,7 +18,7 @@
 		{
 			dot: 'bg-white',
 			head: 'Under 2 tbsp fat',
-			text: 'Added oil or butter per serving. Every everyday recipe shows a meter for this.'
+			text: 'Added oil or butter per serving.'
 		}
 	];
 </script>
@@ -67,10 +67,7 @@
 
 	<section class="brutal-box reveal bg-white p-6">
 		<h2 class="font-display text-3xl font-black">Lunch and dinner</h2>
-		<p class="mt-3 text-ink/85">
-			The other two meals of the day follow the plate above. Cook a recipe once, and it covers
-			several lunches and dinners.
-		</p>
+		<p class="mt-3 text-ink/85">The other two meals of the day follow the plate above.</p>
 		<div class="mt-5 overflow-x-auto">
 			<div
 				class="grid min-w-[30rem] grid-cols-[5rem_repeat(7,minmax(0,1fr))] gap-1.5 text-center font-mono text-xs font-bold uppercase"
@@ -90,9 +87,6 @@
 					></span>{/each}
 			</div>
 		</div>
-		<p class="mt-3 text-xs text-ink/60">
-			7 breakfasts + 14 plate meals. The meal planner counts the 14 lunches and dinners.
-		</p>
 	</section>
 
 	<div class="flex flex-wrap gap-3">

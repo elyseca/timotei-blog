@@ -26,6 +26,8 @@ export interface Recipe {
 	flavors?: { name: string; add: string; sweet?: string; top?: string }[];
 	source?: { name: string; url: string };
 	user?: boolean;
+	/** Set on a combo: the ids of the protein, veg and carb recipes it is made from. */
+	parts?: string[];
 }
 
 export interface PlanItem {
@@ -38,5 +40,3 @@ export interface Cook {
 	name: string;
 	icon: 'shark' | 'jellyfish';
 }
-
-export type CalendarId = 'google' | 'outlook' | 'office' | 'ics';

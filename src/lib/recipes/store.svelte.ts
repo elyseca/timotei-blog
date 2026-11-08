@@ -2,7 +2,8 @@
 // (localStorage); nothing is sent anywhere.
 import { browser } from '$app/environment';
 import { RECIPES } from './data';
-import type { CalendarId, Cook, Recipe } from './types';
+import { makeCombo } from './engine';
+import type { Cook, Recipe } from './types';
 
 const KEY = 'timotei-recipes-v1';
 
@@ -25,11 +26,9 @@ function fresh() {
 		plan: [] as { id: string; servings: number }[],
 		checks: {} as Record<string, boolean>,
 		user: [] as Recipe[],
-		sched: {} as Record<string, { day: number; chef: string }>,
-		filters: { exclude: [] as string[], plant: false, fresh: false },
+		sched: {} as Record<string, { slot: number; chef: string; eats: number[] }>,
+		filters: { exclude: [] as string[], plant: false, fresh: false, have: [] as string[] },
 		weekStart: comingSunday(),
-		cookTime: '17:30',
-		calendar: 'google' as CalendarId,
 		cooks: [
 			{ id: 'e', name: 'Elyse', icon: 'shark' },
 			{ id: 'g', name: 'Gabe', icon: 'jellyfish' }
@@ -54,9 +53,13 @@ export function hydrate() {
 		const raw = localStorage.getItem(KEY);
 		if (raw) {
 			const saved = JSON.parse(raw);
-			// Older saves may carry email addresses; never keep them.
-			if (Array.isArray(saved.cooks))
-				saved.cooks.forEach((c: Record<string, unknown>) => delete c.email);
+			// Older saves used a cook time and per-day cooking; start the schedule fresh.
+			delete saved.cookTime;
+			delete saved.calendar;
+			delete saved.cooks; // the two chefs are fixed
+			const first = Object.values(saved.sched ?? {})[0] as Record<string, unknown> | undefined;
+			if (first && !('slot' in first)) saved.sched = {};
+			saved.filters = { ...fresh().filters, ...saved.filters };
 			Object.assign(S, saved);
 		}
 	} catch {
@@ -77,7 +80,10 @@ export function persist() {
 }
 
 export const allRecipes = (): Recipe[] => RECIPES.concat(S.user);
-export const byId = (id: string): Recipe | undefined => allRecipes().find((r) => r.id === id);
+export const byId = (id: string): Recipe | undefined =>
+	id.startsWith('combo:')
+		? (makeCombo(allRecipes(), id.slice(6).split('+')) as Recipe | undefined)
+		: allRecipes().find((r) => r.id === id);
 
 let toastTimer: ReturnType<typeof setTimeout>;
 export function toast(msg: string) {

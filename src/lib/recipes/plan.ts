@@ -1,12 +1,13 @@
 // Meal-plan helpers and actions. They read and write the shared state S.
 import { S, byId, toast } from './store.svelte';
-import { lineText, fmtQty, WEEK_MEALS } from './engine';
+import { lineText, fmtQty, WEEK_MEALS, comboId } from './engine';
 import type { PlanItem } from './types';
 
 export const CDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-// Cooking tiles use strong colours; the meals eaten later use the matching light tint.
-export const STRONG = ['#B3202B', '#2380BF', '#1E7B3A', '#7A3E9D', '#B4590F', '#1F7C69'];
-export const TINT = ['#FBE4E5', '#DDEEFB', '#DDF1E3', '#EFE3F6', '#FBE9D9', '#DAF0EA'];
+// Cooking tiles use the site's palette; the meals eaten later use a light tint of the same colour.
+const PALETTE = ['purple', 'mustard', 'coral', 'teal', 'blue', 'lime'];
+export const STRONG = PALETTE.map((c) => `var(--color-${c})`);
+export const TINT = PALETTE.map((c) => `color-mix(in srgb, var(--color-${c}) 28%, white)`);
 export const GORDER = [
 	'spice',
 	'oil',
@@ -26,12 +27,14 @@ export const daysText = (meals: number): string => {
 	const d = meals / 2;
 	return fmtQty(d) + (d <= 1 ? ' day' : ' days');
 };
-export const shortName = (t: string) =>
+const shortOne = (t: string) =>
 	t
 		.replace(/\(.*?\)/g, '')
-		.replace(/^(One-Pot|Instant Pot)\s+/i, '')
+		.replace(/^(One-Pot|Instant Pot|Frozen|Simple)\s+/i, '')
 		.replace(/[:,].*$/, '')
 		.trim();
+// A combo's title is its parts joined with " + ": shorten each part.
+export const shortName = (t: string) => t.split(' + ').map(shortOne).join(' + ');
 export const cookOf = (id: string) => S.cooks.find((c) => c.id === id) ?? S.cooks[0];
 
 export function planItems(): PlanItem[] {
@@ -40,45 +43,79 @@ export function planItems(): PlanItem[] {
 		.filter((x): x is PlanItem => !!x.r);
 }
 
-/* ---------- default cook days + eating layout ---------- */
+/* ---------- schedule ----------
+ * A slot is one lunch or dinner: slot = day * 2 + (0 lunch | 1 dinner), 0..13 for Sun..Sat.
+ * Each planned recipe has the slot it is cooked in, who cooks, and the slots its servings are eaten in.
+ */
+export const slotDay = (slot: number) => Math.floor(slot / 2);
+export const slotName = (slot: number) => (slot % 2 ? 'Dinner' : 'Lunch');
+
+/** Give every planned recipe a cook slot and eating slots, and keep them matching the servings. */
 export function ensureSched() {
 	const items = planItems();
-	let p = 1;
+	const taken = new Set<number>();
+	items.forEach((x) => S.sched[x.r.id]?.eats.forEach((e) => taken.add(e)));
+	let cursor = 1;
 	items.forEach((x, i) => {
-		if (!S.sched[x.r.id]) {
-			const day = p % 2 === 0 ? Math.floor(p / 2) - 1 : Math.floor(p / 2);
-			S.sched[x.r.id] = {
-				day: Math.max(0, Math.min(6, day)),
-				chef: S.cooks[i % S.cooks.length].id
-			};
+		let sc = S.sched[x.r.id];
+		if (!sc) {
+			const slot = Math.min(WEEK_MEALS - 1, cursor);
+			sc = S.sched[x.r.id] = { slot, chef: S.cooks[i % S.cooks.length].id, eats: [] };
 		}
-		p = Math.max(p, S.sched[x.r.id].day * 2 + 1) + mealsOf(x.servings);
+		const need = mealsOf(x.servings);
+		if (sc.eats.length > need) {
+			sc.eats.slice(need).forEach((e) => taken.delete(e));
+			sc.eats = sc.eats.slice(0, need);
+		}
+		let p = Math.max(sc.slot, sc.eats.length ? Math.max(...sc.eats) + 1 : sc.slot);
+		while (sc.eats.length < need && p < WEEK_MEALS) {
+			if (!taken.has(p)) {
+				sc.eats.push(p);
+				taken.add(p);
+			}
+			p++;
+		}
+		cursor = Math.max(cursor, sc.eats.length ? Math.max(...sc.eats) + 1 : cursor);
+	});
+	Object.keys(S.sched).forEach((id) => {
+		if (!S.plan.some((p) => p.id === id)) delete S.sched[id];
 	});
 }
 
-// slots[0..13] = lunch/dinner for Sun..Sat. The first serving is eaten the night it's cooked.
+/** What sits in each of the 14 slots: who is cooked, and which recipe is eaten. */
 export function layout(items: PlanItem[]) {
-	const slots: (string | null)[] = Array(WEEK_MEALS).fill(null);
+	const eat: (string | null)[] = Array(WEEK_MEALS).fill(null);
+	const cook: string[][] = Array.from({ length: WEEK_MEALS }, () => []);
 	const over: Record<string, number> = {};
-	items
-		.map((x, i) => ({ x, i, sc: S.sched[x.r.id] }))
-		.filter((o) => o.sc)
-		.sort((a, b) => a.sc.day - b.sc.day || a.i - b.i)
-		.forEach(({ x, sc }) => {
-			let need = mealsOf(x.servings);
-			let p = sc.day * 2 + 1;
-			while (need > 0) {
-				while (p < WEEK_MEALS && slots[p] !== null) p++;
-				if (p >= WEEK_MEALS) {
-					over[x.r.id] = (over[x.r.id] || 0) + need;
-					break;
-				}
-				slots[p] = x.r.id;
-				need--;
-				p++;
-			}
-		});
-	return { slots, over };
+	items.forEach((x) => {
+		const sc = S.sched[x.r.id];
+		if (!sc) return;
+		cook[sc.slot].push(x.r.id);
+		sc.eats.forEach((e) => (eat[e] = x.r.id));
+		const short = mealsOf(x.servings) - sc.eats.length;
+		if (short > 0) over[x.r.id] = short;
+	});
+	return { eat, cook, over };
+}
+
+/** Drag actions. Dropping a meal on another meal swaps them. */
+export function moveCook(id: string, slot: number) {
+	const sc = S.sched[id];
+	if (sc && sc.slot !== slot) sc.slot = slot;
+}
+export function moveEat(id: string, from: number, to: number) {
+	if (from === to) return;
+	const mine = S.sched[id];
+	if (!mine) return;
+	const other = Object.entries(S.sched).find(([k, v]) => k !== id && v.eats.includes(to));
+	mine.eats = mine.eats.map((e) => (e === from ? to : e === to ? from : e));
+	if (other) other[1].eats = other[1].eats.map((e) => (e === to ? from : e));
+}
+export function nextChef(id: string) {
+	const sc = S.sched[id];
+	if (!sc) return;
+	const i = S.cooks.findIndex((c) => c.id === sc.chef);
+	sc.chef = S.cooks[(i + 1) % S.cooks.length].id;
 }
 
 /* ---------- actions ---------- */
@@ -93,33 +130,54 @@ export function togglePlan(id: string) {
 		toast('Added to plan');
 	}
 }
+/** Add a protein + veg + carb combination (any two or three of them) as one planned meal. */
+export function addCombo(parts: string[]) {
+	const id = comboId(parts);
+	if (S.plan.some((p) => p.id === id)) return toast('Already in plan');
+	S.plan.push({ id, servings: S.servingsPer });
+	ensureSched();
+	toast('Added to plan');
+}
 export function removeFromPlan(id: string) {
 	S.plan = S.plan.filter((p) => p.id !== id);
+	ensureSched();
 }
 export function choosePlan(ids: string[]) {
 	S.plan = ids.map((id) => ({ id, servings: S.servingsPer }));
+	S.sched = {};
 	ensureSched();
 	window.scrollTo(0, 0);
 }
 export function backToPlans() {
 	S.plan = [];
+	S.sched = {};
 	window.scrollTo(0, 0);
 }
 export function setServ(id: string, d: number) {
 	const p = S.plan.find((x) => x.id === id);
 	if (p) p.servings = Math.max(1, Math.min(48, p.servings + d));
+	ensureSched();
 }
-export const setHousehold = (d: number) =>
-	(S.household = Math.max(1, Math.min(12, S.household + d)));
+export function setHousehold(d: number) {
+	S.household = Math.max(1, Math.min(12, S.household + d));
+	ensureSched();
+}
 export function setServingsPer(d: number) {
 	S.servingsPer = Math.max(1, Math.min(24, S.servingsPer + d));
 	S.plan.forEach((p) => (p.servings = S.servingsPer));
+	ensureSched();
 }
 export const setPerPlan = (d: number) => (S.perPlan = Math.max(1, Math.min(6, S.perPlan + d)));
 export function toggleExclude(m: string) {
 	const i = S.filters.exclude.indexOf(m);
 	if (i >= 0) S.filters.exclude.splice(i, 1);
 	else S.filters.exclude.push(m);
+	S.shuffle = 0;
+}
+export function toggleHave(name: string) {
+	const i = S.filters.have.indexOf(name);
+	if (i >= 0) S.filters.have.splice(i, 1);
+	else S.filters.have.push(name);
 	S.shuffle = 0;
 }
 export function toggleFilter(key: 'plant' | 'fresh') {

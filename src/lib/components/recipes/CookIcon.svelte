@@ -17,6 +17,12 @@
 			stroke-width="1.4"
 			stroke-linecap="round"
 		/>
+		<g fill="#fff" stroke="#243447" stroke-width="1.1" stroke-linejoin="round">
+			<circle cx="6.5" cy="9.5" r="3" />
+			<circle cx="10.5" cy="7" r="3.5" />
+			<circle cx="14.5" cy="9.5" r="3" />
+			<rect x="4.5" y="10.5" width="12" height="4.5" rx="1.2" />
+		</g>
 	</svg>
 {:else}
 	<svg width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
@@ -38,5 +44,11 @@
 			stroke-width="1.4"
 			stroke-linecap="round"
 		/>
+		<g fill="#fff" stroke="#3A2A55" stroke-width="1.1" stroke-linejoin="round">
+			<circle cx="15.5" cy="6" r="3" />
+			<circle cx="20" cy="4.5" r="3.5" />
+			<circle cx="24.5" cy="6" r="3" />
+			<rect x="14" y="7.5" width="12" height="4.5" rx="1.2" />
+		</g>
 	</svg>
 {/if}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { S, byId, allRecipes } from '$lib/recipes/store.svelte';
 	import { MEALS } from '$lib/recipes/data';
-	import { lineText, fmtQty, fatTbsp, hasGarlic, similar } from '$lib/recipes/engine';
+	import { lineText, fmtQty, hasGarlic, similar } from '$lib/recipes/engine';
 	import { togglePlan, ppl, daysText } from '$lib/recipes/plan';
 	import Stepper from './Stepper.svelte';
 
@@ -22,7 +22,6 @@
 				}[])
 			: []
 	);
-	const fat = $derived(r ? (fatTbsp(r) as number) : 0);
 	const tags = $derived(
 		r
 			? [
@@ -110,7 +109,7 @@
 				</p>
 				{#if f !== 1}
 					<p class="mt-1 text-xs text-ink/70">
-						Scaled from {r.servings}. Amounts written inside the method are for the full recipe.
+						Scaled from {r.servings}. Step amounts are for the full recipe.
 					</p>
 				{/if}
 				<ul class="mt-4 flex flex-col">
@@ -124,29 +123,6 @@
 					{/each}
 				</ul>
 			</div>
-			{#if (r.meal ?? []).includes('everyday')}
-				<div class="brutal-box bg-white p-5">
-					<div class="flex items-baseline justify-between gap-3">
-						<span class="font-mono text-xs font-bold tracking-wide uppercase"
-							>Added fat per serving</span
-						>
-						<strong class="font-display text-xl font-black">{Math.round(fat * 10) / 10} tbsp</strong
-						>
-					</div>
-					<div
-						class="mt-3 h-3 overflow-hidden rounded-full border-2 border-ink bg-cream"
-						aria-hidden="true"
-					>
-						<div
-							class="h-full {fat >= 2 ? 'bg-coral' : 'bg-teal'}"
-							style="width:{Math.min(100, (fat / 2) * 100)}%"
-						></div>
-					</div>
-					<p class="mt-2 text-xs text-ink/70">
-						Guideline: under 2 tbsp. Counts added oil and butter only.
-					</p>
-				</div>
-			{/if}
 		</aside>
 
 		<div class="min-w-0">

@@ -109,11 +109,7 @@
 <section class="mx-auto max-w-6xl px-5 py-12 md:px-8">
 	{#if !list.length}
 		<div class="brutal-box bg-white p-12 text-center text-ink/60">
-			<p class="font-mono text-sm uppercase">
-				No recipes match.
-				{#if F.meal === 'special'}No special-occasion recipes yet.{/if}
-				Clear a filter to see more.
-			</p>
+			<p class="font-mono text-sm uppercase">No recipes match.</p>
 		</div>
 	{:else}
 		{#each sections as sec (sec)}

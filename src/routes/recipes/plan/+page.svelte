@@ -9,12 +9,7 @@
 	<title>Meal Plan — timotei.blog</title>
 </svelte:head>
 
-<SectionHero
-	tag="Meal plan"
-	title="Plan the week"
-	blurb="Pick a plan, get one grocery list, then schedule who cooks what."
-	bg="bg-mustard"
-/>
+<SectionHero tag="Meal plan" title="Plan the week" bg="bg-mustard" />
 {#if S.plan.length}
 	<Chosen />
 {:else}
