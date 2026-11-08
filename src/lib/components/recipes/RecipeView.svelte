@@ -8,6 +8,8 @@
 
 	const r = $derived(byId(id));
 
+	// A combo's amounts are per serving: show them for a standard plan serving count.
+	const f = $derived(r?.parts ? S.servingsPer / r.servings : 1);
 	const inPlan = $derived(S.plan.some((p) => p.id === id));
 	const sim = $derived(
 		r
@@ -95,7 +97,7 @@
 						<li
 							class="flex flex-wrap justify-between gap-x-3 border-b border-ink/10 py-2 text-sm last:border-0"
 						>
-							<span>{lineText(x)}</span>
+							<span>{lineText(x, f)}</span>
 							{#if x.note}<em class="text-ink/50">{x.note}</em>{/if}
 						</li>
 					{/each}

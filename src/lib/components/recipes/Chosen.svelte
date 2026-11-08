@@ -190,22 +190,12 @@
 				class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink/15 p-4 last:border-0"
 			>
 				<div>
-					{#if x.r.parts}
-						<p class="font-display text-lg font-black">
-							{#each x.r.parts as id, n (id)}{#if n > 0}
-									<span class="text-ink/40"> + </span>{/if}<a
-									href="/recipes/view#{id}"
-									class="underline decoration-2 underline-offset-4">{byId(id)?.title}</a
-								>{/each}
-						</p>
-					{:else}
-						<a
-							href="/recipes/view#{x.r.id}"
-							class="font-display text-lg font-black underline decoration-2 underline-offset-4"
-						>
-							{x.r.title}
-						</a>
-					{/if}
+					<a
+						href="/recipes/view#{x.r.id}"
+						class="font-display text-lg font-black underline decoration-2 underline-offset-4"
+					>
+						{x.r.title}
+					</a>
 					<p class="font-mono text-xs font-bold tracking-wide text-ink/60 uppercase">
 						{fmtQty(x.servings / S.household)} meals each
 					</p>

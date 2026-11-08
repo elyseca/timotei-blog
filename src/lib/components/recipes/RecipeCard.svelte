@@ -1,9 +1,11 @@
 <script lang="ts">
-	import { S } from '$lib/recipes/store.svelte';
+	import { S, ui } from '$lib/recipes/store.svelte';
 	import { togglePlan } from '$lib/recipes/plan';
 	import type { Recipe } from '$lib/recipes/types';
 
 	let { r }: { r: Recipe } = $props();
+	// Proteins, veggies and carbs are built into a meal; everything else goes straight to the plan.
+	const builds = $derived(['Protein', 'Side', 'Carb'].includes(r.kind ?? ''));
 	const inPlan = $derived(S.plan.some((p) => p.id === r.id));
 	const note = $derived(
 		[r.freezer ? 'Freezes' : '', r.by && r.by !== 'Elyse' ? r.by : ''].filter(Boolean).join(' · ')
@@ -25,13 +27,19 @@
 		<span class="font-mono text-xs font-bold tracking-wide text-ink/60 uppercase">
 			{note}
 		</span>
-		<button
-			type="button"
-			class="brutal-chip"
-			aria-pressed={inPlan}
-			onclick={() => togglePlan(r.id)}
-		>
-			{inPlan ? '✓ In plan' : '+ Plan'}
-		</button>
+		{#if builds}
+			<button type="button" class="brutal-chip" onclick={() => (ui.comboFrom = r.id)}
+				>+ Build</button
+			>
+		{:else}
+			<button
+				type="button"
+				class="brutal-chip"
+				aria-pressed={inPlan}
+				onclick={() => togglePlan(r.id)}
+			>
+				{inPlan ? '✓ In plan' : '+ Plan'}
+			</button>
+		{/if}
 	</div>
 </article>

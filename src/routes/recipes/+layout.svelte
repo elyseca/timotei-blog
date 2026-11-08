@@ -3,6 +3,7 @@
 	import { ui, hydrate, persist } from '$lib/recipes/store.svelte';
 	import { ensureSched } from '$lib/recipes/plan';
 	import RecipeTabs from '$lib/components/recipes/RecipeTabs.svelte';
+	import ComboDialog from '$lib/components/recipes/ComboDialog.svelte';
 
 	let { children } = $props();
 
@@ -19,6 +20,7 @@
 
 <RecipeTabs />
 {@render children()}
+<ComboDialog />
 
 <div
 	class="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center px-5 transition-[opacity,translate] duration-200 {ui.toast

@@ -42,6 +42,8 @@ export const S = $state(fresh());
 export const ui = $state({
 	F: { q: '', meal: '', by: '', equip: '', freezer: false, veg: false, gf: false },
 	calStep: 0,
+	// Id of the protein, veggie or carb being turned into a combo (opens the pop-up).
+	comboFrom: '',
 	toast: '',
 	ready: false
 });
