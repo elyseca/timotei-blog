@@ -4,7 +4,7 @@ This is Gabe and Elyse's personal website. It has four parts:
 
 - **Home**: the front page, with a short hello and links to everything else.
 - **Travel**: write-ups (and videos) of trips we've taken together.
-- **Blog**: everyday posts. Each post belongs to either Gabe or Elyse.
+- **Recipes**: our recipe book, with a meal planner, grocery lists, and cooking-day calendar events.
 - **Wedding**: one page about our wedding, with the story, a video, and photos.
 
 You don't need to know how to code to add or change posts. Every post is a plain text file,
@@ -25,10 +25,10 @@ Inside `src/lib/content/` there is one folder per section:
 
 | Folder             | Shows up on                                      |
 | ------------------ | ------------------------------------------------ |
-| `content/elyse/`   | The **Blog** page, as Elyse's post               |
-| `content/gabe/`    | The **Blog** page, as Gabe's post                |
 | `content/travel/`  | The **Travel** page                              |
 | `content/wedding/` | The **Wedding** page (one file only, `index.md`) |
+
+The recipes aren't text files. They live in `src/lib/recipes/data.ts`.
 
 Everything else in the project is the machinery that turns these files into a website. You can
 leave it alone.
@@ -39,16 +39,15 @@ leave it alone.
 
 ### 1. Make a new file
 
-Create a new file in the right folder (for example `src/lib/content/elyse/`). The easiest way is
+Create a new file in the right folder (for example `src/lib/content/travel/`). The easiest way is
 to copy an existing post and change it.
 
 The **file name becomes the web address**, so keep it short, lowercase, and use dashes instead
 of spaces. It must end in `.md`.
 
-- `spring-planting.md` becomes `timotei.blog/blog/spring-planting`
 - `rome-in-april.md` (in `travel/`) becomes `timotei.blog/travel/rome-in-april`
 
-Two blog posts can't have the same file name, even if one is Gabe's and one is Elyse's.
+Two travel posts can't have the same file name.
 
 ### 2. Fill in the details at the top
 
@@ -70,7 +69,7 @@ What each line means:
 | ---------- | --------- | ------------------------------------------------------------------------------------------------------------------ |
 | `title`    | Yes       | The post's headline.                                                                                               |
 | `date`     | Yes       | Written as year-month-day, like `'2026-08-05'`. Posts are listed newest first using this date.                     |
-| `excerpt`  | Yes       | One or two sentences shown on the post's card on the Blog or Travel page.                                          |
+| `excerpt`  | Yes       | One or two sentences shown on the post's card on the Travel page.                                                  |
 | `cover`    | No        | The main picture. See "Adding pictures" below.                                                                     |
 | `location` | No        | Where it happened, like `'Lisbon, Portugal'`. Shows next to the date on cards, travel posts, and the wedding page. |
 | `video`    | No        | Travel posts only. A YouTube link, like `'https://www.youtube.com/watch?v=abc123'`.                                |

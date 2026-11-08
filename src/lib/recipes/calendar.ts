@@ -169,7 +169,7 @@ export function webCalendarUrl(kind: Exclude<CalendarId, 'ics'>, ev: CalEvent): 
 
 /* ---------- .ics file (RFC 5545) ---------- */
 const icsEscape = (s: string) =>
-	s.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+	s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
 
 // Lines may not exceed 75 octets; continue on the next line with a leading space.
 function fold(line: string): string {

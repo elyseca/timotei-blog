@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { S, byId, allRecipes, toast } from '$lib/recipes/store.svelte';
+	import { S, byId, allRecipes } from '$lib/recipes/store.svelte';
 	import { MEALS } from '$lib/recipes/data';
 	import { lineText, fmtQty, fatTbsp, hasGarlic, similar } from '$lib/recipes/engine';
 	import { togglePlan, ppl, daysText } from '$lib/recipes/plan';
@@ -12,7 +11,6 @@
 	// The page re-creates this component for each recipe ({#key}), so reading the starting value once is fine.
 	// svelte-ignore state_referenced_locally
 	let viewServ = $state(byId(id)?.servings ?? 1);
-	let pendingDelete = $state(false);
 
 	const f = $derived(r ? viewServ / r.servings : 1);
 	const inPlan = $derived(S.plan.some((p) => p.id === id));
@@ -36,17 +34,6 @@
 				]
 			: []
 	);
-
-	function remove() {
-		if (!pendingDelete) {
-			pendingDelete = true;
-			return;
-		}
-		S.user = S.user.filter((x) => x.id !== id);
-		S.plan = S.plan.filter((p) => p.id !== id);
-		toast('Recipe deleted');
-		goto('/recipes');
-	}
 </script>
 
 {#if !r}
@@ -101,11 +88,6 @@
 				>
 					{inPlan ? '✓ In meal plan' : '+ Add to meal plan'}
 				</button>
-				{#if r.user}
-					<button type="button" class="brutal-btn bg-white" onclick={remove}>
-						{pendingDelete ? 'Tap again to delete' : 'Delete recipe'}
-					</button>
-				{/if}
 			</div>
 		</div>
 	</section>

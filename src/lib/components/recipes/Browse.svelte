@@ -112,8 +112,7 @@
 			<p class="font-mono text-sm uppercase">
 				No recipes match.
 				{#if F.meal === 'special'}No special-occasion recipes yet.{/if}
-				<a href="/recipes/add" class="underline decoration-2 underline-offset-4">Add one</a> or clear
-				a filter.
+				Clear a filter to see more.
 			</p>
 		</div>
 	{:else}

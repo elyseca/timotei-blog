@@ -14,6 +14,8 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 			adapter: adapter(),
+			// Recipe pages are /recipes/view#<id>: the hash targets are filled in by the browser.
+			prerender: { handleMissingId: 'ignore' },
 			preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],
 			extensions: ['.svelte', '.svx', '.md']
 		})

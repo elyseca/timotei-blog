@@ -54,7 +54,7 @@ export function pluralName(name, q, unit) {
 	return name + 's';
 }
 
-export function lineText(x, f) {
+export function lineText(x, f = 1) {
 	f = f || 1;
 	let q = x.qty == null ? null : x.qty * f,
 		u = x.unit;

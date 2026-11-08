@@ -5,7 +5,6 @@
 	const tabs = [
 		{ href: '/recipes/plan', label: 'Meal Plan' },
 		{ href: '/recipes', label: 'Recipes' },
-		{ href: '/recipes/add', label: 'Add Recipes' },
 		{ href: '/recipes/approach', label: 'Meal Plan Approach' }
 	];
 
