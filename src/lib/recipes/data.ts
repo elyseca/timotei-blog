@@ -13,18 +13,20 @@ export const DEPTS = [
 	['frozen', 'Frozen'],
 	['other', 'Other']
 ];
+/* `weekly: true` marks the easy weekly dishes the meal planner and combos draw from.
+   Leave it off for special-occasion recipes. */
 export const SECTIONS = [
 	'Easy Weekly Meals',
-	'Easy Weekly Protein',
-	'Veggies & Sides',
+	'Protein',
+	'Veggies',
 	'Carbs',
 	'Breakfast',
 	'Sweet Treats'
 ];
 export const KINDS = {
 	Main: 'Easy Weekly Meals',
-	Protein: 'Easy Weekly Protein',
-	Side: 'Veggies & Sides',
+	Protein: 'Protein',
+	Side: 'Veggies',
 	Carb: 'Carbs',
 	Breakfast: 'Breakfast',
 	Treat: 'Sweet Treats'
@@ -68,6 +70,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Chili',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 8,
 		equip: ['Instant Pot'],
@@ -105,6 +108,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Chicken Sausage & Couscous Soup',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 6,
 		equip: ['Oven', 'Dutch oven'],
@@ -130,6 +134,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Salsa Verde Chicken Soup',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 4,
 		equip: ['Instant Pot'],
@@ -160,6 +165,7 @@ export const RECIPES: Recipe[] = [
 		title: 'One-Pot Chicken & White Bean Stew',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 8,
 		equip: ['Dutch oven', 'Stovetop'],
@@ -213,6 +219,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Butternut Squash Soup',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 6,
 		equip: ['Instant Pot'],
@@ -252,6 +259,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Kung Pao Beef Bowls',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 4,
 		equip: ['Instant Pot', 'Stovetop'],
@@ -288,6 +296,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Mediterranean Meatball Bowls',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 4,
 		equip: ['Oven'],
@@ -321,6 +330,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Salmon, Asparagus & White Rice',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 2,
 		equip: ['Oven', 'Instant Pot'],
@@ -349,6 +359,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Chicken Thigh & Potato Sheet Pan Meal',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 4,
 		equip: ['Oven'],
@@ -383,6 +394,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Roasted Sweet Potato, Fennel & Lentil Power Bowl',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 4,
 		equip: ['Oven', 'Stovetop'],
@@ -421,6 +433,7 @@ export const RECIPES: Recipe[] = [
 		title: 'Vegan Vodka Sauce (Silken Tofu)',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 8,
 		equip: ['Stovetop'],
@@ -457,6 +470,7 @@ export const RECIPES: Recipe[] = [
 		title: 'One-Pot Cherry Tomato & Basil Butter Beans',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
+		weekly: true,
 		stew: true,
 		meal: ['everyday'],
 		servings: 4,
@@ -492,19 +506,20 @@ export const RECIPES: Recipe[] = [
 		notes: []
 	},
 
-	/* ---------- Easy Weekly Protein ---------- */
+	/* ---------- Protein ---------- */
 	{
 		id: 'wings',
 		title: 'Chicken Wings',
-		section: 'Easy Weekly Protein',
+		section: 'Protein',
 		kind: 'Protein',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 4,
 		equip: ['Oven'],
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Crisp-skinned wings with salt and pepper.',
+		blurb: '',
 		ing: [
 			i(3, 'lb', 'chicken wings', 'meat'),
 			i(2, 'tbsp', 'flour', 'spice'),
@@ -524,15 +539,16 @@ export const RECIPES: Recipe[] = [
 	{
 		id: 'pork-loin',
 		title: 'Pork Loin',
-		section: 'Easy Weekly Protein',
+		section: 'Protein',
 		kind: 'Protein',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 5,
 		equip: ['Oven'],
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Paprika and Dijon.',
+		blurb: '',
 		ing: [
 			i(2, 'lb', 'pork loin', 'meat'),
 			i(1, 'tbsp', 'paprika', 'spice'),
@@ -551,15 +567,16 @@ export const RECIPES: Recipe[] = [
 	{
 		id: 'whole-chicken',
 		title: 'Whole Chicken',
-		section: 'Easy Weekly Protein',
+		section: 'Protein',
 		kind: 'Protein',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 5,
 		equip: ['Oven'],
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Paprika, thyme, and lemon.',
+		blurb: '',
 		ing: [
 			i(1, '', 'whole chicken', 'meat', '4–5 lb'),
 			i(1, 'tbsp', 'olive oil', 'oil'),
@@ -580,19 +597,117 @@ export const RECIPES: Recipe[] = [
 		notes: []
 	},
 
-	/* ---------- Veggies & Sides ---------- */
+	{
+		id: 'salmon',
+		title: 'Salmon',
+		section: 'Protein',
+		kind: 'Protein',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 2,
+		equip: ['Oven'],
+		freezer: false,
+		veg: false,
+		by: 'Elyse',
+		blurb: '',
+		ing: [
+			i(2, '', 'salmon fillet', 'meat', '5–6 oz each'),
+			i(0.5, 'tsp', 'paprika', 'spice'),
+			SALT,
+			PEPPER
+		],
+		steps: [
+			'Preheat the oven to 400°F.',
+			'Season the salmon with salt, pepper, and paprika.',
+			'Roast for 12–15 minutes, until it flakes easily.'
+		],
+		notes: []
+	},
+	{
+		id: 'chicken-thighs',
+		title: 'Chicken Thighs',
+		section: 'Protein',
+		kind: 'Protein',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Oven'],
+		freezer: false,
+		veg: false,
+		by: 'Elyse',
+		blurb: '',
+		ing: [
+			i(2, 'lb', 'boneless skinless chicken thighs', 'meat'),
+			i(1.5, 'tbsp', 'olive oil', 'oil'),
+			i(1, 'tsp', 'paprika', 'spice'),
+			i(1, 'tsp', 'dried oregano', 'spice'),
+			i(1, 'tsp', 'dried thyme', 'spice'),
+			i(0.5, 'tsp', 'salt', 'spice'),
+			i(0.5, 'tsp', 'black pepper', 'spice'),
+			i(1, '', 'lemon', 'produce', 'cut into wedges')
+		],
+		steps: [
+			'Preheat the oven to 425°F.',
+			'Toss the chicken with the oil and the spices. Spread on a sheet pan.',
+			'Roast 20–25 minutes, until the chicken reaches 165°F.',
+			'Squeeze the lemon over the top before serving.'
+		],
+		notes: []
+	},
+	{
+		id: 'meatballs',
+		title: 'Low-Fat Meatballs',
+		section: 'Protein',
+		kind: 'Protein',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Oven'],
+		freezer: false,
+		veg: false,
+		by: 'Elyse',
+		blurb: '',
+		ing: [i(24, 'oz', 'low-fat meatballs', 'meat', 'pre-made, or ground turkey')],
+		steps: ['Bake the meatballs per the package directions.'],
+		notes: []
+	},
+	{
+		id: 'lentils',
+		title: 'Lentils',
+		section: 'Protein',
+		kind: 'Protein',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Stovetop'],
+		freezer: false,
+		veg: true,
+		by: 'Elyse',
+		blurb: '',
+		ing: [
+			i(1, 'cup', 'green or brown lentils', 'dry', 'dry, or 2 cans, drained and rinsed'),
+			i(3, 'cup', 'water', 'other')
+		],
+		steps: [
+			'Simmer the lentils in about 3 cups water for 20–25 minutes until tender; drain. Skip this step if using canned.'
+		],
+		notes: []
+	},
+
+	/* ---------- Veggies ---------- */
 	{
 		id: 'broccoli',
 		title: 'Frozen Broccoli',
-		section: 'Veggies & Sides',
+		section: 'Veggies',
 		kind: 'Side',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 4,
 		equip: ['Oven'],
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Roasted broccoli with parmesan.',
+		blurb: '',
 		ing: [
 			i(1, 'lb', 'frozen broccoli florets', 'frozen'),
 			i(1, 'tbsp', 'olive oil', 'oil'),
@@ -612,13 +727,14 @@ export const RECIPES: Recipe[] = [
 		title: 'Instant Pot Mashed Potatoes',
 		section: 'Carbs',
 		kind: 'Carb',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 4,
 		equip: ['Instant Pot'],
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Creamy Yukon potatoes with parmesan.',
+		blurb: '',
 		ing: [
 			i(2, 'lb', 'Yukon potatoes', 'produce', 'cubed'),
 			i(1, 'cup', 'milk or broth', 'dairy', 'half and half is best'),
@@ -636,15 +752,16 @@ export const RECIPES: Recipe[] = [
 	{
 		id: 'arugula-salad',
 		title: 'Simple Arugula Salad',
-		section: 'Veggies & Sides',
+		section: 'Veggies',
 		kind: 'Side',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 2,
 		equip: [],
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Peppery arugula, lemon, and parmesan.',
+		blurb: '',
 		ing: [
 			i(5, 'oz', 'arugula', 'produce'),
 			i(1, 'tbsp', 'olive oil', 'oil'),
@@ -660,19 +777,127 @@ export const RECIPES: Recipe[] = [
 		notes: ['Use fresh lemons for the juice if you have them.']
 	},
 
+	{
+		id: 'asparagus',
+		title: 'Roasted Asparagus',
+		section: 'Veggies',
+		kind: 'Side',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 2,
+		equip: ['Oven'],
+		freezer: false,
+		veg: true,
+		by: 'Elyse',
+		blurb: '',
+		ing: [
+			i(1, 'lb', 'asparagus', 'produce', 'trimmed'),
+			i(1, 'tbsp', 'olive oil', 'oil'),
+			SALT,
+			PEPPER
+		],
+		steps: [
+			'Preheat the oven to 400°F.',
+			'Toss the asparagus with the olive oil, salt, and pepper.',
+			'Roast for 15 minutes.'
+		],
+		notes: []
+	},
+	{
+		id: 'roasted-fennel',
+		title: 'Roasted Fennel',
+		section: 'Veggies',
+		kind: 'Side',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 2,
+		equip: ['Oven'],
+		freezer: false,
+		veg: true,
+		by: 'Elyse',
+		blurb: '',
+		ing: [
+			i(1, '', 'fennel bulb', 'produce', 'large, sliced'),
+			i(1, 'tbsp', 'olive oil', 'oil'),
+			i(0.5, 'tsp', 'cumin', 'spice'),
+			i(0.25, 'tsp', 'smoked paprika', 'spice'),
+			SALT,
+			PEPPER
+		],
+		steps: [
+			'Preheat the oven to 425°F.',
+			'Toss the fennel with the oil, cumin, paprika, salt, and pepper.',
+			'Roast on a sheet pan for 25–30 minutes, flipping halfway.'
+		],
+		notes: []
+	},
+	{
+		id: 'cucumber-salad',
+		title: 'Lemony Cucumber Tomato Salad',
+		section: 'Veggies',
+		kind: 'Side',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: [],
+		freezer: false,
+		veg: true,
+		by: 'Elyse',
+		blurb: '',
+		ing: [
+			i(6, '', 'mini cucumber', 'produce', 'diced'),
+			i(1, 'pint', 'cherry tomatoes', 'produce', 'halved'),
+			i(0.25, 'cup', 'fresh parsley', 'produce', 'chopped'),
+			i(0.75, 'cup', 'plain Greek yogurt', 'dairy'),
+			i(2, 'tbsp', 'lemon juice', 'produce'),
+			i(0.25, 'tsp', 'salt', 'spice')
+		],
+		steps: [
+			'Mix the yogurt, lemon juice, parsley, and salt.',
+			'Toss the cucumber and tomatoes with the yogurt mixture.'
+		],
+		notes: []
+	},
+	{
+		id: 'roasted-carrots',
+		title: 'Roasted Carrots',
+		section: 'Veggies',
+		kind: 'Side',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Oven'],
+		freezer: false,
+		veg: true,
+		by: 'Elyse',
+		blurb: '',
+		ing: [
+			i(1, 'lb', 'carrots', 'produce', 'crinkle-cut works well'),
+			i(1, 'tbsp', 'olive oil', 'oil'),
+			SALT
+		],
+		steps: [
+			'Preheat the oven to 400°F.',
+			'Toss the carrots with the olive oil and salt.',
+			'Roast for 25 minutes.'
+		],
+		notes: []
+	},
+
 	/* ---------- Carbs (each recipe is 1 cup dry) ---------- */
 	{
 		id: 'white-rice',
 		title: 'White Rice',
 		section: 'Carbs',
 		kind: 'Carb',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 3,
 		equip: ['Instant Pot'],
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Plain white rice.',
+		blurb: '',
 		ing: [i(1, 'cup', 'white rice', 'dry'), i(1, 'cup', 'water', 'other')],
 		steps: [
 			'Add the rice and water to the Instant Pot.',
@@ -686,13 +911,14 @@ export const RECIPES: Recipe[] = [
 		title: 'Brown Rice',
 		section: 'Carbs',
 		kind: 'Carb',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 3,
 		equip: ['Instant Pot'],
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Nutty brown rice.',
+		blurb: '',
 		ing: [i(1, 'cup', 'brown rice', 'dry'), i(1.25, 'cup', 'water', 'other')],
 		steps: [
 			'Add the rice and water to the Instant Pot.',
@@ -706,13 +932,14 @@ export const RECIPES: Recipe[] = [
 		title: 'Sushi Rice',
 		section: 'Carbs',
 		kind: 'Carb',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 3,
 		equip: ['Instant Pot'],
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Sticky rice seasoned with rice vinegar.',
+		blurb: '',
 		ing: [
 			i(1, 'cup', 'sushi rice', 'dry'),
 			i(1.25, 'cup', 'water', 'other'),
@@ -731,13 +958,14 @@ export const RECIPES: Recipe[] = [
 		title: 'Quinoa',
 		section: 'Carbs',
 		kind: 'Carb',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 3,
 		equip: ['Stovetop'],
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Plain quinoa.',
+		blurb: '',
 		ing: [i(1, 'cup', 'quinoa', 'dry'), i(2, 'cup', 'water', 'other')],
 		steps: [
 			'Rinse the quinoa.',
@@ -751,15 +979,71 @@ export const RECIPES: Recipe[] = [
 		title: 'Pearled Couscous',
 		section: 'Carbs',
 		kind: 'Carb',
+		weekly: true,
 		meal: ['everyday'],
 		servings: 3,
 		equip: ['Stovetop'],
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Plain pearled couscous.',
+		blurb: '',
 		ing: [i(1, 'cup', 'pearled couscous', 'dry'), i(1.25, 'cup', 'water', 'other')],
 		steps: ['Simmer the couscous in the water for 10 minutes.'],
+		notes: []
+	},
+
+	{
+		id: 'sweet-potatoes',
+		title: 'Roasted Sweet Potatoes',
+		section: 'Carbs',
+		kind: 'Carb',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Oven'],
+		freezer: false,
+		veg: true,
+		by: 'Elyse',
+		blurb: '',
+		ing: [
+			i(2, '', 'sweet potato', 'produce', 'medium, cubed'),
+			i(1, 'tbsp', 'olive oil', 'oil'),
+			i(1, 'tsp', 'cumin', 'spice'),
+			i(0.25, 'tsp', 'smoked paprika', 'spice'),
+			SALT,
+			PEPPER
+		],
+		steps: [
+			'Preheat the oven to 425°F.',
+			'Toss the sweet potatoes with the oil, cumin, paprika, salt, and pepper.',
+			'Roast on a sheet pan for 25–30 minutes, flipping halfway.'
+		],
+		notes: []
+	},
+	{
+		id: 'roasted-potatoes',
+		title: 'Roasted Potatoes & Red Onion',
+		section: 'Carbs',
+		kind: 'Carb',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Oven'],
+		freezer: false,
+		veg: true,
+		by: 'Elyse',
+		blurb: '',
+		ing: [
+			i(1.5, 'lb', 'baby potatoes', 'produce', 'halved'),
+			i(1, '', 'red onion', 'produce', 'large, cut into wedges'),
+			i(1.5, 'tbsp', 'olive oil', 'oil'),
+			i(0.5, 'tsp', 'salt', 'spice')
+		],
+		steps: [
+			'Preheat the oven to 425°F.',
+			'Toss the potatoes and onion wedges with the oil and salt. Spread on a large sheet pan.',
+			'Roast 35–40 minutes, stirring once, until golden.'
+		],
 		notes: []
 	},
 

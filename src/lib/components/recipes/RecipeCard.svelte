@@ -15,7 +15,9 @@
 >
 	<a href="/recipes/view#{r.id}" class="flex flex-1 flex-col gap-2 p-5">
 		<h3 class="font-display text-xl font-black">{r.title}</h3>
-		<p class="line-clamp-3 flex-1 text-sm text-ink/75">{r.blurb}</p>
+		{#if r.blurb}<p class="line-clamp-3 flex-1 text-sm text-ink/75">{r.blurb}</p>{:else}<span
+				class="flex-1"
+			></span>{/if}
 	</a>
 	<div
 		class="flex items-center justify-between gap-3 border-t-[2.5px] border-ink bg-cream-2 px-5 py-3"

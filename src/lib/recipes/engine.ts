@@ -376,7 +376,7 @@ export function proteinOf(r) {
 	return 'Plant-based';
 }
 export function planPool(all) {
-	return all.filter((r) => r.kind === 'Main' && (r.meal || []).includes('everyday'));
+	return all.filter((r) => r.kind === 'Main' && r.weekly);
 }
 export function hashStr(s) {
 	let h = 0;
@@ -417,22 +417,22 @@ export function makeCombo(all, ids) {
 	};
 }
 
-const everyday = (all, kind) =>
-	all.filter((r) => r.kind === kind && (r.meal || []).includes('everyday'));
+const weekly = (all, kind) => all.filter((r) => r.kind === kind && r.weekly);
 export const comboParts = (all) => ({
-	protein: everyday(all, 'Protein'),
-	veg: everyday(all, 'Side'),
-	carb: everyday(all, 'Carb')
+	protein: weekly(all, 'Protein'),
+	veg: weekly(all, 'Side'),
+	carb: weekly(all, 'Carb')
 });
 
 /* ---- what goes with what ----
  * One protein, one non-starchy veg, one starch. Potatoes are a starch, so never beside rice.
  * - Salad goes with quinoa or pearled couscous (grains that suit a cool plate), not rice or mash.
  * - Sushi rice is for fish only.
- * - Mashed potatoes go with the roasts (whole chicken, pork loin) and a hot veg, not wings.
+ * - Mashed potatoes go with the roasts (whole chicken, chicken thighs, pork loin), not wings.
  * Parts may be missing (a two-part combo); only the parts present are checked. */
 const isSalad = (r) => !!r && /salad/i.test(r.title);
 const WHOLE_GRAIN = ['brown-rice', 'quinoa'];
+const ROASTS = ['whole-chicken', 'pork-loin', 'chicken-thighs'];
 
 export function pairOk(parts) {
 	const by = (k) => parts.find((r) => r && r.kind === k);
@@ -443,7 +443,7 @@ export function pairOk(parts) {
 	if (carb.id === 'sushi-rice' && protein && proteinOf(protein) !== 'Fish') return false;
 	if (isSalad(veg) && !['quinoa', 'pearled-couscous'].includes(carb.id)) return false;
 	if (carb.id === 'mashed-potatoes') {
-		if (protein && !['whole-chicken', 'pork-loin'].includes(protein.id)) return false;
+		if (protein && !ROASTS.includes(protein.id)) return false;
 	}
 	return true;
 }
@@ -464,6 +464,12 @@ export function pairFit(parts) {
 		if (carb.id === 'mashed-potatoes') f += 1.5;
 	}
 	if (protein && protein.id === 'wings' && isSalad(veg)) f += 1; // something fresh against fried skin
+	// Pairings that are classics from the recipe book itself.
+	if (protein && protein.id === 'salmon' && veg && veg.id === 'asparagus') f += 1.5;
+	if (protein && protein.id === 'salmon' && carb && /rice/.test(carb.id)) f += 1;
+	if (protein && protein.id === 'meatballs' && veg && veg.id === 'cucumber-salad') f += 1.5;
+	if (protein && protein.id === 'chicken-thighs' && carb && carb.id === 'roasted-potatoes') f += 1;
+	if (protein && protein.id === 'lentils' && carb && /rice/.test(carb.id)) f += 0.5;
 	return f;
 }
 
@@ -501,16 +507,21 @@ export function suggestCombos(all, planned, have, n) {
 		})
 		.sort((a, b) => b.score - a.score || (a.r.id < b.r.id ? -1 : 1));
 	const out = [];
-	const proteins = new Set();
-	const sides = new Set();
-	for (const c of scored) {
-		const [p, v, k] = c.r.parts;
-		// A different protein, and a different veg + starch pairing, each time.
-		if (proteins.has(p) || sides.has(v + '|' + k)) continue;
-		proteins.add(p);
-		sides.add(v + '|' + k);
-		out.push(c);
-		if (out.length >= n) break;
+	// Prefer different proteins, veg and starches across the suggestions; relax if there are too few.
+	for (const strict of [3, 2, 1]) {
+		const seen = [new Set(), new Set(), new Set()];
+		out.forEach((c) => c.r.parts.forEach((id, n) => seen[n].add(id)));
+		for (const c of scored) {
+			if (out.length >= n) break;
+			if (out.includes(c)) continue;
+			const [p, v, k] = c.r.parts;
+			const clash = [seen[0].has(p), seen[1].has(v), seen[2].has(k)];
+			if (clash[0] || (strict >= 2 && clash[2]) || (strict >= 3 && clash[1])) continue;
+			out.push(c);
+			seen[0].add(p);
+			seen[1].add(v);
+			seen[2].add(k);
+		}
 	}
 	return out;
 }
@@ -541,7 +552,16 @@ export function buildPlans(all, n, shuffle, opts) {
 		});
 		return c;
 	};
-	const hub = (r) => pool.reduce((t, o) => t + (o === r ? 0 : pair(r, o)), 0);
+	const mains = pool.filter((r) => !r.parts);
+	const hubs = new Map();
+	const hub = (r) => {
+		if (!hubs.has(r.id))
+			hubs.set(
+				r.id,
+				mains.reduce((t, o) => t + (o === r ? 0 : pair(r, o)), 0) // overlap with the regular mains only
+			);
+		return hubs.get(r.id);
+	};
 	const have = new Set(opts.have || []);
 	const matches = (r) => [...have].filter((h) => cores.get(r.id).has(h)).length;
 	const used = new Map();
@@ -565,8 +585,9 @@ export function buildPlans(all, n, shuffle, opts) {
 				if (o.veg && r.veg && !chosen.some((c) => c.veg)) s += 2;
 				s += matches(r) * 6; // ingredients already on hand
 				s += r.fit || 0; // how well a combo's parts go together
+				if (r.parts) s += ((hashStr(r.id + ':' + shuffle) % 100) / 100) * 4; // so shuffling varies the combos
 				s -= (used.get(r.id) || 0) * 3;
-				if (r.parts) s -= r.parts.reduce((t, id) => t + (used.get(id) || 0), 0) * 6; // vary the combos
+				if (r.parts) s -= r.parts.reduce((t, id) => t + (used.get(id) || 0), 0) * 12; // vary the combos
 				s += (((hashStr(r.id) + shuffle * 37) % 10) / 10) * 1.2;
 				if (s > bs) {
 					bs = s;

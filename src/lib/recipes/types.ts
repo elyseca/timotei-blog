@@ -12,6 +12,8 @@ export interface Recipe {
 	blurb: string;
 	section: string;
 	kind?: string;
+	/** Easy weekly dish: the meal planner and combos only use recipes with this set. */
+	weekly?: boolean;
 	meal: string[];
 	by: string;
 	servings: number;

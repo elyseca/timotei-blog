@@ -54,7 +54,9 @@
 			>
 				{r.title}
 			</h1>
-			<p class="rise-in mt-4 max-w-2xl text-lg text-ink/80" style="--delay: 140ms">{r.blurb}</p>
+			{#if r.blurb}<p class="rise-in mt-4 max-w-2xl text-lg text-ink/80" style="--delay: 140ms">
+					{r.blurb}
+				</p>{/if}
 			<div class="rise-in mt-5 flex flex-wrap gap-2" style="--delay: 200ms">
 				{#each tags as t (t)}<span class="brutal-tag">{t}</span>{/each}
 			</div>
