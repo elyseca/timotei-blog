@@ -1,0 +1,139 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+	--color-cream: #f5efe2;
+	--color-cream-2: #ede4d0;
+	--color-ink: #141414;
+
+	--color-purple: #7b5cfa;
+	--color-blue: #4c6ff5;
+	--color-mustard: #e8a63c;
+	--color-coral: #dd6f5c;
+	--color-teal: #5bb8ac;
+	--color-lime: #cfe83b;
+
+	--font-display: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+	--font-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+	--font-mono: 'Space Mono', ui-monospace, SFMono-Regular, monospace;
+
+	--shadow-hard-sm: 3px 3px 0 0 var(--color-ink);
+	--shadow-hard: 5px 5px 0 0 var(--color-ink);
+	--shadow-hard-lg: 8px 8px 0 0 var(--color-ink);
+}
+
+@layer base {
+	html {
+		background: var(--color-cream);
+		cursor: url('/cursors/cursor-arrow.cur'), auto;
+		scroll-behavior: smooth;
+	}
+
+	body {
+		font-family: var(--font-sans);
+		color: var(--color-ink);
+		-webkit-font-smoothing: antialiased;
+	}
+
+	a,
+	button,
+	[role='button'],
+	input[type='submit'],
+	input[type='checkbox'],
+	input[type='radio'],
+	select,
+	label {
+		cursor: url('/cursors/cursor-pointer.cur'), pointer;
+	}
+
+	p,
+	li,
+	blockquote,
+	dt,
+	dd,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	input:not([type='submit'], [type='checkbox'], [type='radio']),
+	textarea,
+	[contenteditable] {
+		cursor: url('/cursors/cursor-text.cur'), text;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		font-family: var(--font-display);
+		font-weight: 900;
+		letter-spacing: -0.02em;
+		line-height: 1.05;
+	}
+}
+
+@layer components {
+	/* Thick-border, hard-shadow "neubrutalist" card */
+	.brutal-box {
+		border: 2.5px solid var(--color-ink);
+		border-radius: 0.75rem;
+		box-shadow: var(--shadow-hard);
+		background: white;
+	}
+
+	.brutal-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-family: var(--font-mono);
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		font-size: 0.875rem;
+		border: 2.5px solid var(--color-ink);
+		border-radius: 0.6rem;
+		padding: 0.7rem 1.4rem;
+		background: var(--color-lime);
+		color: var(--color-ink);
+		box-shadow: var(--shadow-hard-sm);
+		transition:
+			transform 120ms ease,
+			box-shadow 120ms ease;
+	}
+
+	.brutal-btn:hover {
+		transform: translate(-2px, -2px);
+		box-shadow: 6px 6px 0 0 var(--color-ink);
+	}
+
+	.brutal-btn:active {
+		transform: translate(1px, 1px);
+		box-shadow: 2px 2px 0 0 var(--color-ink);
+	}
+
+	.brutal-tag {
+		display: inline-block;
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		border: 2px solid var(--color-ink);
+		border-radius: 999px;
+		padding: 0.2rem 0.65rem;
+		background: white;
+	}
+
+	.grid-bg {
+		background-image:
+			linear-gradient(rgba(20, 20, 20, 0.08) 1.5px, transparent 1.5px),
+			linear-gradient(90deg, rgba(20, 20, 20, 0.08) 1.5px, transparent 1.5px);
+		background-size: 32px 32px;
+	}
+
+	.post-prose :where(p, ul, ol, blockquote):not(:where([class~='not-prose'] *)) {
+		font-family: var(--font-sans);
+	}
+}
