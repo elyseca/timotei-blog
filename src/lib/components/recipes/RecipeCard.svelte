@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { S } from '$lib/recipes/store.svelte';
-	import { hasGarlic } from '$lib/recipes/engine';
 	import { togglePlan } from '$lib/recipes/plan';
 	import type { Recipe } from '$lib/recipes/types';
 
 	let { r }: { r: Recipe } = $props();
 	const inPlan = $derived(S.plan.some((p) => p.id === r.id));
+	const note = $derived(
+		[r.freezer ? 'Freezes' : '', r.by && r.by !== 'Elyse' ? r.by : ''].filter(Boolean).join(' · ')
+	);
 </script>
 
 <article
@@ -14,15 +16,12 @@
 	<a href="/recipes/view#{r.id}" class="flex flex-1 flex-col gap-2 p-5">
 		<h3 class="font-display text-xl font-black">{r.title}</h3>
 		<p class="line-clamp-3 flex-1 text-sm text-ink/75">{r.blurb}</p>
-		{#if hasGarlic(r)}<span class="brutal-tag self-start bg-mustard">Contains garlic</span>{/if}
 	</a>
 	<div
 		class="flex items-center justify-between gap-3 border-t-[2.5px] border-ink bg-cream-2 px-5 py-3"
 	>
 		<span class="font-mono text-xs font-bold tracking-wide text-ink/60 uppercase">
-			Serves {r.servings}{r.freezer ? ' · Freezes' : ''}{r.by && r.by !== 'Elyse'
-				? ' · ' + r.by
-				: ''}
+			{note}
 		</span>
 		<button
 			type="button"

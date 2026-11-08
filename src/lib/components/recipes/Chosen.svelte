@@ -7,6 +7,7 @@
 		fmtQty,
 		comboParts,
 		suggestCombos,
+		pairOk,
 		WEEK_MEALS
 	} from '$lib/recipes/engine';
 	import {
@@ -88,6 +89,14 @@
 		) as { r: Recipe; shared: string[] }[]
 	);
 	let pick = $state({ protein: '', veg: '', carb: '' });
+	// Only offer parts that go with what is already picked.
+	const chosen = $derived(
+		[pick.protein, pick.veg, pick.carb].map((id) => all.find((r) => r.id === id))
+	);
+	const fits = (role: 'protein' | 'veg' | 'carb') =>
+		options[role].filter((r) =>
+			pairOk(chosen.filter((c): c is Recipe => !!c && c.kind !== r.kind).concat(r))
+		);
 	const picked = $derived([pick.protein, pick.veg, pick.carb].filter(Boolean));
 	const names = (r: Recipe) => (r.parts ?? []).map((id) => byId(id)?.title ?? id).join(' · ');
 	function addPicked() {
@@ -239,15 +248,15 @@
 		<div class="mt-4 flex flex-wrap items-center gap-3">
 			<select class="brutal-field w-auto" aria-label="Protein" bind:value={pick.protein}>
 				<option value="">Protein</option>
-				{#each options.protein as r (r.id)}<option value={r.id}>{r.title}</option>{/each}
+				{#each fits('protein') as r (r.id)}<option value={r.id}>{r.title}</option>{/each}
 			</select>
 			<select class="brutal-field w-auto" aria-label="Veg" bind:value={pick.veg}>
 				<option value="">Veg</option>
-				{#each options.veg as r (r.id)}<option value={r.id}>{r.title}</option>{/each}
+				{#each fits('veg') as r (r.id)}<option value={r.id}>{r.title}</option>{/each}
 			</select>
 			<select class="brutal-field w-auto" aria-label="Carb" bind:value={pick.carb}>
 				<option value="">Carb</option>
-				{#each options.carb as r (r.id)}<option value={r.id}>{r.title}</option>{/each}
+				{#each fits('carb') as r (r.id)}<option value={r.id}>{r.title}</option>{/each}
 			</select>
 			<button type="button" class="brutal-btn" disabled={picked.length < 2} onclick={addPicked}>
 				Add

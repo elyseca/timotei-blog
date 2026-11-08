@@ -1,18 +1,13 @@
 <script lang="ts">
 	import { S, byId, allRecipes } from '$lib/recipes/store.svelte';
 	import { MEALS } from '$lib/recipes/data';
-	import { lineText, fmtQty, hasGarlic, similar } from '$lib/recipes/engine';
-	import { togglePlan, ppl, daysText } from '$lib/recipes/plan';
-	import Stepper from './Stepper.svelte';
+	import { lineText, similar } from '$lib/recipes/engine';
+	import { togglePlan } from '$lib/recipes/plan';
 
 	let { id }: { id: string } = $props();
 
 	const r = $derived(byId(id));
-	// The page re-creates this component for each recipe ({#key}), so reading the starting value once is fine.
-	// svelte-ignore state_referenced_locally
-	let viewServ = $state(byId(id)?.servings ?? 1);
 
-	const f = $derived(r ? viewServ / r.servings : 1);
 	const inPlan = $derived(S.plan.some((p) => p.id === id));
 	const sim = $derived(
 		r
@@ -62,7 +57,6 @@
 			<p class="rise-in mt-4 max-w-2xl text-lg text-ink/80" style="--delay: 140ms">{r.blurb}</p>
 			<div class="rise-in mt-5 flex flex-wrap gap-2" style="--delay: 200ms">
 				{#each tags as t (t)}<span class="brutal-tag">{t}</span>{/each}
-				{#if hasGarlic(r)}<span class="brutal-tag bg-mustard">Contains garlic</span>{/if}
 			</div>
 			<p
 				class="rise-in mt-4 font-mono text-xs font-bold tracking-wide text-ink/70 uppercase"
@@ -94,30 +88,12 @@
 	<div class="mx-auto grid max-w-6xl gap-10 px-5 py-12 md:px-8 lg:grid-cols-[22rem_1fr]">
 		<aside class="flex flex-col gap-6">
 			<div class="brutal-box bg-white p-5">
-				<div class="flex items-center justify-between gap-3">
-					<span class="font-mono text-xs font-bold tracking-wide uppercase">Servings</span>
-					<Stepper
-						value={viewServ}
-						label="Servings"
-						ondec={() => (viewServ = Math.max(1, viewServ - 1))}
-						oninc={() => (viewServ = Math.min(48, viewServ + 1))}
-					/>
-				</div>
-				<p class="mt-3 text-xs text-ink/70">
-					{viewServ} servings = {fmtQty(viewServ / S.household)} meals each for {ppl(S.household)},
-					about {daysText(viewServ / S.household)}.
-				</p>
-				{#if f !== 1}
-					<p class="mt-1 text-xs text-ink/70">
-						Scaled from {r.servings}. Step amounts are for the full recipe.
-					</p>
-				{/if}
-				<ul class="mt-4 flex flex-col">
+				<ul class="flex flex-col">
 					{#each r.ing as x, i (i)}
 						<li
 							class="flex flex-wrap justify-between gap-x-3 border-b border-ink/10 py-2 text-sm last:border-0"
 						>
-							<span>{lineText(x, f)}</span>
+							<span>{lineText(x)}</span>
 							{#if x.note}<em class="text-ink/50">{x.note}</em>{/if}
 						</li>
 					{/each}

@@ -74,7 +74,7 @@ export const RECIPES: Recipe[] = [
 		freezer: true,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Big-batch Instant Pot chili with beans on top and a bag of frozen vegetables.',
+		blurb: 'Turkey, beans, and fire-roasted tomatoes.',
 		ing: [
 			i(1, 'tbsp', 'olive oil', 'oil'),
 			i(2, 'cup', 'chopped onion', 'produce', 'frozen pre-chopped works well'),
@@ -102,62 +102,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'sausage-soup',
-		title: 'Instant Pot Chicken Sausage & Couscous Soup',
-		section: 'Easy Weekly Meals',
-		kind: 'Main',
-		meal: ['everyday'],
-		servings: 6,
-		equip: ['Instant Pot'],
-		freezer: true,
-		veg: false,
-		by: 'Elyse',
-		blurb: 'Chicken sausage, vegetables, and whole-wheat couscous, finished with plenty of lemon.',
-		ing: SS_ING,
-		steps: [
-			'Sauté the sausage in the olive oil until browned. Remove and set aside.',
-			'Sauté the onion, carrots, and celery until softened.',
-			'Add the zucchini and cook 2–3 minutes.',
-			'Add the tomatoes, broth, seasoning, and sausage.',
-			'Pressure cook on High for 5 minutes. Natural release 10 minutes.',
-			'Stir in the couscous and greens; cover for 5 minutes.',
-			'Finish with the lemon juice and the fresh parsley.'
-		],
-		notes: ['Freezes well.']
-	},
-	{
-		id: 'sausage-soup-broil',
-		title: 'Chicken Sausage & Couscous Soup, Oven Version 1: Broiled Base',
-		section: 'Easy Weekly Meals',
-		kind: 'Main',
-		meal: ['everyday'],
-		servings: 6,
-		equip: ['Oven', 'Stovetop'],
-		freezer: true,
-		veg: false,
-		by: 'Elyse',
-		blurb:
-			'Broiling chars the sausage and vegetables for a deeper, roasted broth. Stop after step 5 for a make-ahead base.',
-		ing: SS_ING.concat([
-			i(1, '', 'bay leaf', 'spice'),
-			i(1, '', 'parmesan rind', 'dairy', 'optional')
-		]),
-		steps: [
-			'Set an oven rack about 6 inches under the broiler and heat the broiler to high.',
-			'On a large rimmed sheet pan, toss the sliced sausage with the onions (cut into wedges), carrots, and celery (cut into chunks), 2 tbsp olive oil, salt, and pepper. Spread in a single layer.',
-			'Broil 8–10 minutes, stirring once, until the sausage and onion edges are deeply browned and slightly charred.',
-			'Scrape everything into a large soup pot. Pour 1 cup of the broth onto the hot pan, scrape up the browned bits, and add them to the pot.',
-			'Add the remaining 5 cups broth, the canned tomatoes, oregano, basil, thyme, bay leaf, and parmesan rind. Bring to a boil, then simmer partly covered for 20–25 minutes.',
-			'Add the zucchini and simmer 5 more minutes.',
-			'Stir in the couscous and greens, turn off the heat, and cover for 5 minutes.',
-			'Remove the bay leaf and rind. Finish with the lemon juice, parsley, and salt and pepper.'
-		],
-		notes: [
-			'Make-ahead broth: stop after step 5 and you have a roasted sausage-and-vegetable broth. Cool and refrigerate up to 4 days or freeze up to 3 months, then reheat and finish with steps 6–8.'
-		]
-	},
-	{
-		id: 'sausage-soup-oven',
-		title: 'Chicken Sausage & Couscous Soup, Oven Version 2: All-Oven Dutch Oven',
+		title: 'Chicken Sausage & Couscous Soup',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
 		meal: ['everyday'],
@@ -166,8 +111,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb:
-			'Roast first, then bake covered in one pot. Mostly hands-off; use a 5.5 qt or larger Dutch oven.',
+		blurb: 'Chicken sausage, zucchini, couscous, and lemon.',
 		ing: SS_ING.concat([
 			i(1, '', 'bay leaf', 'spice'),
 			i(1, '', 'parmesan rind', 'dairy', 'optional')
@@ -192,8 +136,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb:
-			'Five minutes under pressure with cooked shredded chicken, salsa verde, and green chiles.',
+		blurb: 'Shredded chicken, salsa verde, and green chiles.',
 		ing: [
 			i(16, 'oz', 'cooked shredded chicken', 'meat'),
 			i(2, 'cup', 'salsa verde', 'pantry'),
@@ -210,7 +153,7 @@ export const RECIPES: Recipe[] = [
 			'Pressure cook on High for 5 minutes.',
 			'Quick release and stir.'
 		],
-		notes: ['Check the salsa verde label for garlic before you buy.']
+		notes: []
 	},
 	{
 		id: 'white-bean-stew',
@@ -223,8 +166,7 @@ export const RECIPES: Recipe[] = [
 		freezer: true,
 		veg: false,
 		by: 'Elyse',
-		blurb:
-			'Double batch for two people to eat for several meals. Baby carrots mean no peeling or chopping.',
+		blurb: 'Chicken thighs, white beans, and baby carrots.',
 		ing: [
 			i(2, 'tbsp', 'olive oil', 'oil'),
 			i(3, '', 'onion', 'produce', 'yellow, diced'),
@@ -277,7 +219,7 @@ export const RECIPES: Recipe[] = [
 		freezer: true,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Golden onions, thyme, and silken tofu blended in for protein and creaminess.',
+		blurb: 'Butternut squash with golden onion and thyme.',
 		ing: [
 			i(1, 'tbsp', 'olive oil', 'oil'),
 			i(2, '', 'onion', 'produce', 'yellow, diced'),
@@ -316,8 +258,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb:
-			'Ground beef, peppers, and scallions in a sweet soy glaze over rice, topped with peanuts.',
+		blurb: 'Ground beef, peppers, and peanuts in sweet soy.',
 		ing: [
 			i(1, 'cup', 'white rice', 'dry'),
 			i(1, 'tbsp', 'olive oil', 'oil'),
@@ -340,9 +281,7 @@ export const RECIPES: Recipe[] = [
 			'Stir in the glaze and ginger; simmer 1–2 minutes until glossy.',
 			'Serve over rice with the peanuts and scallion greens.'
 		],
-		notes: [
-			'Brand note: Kikkoman Sweet Soy Glaze (11.8 oz bottle) is the pick. Its listed ingredients are soy sauce, sweeteners, vinegar, starch, MSG, and preservatives, with no garlic. Check the bottle label each time in case the formula changes, and look closely at any bottled teriyaki sauce, since those often add garlic.'
-		]
+		notes: []
 	},
 	{
 		id: 'meatball-bowls',
@@ -355,7 +294,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Quinoa, low-fat meatballs, and a lemony yogurt-dressed cucumber and tomato salad.',
+		blurb: 'Meatballs, quinoa, and lemony cucumber-tomato salad.',
 		ing: [
 			i(1, 'cup', 'quinoa', 'dry'),
 			i(24, 'oz', 'low-fat meatballs', 'meat', 'pre-made, or ground turkey'),
@@ -375,7 +314,7 @@ export const RECIPES: Recipe[] = [
 			'Optional: roast the carrots at 400°F for 25 minutes.',
 			'Assemble the bowls.'
 		],
-		notes: ['Check the meatball label for garlic before you buy.']
+		notes: []
 	},
 	{
 		id: 'salmon-asparagus',
@@ -388,7 +327,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Sheet-pan salmon and asparagus with Instant Pot rice.',
+		blurb: 'Salmon, asparagus, and rice.',
 		ing: [
 			i(2, '', 'salmon fillet', 'meat', '5–6 oz each'),
 			i(1, 'lb', 'asparagus', 'produce', 'trimmed'),
@@ -416,7 +355,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Potatoes and red onion get a head start, then chicken and broccoli join the pan.',
+		blurb: 'Chicken thighs, potatoes, red onion, and broccoli.',
 		ing: [
 			i(2, 'lb', 'boneless skinless chicken thighs', 'meat'),
 			i(1.5, 'lb', 'baby potatoes', 'produce', 'halved'),
@@ -450,7 +389,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Roasted sweet potato and fennel over lentils and greens with a lemony tahini dressing.',
+		blurb: 'Sweet potato, fennel, and lentils with lemon tahini.',
 		ing: [
 			i(2, '', 'sweet potato', 'produce', 'medium, cubed'),
 			i(1, '', 'fennel bulb', 'produce', 'large, sliced'),
@@ -488,8 +427,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb:
-			'Silken tofu, roasted red peppers, fire-roasted tomatoes, and cashews. Enough for about 1 lb of pasta.',
+		blurb: 'Creamy tomato sauce with roasted red pepper.',
 		ing: [
 			i(1, 'tbsp', 'olive oil', 'oil'),
 			i(1, '', 'onion', 'produce', 'small, diced'),
@@ -511,8 +449,7 @@ export const RECIPES: Recipe[] = [
 			'Gently warm before serving.'
 		],
 		notes: [
-			'About the cashews: "Raw" means plain, unroasted, unsalted cashews, not the roasted, salted snack kind. Soaking softens them so they blend into a smooth, creamy base instead of a gritty one. Cover them with water and soak 2–4 hours, or overnight in the fridge. For a quick soak, cover with just-boiled water for 15–20 minutes. Drain and rinse before blending.',
-			'Check the roasted red pepper jar for garlic before you buy.'
+			'About the cashews: "Raw" means plain, unroasted, unsalted cashews, not the roasted, salted snack kind. Soaking softens them so they blend into a smooth, creamy base instead of a gritty one. Cover them with water and soak 2–4 hours, or overnight in the fridge. For a quick soak, cover with just-boiled water for 15–20 minutes. Drain and rinse before blending.'
 		]
 	},
 	{
@@ -527,8 +464,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb:
-			'Blistered cherry tomatoes and butter beans in a creamy blended sauce. Serve with toasted bread.',
+		blurb: 'Butter beans and cherry tomatoes in a creamy basil sauce.',
 		ing: [
 			i(1, 'tbsp', 'olive oil', 'oil'),
 			i(1, '', 'onion', 'produce', 'small, diced'),
@@ -568,7 +504,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Crisp oven wings with a flour and baking powder coating.',
+		blurb: 'Crisp-skinned wings with salt and pepper.',
 		ing: [
 			i(3, 'lb', 'chicken wings', 'meat'),
 			i(2, 'tbsp', 'flour', 'spice'),
@@ -596,7 +532,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Paprika rub and a Dijon brush. About 4–6 servings.',
+		blurb: 'Paprika and Dijon.',
 		ing: [
 			i(2, 'lb', 'pork loin', 'meat'),
 			i(1, 'tbsp', 'paprika', 'spice'),
@@ -623,7 +559,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: false,
 		by: 'Elyse',
-		blurb: 'Roast once, eat all week. Save the carcass for broth.',
+		blurb: 'Paprika, thyme, and lemon.',
 		ing: [
 			i(1, '', 'whole chicken', 'meat', '4–5 lb'),
 			i(1, 'tbsp', 'olive oil', 'oil'),
@@ -656,7 +592,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Roast straight from frozen. Optional parmesan.',
+		blurb: 'Roasted broccoli with parmesan.',
 		ing: [
 			i(1, 'lb', 'frozen broccoli florets', 'frozen'),
 			i(1, 'tbsp', 'olive oil', 'oil'),
@@ -674,15 +610,15 @@ export const RECIPES: Recipe[] = [
 	{
 		id: 'mashed-potatoes',
 		title: 'Instant Pot Mashed Potatoes',
-		section: 'Veggies & Sides',
-		kind: 'Side',
+		section: 'Carbs',
+		kind: 'Carb',
 		meal: ['everyday'],
 		servings: 4,
 		equip: ['Instant Pot'],
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Yukon potatoes, pressure cooked and mashed with parmesan.',
+		blurb: 'Creamy Yukon potatoes with parmesan.',
 		ing: [
 			i(2, 'lb', 'Yukon potatoes', 'produce', 'cubed'),
 			i(1, 'cup', 'milk or broth', 'dairy', 'half and half is best'),
@@ -708,7 +644,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Arugula, olive oil, lemon, and shaved parmesan.',
+		blurb: 'Peppery arugula, lemon, and parmesan.',
 		ing: [
 			i(5, 'oz', 'arugula', 'produce'),
 			i(1, 'tbsp', 'olive oil', 'oil'),
@@ -724,7 +660,7 @@ export const RECIPES: Recipe[] = [
 		notes: ['Use fresh lemons for the juice if you have them.']
 	},
 
-	/* ---------- Carbs (each recipe is 1 cup dry, about 3 servings) ---------- */
+	/* ---------- Carbs (each recipe is 1 cup dry) ---------- */
 	{
 		id: 'white-rice',
 		title: 'White Rice',
@@ -736,7 +672,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: '1 cup dry makes about 3 servings.',
+		blurb: 'Plain white rice.',
 		ing: [i(1, 'cup', 'white rice', 'dry'), i(1, 'cup', 'water', 'other')],
 		steps: [
 			'Add the rice and water to the Instant Pot.',
@@ -756,7 +692,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: '1 cup dry makes about 3 servings.',
+		blurb: 'Nutty brown rice.',
 		ing: [i(1, 'cup', 'brown rice', 'dry'), i(1.25, 'cup', 'water', 'other')],
 		steps: [
 			'Add the rice and water to the Instant Pot.',
@@ -776,7 +712,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Rinsed well, then seasoned with rice vinegar and sugar.',
+		blurb: 'Sticky rice seasoned with rice vinegar.',
 		ing: [
 			i(1, 'cup', 'sushi rice', 'dry'),
 			i(1.25, 'cup', 'water', 'other'),
@@ -801,7 +737,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: '1 cup dry makes about 3 servings.',
+		blurb: 'Plain quinoa.',
 		ing: [i(1, 'cup', 'quinoa', 'dry'), i(2, 'cup', 'water', 'other')],
 		steps: [
 			'Rinse the quinoa.',
@@ -821,7 +757,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: '1 cup dry makes about 3 servings.',
+		blurb: 'Plain pearled couscous.',
 		ing: [i(1, 'cup', 'pearled couscous', 'dry'), i(1.25, 'cup', 'water', 'other')],
 		steps: ['Simmer the couscous in the water for 10 minutes.'],
 		notes: []
@@ -839,8 +775,7 @@ export const RECIPES: Recipe[] = [
 		freezer: true,
 		veg: true,
 		by: 'Elyse',
-		blurb:
-			"About 12 pan-fried fritters. Serve with eggs, or prosciutto if you don't want to cook more.",
+		blurb: 'Zucchini and carrot, pan-fried.',
 		ing: [
 			i(2, '', 'zucchini', 'produce', 'medium, about 1 lb, shredded'),
 			i(2, '', 'carrot', 'produce', 'shredded'),
@@ -871,7 +806,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Meal-prep jars that keep 4–5 days in the fridge. Serve cold or warmed.',
+		blurb: 'Pumpkin, chia, and oats.',
 		ing: [
 			i(1, 'cup', 'canned pumpkin puree', 'pantry', 'not pie filling'),
 			i(1, 'cup', 'rolled oats', 'dry'),
@@ -913,7 +848,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'The pumpkin pudding as a base for five fruit flavors. Keeps 4–5 days.',
+		blurb: 'Chia-oat pudding in five fruit flavors.',
 		ing: [
 			i(1, 'cup', 'rolled oats', 'dry'),
 			i(0.25, 'cup', 'chia seeds', 'dry'),
@@ -982,7 +917,7 @@ export const RECIPES: Recipe[] = [
 			name: 'Jenna Barnard, Butternut Bakery',
 			url: 'https://butternutbakeryblog.com/best-chocolate-chip-cookies/'
 		},
-		blurb: '9 large or 12 regular cookies. No chilling, mixed by hand in about 30 minutes.',
+		blurb: 'Classic chocolate chip.',
 		ing: [
 			i(1.33333, 'cup', 'all-purpose flour', 'spice', '170 g, spooned into the cup and leveled'),
 			i(0.5, 'tsp', 'baking soda', 'spice'),

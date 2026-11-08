@@ -376,12 +376,7 @@ export function proteinOf(r) {
 	return 'Plant-based';
 }
 export function planPool(all) {
-	return all.filter(
-		(r) =>
-			r.kind === 'Main' &&
-			(r.meal || []).includes('everyday') &&
-			!/^sausage-soup-(broil|oven)$/.test(r.id)
-	);
+	return all.filter((r) => r.kind === 'Main' && (r.meal || []).includes('everyday'));
 }
 export function hashStr(s) {
 	let h = 0;
@@ -430,12 +425,60 @@ export const comboParts = (all) => ({
 	carb: everyday(all, 'Carb')
 });
 
-/** Every full protein + veg + carb combination. */
+/* ---- what goes with what ----
+ * One protein, one non-starchy veg, one starch. Potatoes are a starch, so never beside rice.
+ * - Salad goes with quinoa or pearled couscous (grains that suit a cool plate), not rice or mash.
+ * - Sushi rice is for fish only.
+ * - Mashed potatoes go with the roasts (whole chicken, pork loin) and a hot veg, not wings.
+ * Parts may be missing (a two-part combo); only the parts present are checked. */
+const isSalad = (r) => !!r && /salad/i.test(r.title);
+const WHOLE_GRAIN = ['brown-rice', 'quinoa'];
+
+export function pairOk(parts) {
+	const by = (k) => parts.find((r) => r && r.kind === k);
+	const protein = by('Protein'),
+		veg = by('Side'),
+		carb = by('Carb');
+	if (!carb) return true;
+	if (carb.id === 'sushi-rice' && protein && proteinOf(protein) !== 'Fish') return false;
+	if (isSalad(veg) && !['quinoa', 'pearled-couscous'].includes(carb.id)) return false;
+	if (carb.id === 'mashed-potatoes') {
+		if (protein && !['whole-chicken', 'pork-loin'].includes(protein.id)) return false;
+	}
+	return true;
+}
+
+/** How well the parts suit each other (higher is better): used to rank suggestions. */
+export function pairFit(parts) {
+	const by = (k) => parts.find((r) => r && r.kind === k);
+	const protein = by('Protein'),
+		veg = by('Side'),
+		carb = by('Carb');
+	let f = 0;
+	if (carb) {
+		if (WHOLE_GRAIN.includes(carb.id)) f += 0.5;
+		if (carb.id === 'white-rice') f -= 0.3;
+		if (isSalad(veg) && carb.id === 'quinoa') f += 2;
+		if (isSalad(veg) && carb.id === 'pearled-couscous') f += 1;
+		if (veg && !isSalad(veg) && /rice/.test(carb.id)) f += 1;
+		if (carb.id === 'mashed-potatoes') f += 1.5;
+	}
+	if (protein && protein.id === 'wings' && isSalad(veg)) f += 1; // something fresh against fried skin
+	return f;
+}
+
+/** Every full protein + veg + carb combination that works, best fits carrying a higher `fit`. */
 export function comboList(all) {
 	const { protein, veg, carb } = comboParts(all);
 	const out = [];
 	for (const p of protein)
-		for (const v of veg) for (const c of carb) out.push(makeCombo(all, [p.id, v.id, c.id]));
+		for (const v of veg)
+			for (const c of carb) {
+				if (!pairOk([p, v, c])) continue;
+				const combo = makeCombo(all, [p.id, v.id, c.id]);
+				combo.fit = pairFit([p, v, c]);
+				out.push(combo);
+			}
 	return out;
 }
 
@@ -450,15 +493,22 @@ export function suggestCombos(all, planned, have, n) {
 		.map((r) => {
 			const cores = coreSet(r);
 			const shared = [...cores].filter((c) => base.has(c));
-			return { r, shared, score: shared.length - (cores.size - shared.length) * 0.15 };
+			return {
+				r,
+				shared,
+				score: shared.length - (cores.size - shared.length) * 0.15 + (r.fit || 0)
+			};
 		})
 		.sort((a, b) => b.score - a.score || (a.r.id < b.r.id ? -1 : 1));
 	const out = [];
 	const proteins = new Set();
+	const sides = new Set();
 	for (const c of scored) {
-		const p = c.r.parts[0];
-		if (proteins.has(p)) continue; // a different protein each time
+		const [p, v, k] = c.r.parts;
+		// A different protein, and a different veg + starch pairing, each time.
+		if (proteins.has(p) || sides.has(v + '|' + k)) continue;
 		proteins.add(p);
+		sides.add(v + '|' + k);
 		out.push(c);
 		if (out.length >= n) break;
 	}
@@ -514,6 +564,7 @@ export function buildPlans(all, n, shuffle, opts) {
 				if (o.freezer && r.freezer) s += 4;
 				if (o.veg && r.veg && !chosen.some((c) => c.veg)) s += 2;
 				s += matches(r) * 6; // ingredients already on hand
+				s += r.fit || 0; // how well a combo's parts go together
 				s -= (used.get(r.id) || 0) * 3;
 				if (r.parts) s -= r.parts.reduce((t, id) => t + (used.get(id) || 0), 0) * 6; // vary the combos
 				s += (((hashStr(r.id) + shuffle * 37) % 10) / 10) * 1.2;
