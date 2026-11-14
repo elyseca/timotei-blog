@@ -12,6 +12,7 @@
 	import type { Recipe } from '$lib/recipes/types';
 	import Stepper from './Stepper.svelte';
 	import Controls from './Controls.svelte';
+	import EffortBadge from './EffortBadge.svelte';
 	import Schedule from './Schedule.svelte';
 
 	const items = $derived(planItems());
@@ -84,6 +85,7 @@
 					<p class="font-mono text-xs font-bold tracking-wide text-ink/60 uppercase">
 						{fmtQty(x.servings / S.household)} meals each
 					</p>
+					{#if x.r.mins}<div class="mt-1"><EffortBadge r={x.r} /></div>{/if}
 				</div>
 				<div class="flex items-center gap-4">
 					<Stepper

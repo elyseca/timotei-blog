@@ -29,7 +29,16 @@ function fresh() {
 		sched: {} as Record<string, { slot: number; chef: string; eats: number[] }>,
 		// The slot of the grocery run (null until there is a plan). It stays on or before the first cook.
 		shop: null as number | null,
-		filters: { exclude: [] as string[], plant: false, fresh: false, have: [] as string[] },
+		filters: {
+			exclude: [] as string[],
+			plant: false,
+			fresh: false,
+			// Only recipes that are quick and easy to make.
+			easy: false,
+			// Which meals plans draw from.
+			occasion: 'everyday' as 'everyday' | 'special',
+			have: [] as string[]
+		},
 		weekStart: comingSunday(),
 		cooks: [
 			{ id: 'e', name: 'Elyse', icon: 'shark' },

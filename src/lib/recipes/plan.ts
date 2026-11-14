@@ -217,13 +217,17 @@ export function toggleExclude(m: string) {
 	else S.filters.exclude.push(m);
 	S.shuffle = 0;
 }
+export function setOccasion(o: 'everyday' | 'special') {
+	S.filters.occasion = o;
+	S.shuffle = 0;
+}
 export function toggleHave(name: string) {
 	const i = S.filters.have.indexOf(name);
 	if (i >= 0) S.filters.have.splice(i, 1);
 	else S.filters.have.push(name);
 	S.shuffle = 0;
 }
-export function toggleFilter(key: 'plant' | 'fresh') {
+export function toggleFilter(key: 'plant' | 'fresh' | 'easy') {
 	S.filters[key] = !S.filters[key];
 	S.shuffle = 0;
 }

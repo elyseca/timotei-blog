@@ -13,6 +13,8 @@ export const DEPTS = [
 	['frozen', 'Frozen'],
 	['other', 'Other']
 ];
+/* `mins` is hands-on (`active`) and start-to-table (`total`) time in minutes, excluding overnight
+   chilling. They feed the effort score, so tweak them if a recipe takes you more or less time. */
 /* `weekly: true` marks the easy weekly dishes the meal planner and combos draw from.
    Leave it off for special-occasion recipes. */
 export const SECTIONS = [
@@ -67,6 +69,7 @@ export const RECIPES: Recipe[] = [
 	/* ---------- Easy Weekly Meals ---------- */
 	{
 		id: 'chili',
+		mins: { active: 20, total: 55 },
 		title: 'Chili',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -105,6 +108,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'sausage-soup',
+		mins: { active: 25, total: 90 },
 		title: 'Chicken Sausage & Couscous Soup',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -131,6 +135,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'salsa-verde-soup',
+		mins: { active: 10, total: 30 },
 		title: 'Salsa Verde Chicken Soup',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -162,6 +167,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'white-bean-stew',
+		mins: { active: 30, total: 55 },
 		title: 'One-Pot Chicken & White Bean Stew',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -216,6 +222,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'butternut-soup',
+		mins: { active: 25, total: 60 },
 		title: 'Butternut Squash Soup',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -256,6 +263,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'kung-pao',
+		mins: { active: 25, total: 40 },
 		title: 'Kung Pao Beef Bowls',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -293,6 +301,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'meatball-bowls',
+		mins: { active: 20, total: 45 },
 		title: 'Mediterranean Meatball Bowls',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -327,6 +336,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'salmon-asparagus',
+		mins: { active: 15, total: 35 },
 		title: 'Salmon, Asparagus & White Rice',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -356,6 +366,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'sheet-pan-chicken',
+		mins: { active: 15, total: 50 },
 		title: 'Chicken Thigh & Potato Sheet Pan Meal',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -391,6 +402,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'power-bowl',
+		mins: { active: 30, total: 55 },
 		title: 'Roasted Sweet Potato, Fennel & Lentil Power Bowl',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -430,6 +442,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'vodka-sauce',
+		mins: { active: 20, total: 35 },
 		title: 'Vegan Vodka Sauce (Silken Tofu)',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -467,6 +480,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'butter-beans',
+		mins: { active: 30, total: 40 },
 		title: 'One-Pot Cherry Tomato & Basil Butter Beans',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
@@ -509,6 +523,7 @@ export const RECIPES: Recipe[] = [
 	/* ---------- Protein ---------- */
 	{
 		id: 'wings',
+		mins: { active: 15, total: 65 },
 		title: 'Chicken Wings',
 		section: 'Protein',
 		kind: 'Protein',
@@ -538,6 +553,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'pork-loin',
+		mins: { active: 15, total: 65 },
 		title: 'Pork Loin',
 		section: 'Protein',
 		kind: 'Protein',
@@ -566,6 +582,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'whole-chicken',
+		mins: { active: 20, total: 100 },
 		title: 'Whole Chicken',
 		section: 'Protein',
 		kind: 'Protein',
@@ -599,6 +616,7 @@ export const RECIPES: Recipe[] = [
 
 	{
 		id: 'salmon',
+		mins: { active: 10, total: 25 },
 		title: 'Salmon',
 		section: 'Protein',
 		kind: 'Protein',
@@ -625,6 +643,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'chicken-thighs',
+		mins: { active: 10, total: 40 },
 		title: 'Chicken Thighs',
 		section: 'Protein',
 		kind: 'Protein',
@@ -656,6 +675,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'meatballs',
+		mins: { active: 5, total: 25 },
 		title: 'Low-Fat Meatballs',
 		section: 'Protein',
 		kind: 'Protein',
@@ -673,6 +693,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'lentils',
+		mins: { active: 5, total: 30 },
 		title: 'Lentils',
 		section: 'Protein',
 		kind: 'Protein',
@@ -697,6 +718,7 @@ export const RECIPES: Recipe[] = [
 	/* ---------- Veggies ---------- */
 	{
 		id: 'broccoli',
+		mins: { active: 5, total: 35 },
 		title: 'Frozen Broccoli',
 		section: 'Veggies',
 		kind: 'Side',
@@ -724,6 +746,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'mashed-potatoes',
+		mins: { active: 15, total: 40 },
 		title: 'Instant Pot Mashed Potatoes',
 		section: 'Carbs',
 		kind: 'Carb',
@@ -751,6 +774,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'arugula-salad',
+		mins: { active: 10, total: 10 },
 		title: 'Simple Arugula Salad',
 		section: 'Veggies',
 		kind: 'Side',
@@ -779,6 +803,7 @@ export const RECIPES: Recipe[] = [
 
 	{
 		id: 'asparagus',
+		mins: { active: 5, total: 20 },
 		title: 'Roasted Asparagus',
 		section: 'Veggies',
 		kind: 'Side',
@@ -805,6 +830,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'roasted-fennel',
+		mins: { active: 10, total: 40 },
 		title: 'Roasted Fennel',
 		section: 'Veggies',
 		kind: 'Side',
@@ -833,6 +859,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'cucumber-salad',
+		mins: { active: 10, total: 10 },
 		title: 'Lemony Cucumber Tomato Salad',
 		section: 'Veggies',
 		kind: 'Side',
@@ -860,6 +887,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'roasted-carrots',
+		mins: { active: 5, total: 30 },
 		title: 'Roasted Carrots',
 		section: 'Veggies',
 		kind: 'Side',
@@ -887,6 +915,7 @@ export const RECIPES: Recipe[] = [
 	/* ---------- Carbs (each recipe is 1 cup dry) ---------- */
 	{
 		id: 'white-rice',
+		mins: { active: 3, total: 25 },
 		title: 'White Rice',
 		section: 'Carbs',
 		kind: 'Carb',
@@ -908,6 +937,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'brown-rice',
+		mins: { active: 3, total: 40 },
 		title: 'Brown Rice',
 		section: 'Carbs',
 		kind: 'Carb',
@@ -929,6 +959,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'sushi-rice',
+		mins: { active: 8, total: 35 },
 		title: 'Sushi Rice',
 		section: 'Carbs',
 		kind: 'Carb',
@@ -955,6 +986,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'quinoa',
+		mins: { active: 5, total: 25 },
 		title: 'Quinoa',
 		section: 'Carbs',
 		kind: 'Carb',
@@ -976,6 +1008,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'pearled-couscous',
+		mins: { active: 3, total: 12 },
 		title: 'Pearled Couscous',
 		section: 'Carbs',
 		kind: 'Carb',
@@ -994,6 +1027,7 @@ export const RECIPES: Recipe[] = [
 
 	{
 		id: 'sweet-potatoes',
+		mins: { active: 8, total: 40 },
 		title: 'Roasted Sweet Potatoes',
 		section: 'Carbs',
 		kind: 'Carb',
@@ -1022,6 +1056,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'roasted-potatoes',
+		mins: { active: 10, total: 50 },
 		title: 'Roasted Potatoes & Red Onion',
 		section: 'Carbs',
 		kind: 'Carb',
@@ -1050,6 +1085,7 @@ export const RECIPES: Recipe[] = [
 	/* ---------- Breakfast ---------- */
 	{
 		id: 'fritters',
+		mins: { active: 25, total: 30 },
 		title: 'Zucchini Carrot Fritters',
 		section: 'Breakfast',
 		kind: 'Breakfast',
@@ -1081,6 +1117,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'pumpkin-pudding',
+		mins: { active: 15, total: 25 },
 		title: 'Pumpkin Chia-Oat Pudding',
 		section: 'Breakfast',
 		kind: 'Breakfast',
@@ -1123,6 +1160,7 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'chia-variations',
+		mins: { active: 10, total: 20 },
 		title: 'Chia-Oat Pudding Variations',
 		section: 'Breakfast',
 		kind: 'Breakfast',
@@ -1188,6 +1226,7 @@ export const RECIPES: Recipe[] = [
 	/* ---------- Sweet Treats ---------- */
 	{
 		id: 'choc-chip-cookies',
+		mins: { active: 30, total: 60 },
 		title: 'Chocolate Chip Cookies (À la Analise)',
 		section: 'Sweet Treats',
 		kind: 'Treat',

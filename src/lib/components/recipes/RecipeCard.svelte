@@ -2,6 +2,7 @@
 	import { S, ui } from '$lib/recipes/store.svelte';
 	import { togglePlan } from '$lib/recipes/plan';
 	import type { Recipe } from '$lib/recipes/types';
+	import EffortBadge from './EffortBadge.svelte';
 
 	let { r }: { r: Recipe } = $props();
 	// Proteins, veggies and carbs are built into a meal; everything else goes straight to the plan.
@@ -20,6 +21,7 @@
 		{#if r.blurb}<p class="line-clamp-3 flex-1 text-sm text-ink/75">{r.blurb}</p>{:else}<span
 				class="flex-1"
 			></span>{/if}
+		{#if r.mins}<EffortBadge {r} mode="short" />{/if}
 	</a>
 	<div
 		class="flex items-center justify-between gap-3 border-t-[2.5px] border-ink bg-cream-2 px-5 py-3"

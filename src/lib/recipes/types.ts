@@ -17,6 +17,8 @@ export interface Recipe {
 	meal: string[];
 	by: string;
 	servings: number;
+	/** Minutes: hands-on work (`active`) and start to table (`total`). */
+	mins?: { active: number; total: number };
 	equip?: string[];
 	tags?: string[];
 	freezer?: boolean;

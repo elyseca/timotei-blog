@@ -3,6 +3,7 @@
 	import { MEALS } from '$lib/recipes/data';
 	import { lineText, similar } from '$lib/recipes/engine';
 	import { togglePlan } from '$lib/recipes/plan';
+	import EffortBadge from './EffortBadge.svelte';
 
 	let { id }: { id: string } = $props();
 
@@ -59,6 +60,9 @@
 			{#if r.blurb}<p class="rise-in mt-4 max-w-2xl text-lg text-ink/80" style="--delay: 140ms">
 					{r.blurb}
 				</p>{/if}
+			{#if r.mins}
+				<div class="rise-in mt-5" style="--delay: 180ms"><EffortBadge {r} /></div>
+			{/if}
 			<div class="rise-in mt-5 flex flex-wrap gap-2" style="--delay: 200ms">
 				{#each tags as t (t)}<span class="brutal-tag">{t}</span>{/each}
 			</div>

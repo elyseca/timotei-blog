@@ -359,6 +359,35 @@ export function parseLine(line) {
 	return { qty, unit, name, dept: guessDept(name), note };
 }
 
+/* ---- effort: how much work a recipe is ----
+ * Built from the hands-on time, the start-to-table time, and the volume of work (how many
+ * ingredients there are to buy and prep, and how many steps). Each gives 0 to 4 points; hands-on
+ * time counts most. The score runs from 1 (a few minutes of work) to 5 (a project). */
+const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+export const EFFORT_LABEL = { easy: 'Quick & easy', medium: 'Moderate', involved: 'Involved' };
+
+export function effort(r) {
+	// A recipe with no times yet is guessed from its steps, so it still gets a score.
+	const m = r.mins || { active: 5 + 3 * r.steps.length, total: 15 + 6 * r.steps.length };
+	const items = coreSet(r).size;
+	const steps = r.steps.length;
+	const timePts = clamp((m.total - 20) / 20, 0, 4);
+	const handsPts = clamp((m.active - 5) / 10, 0, 4);
+	const workPts = clamp(((items - 4) / 4 + (steps - 3) / 2) / 2, 0, 4);
+	const score = Math.round((1 + 0.35 * timePts + 0.4 * handsPts + 0.25 * workPts) * 10) / 10;
+	const tier = score <= EFFORT_EASY ? 'easy' : score <= EFFORT_MEDIUM ? 'medium' : 'involved';
+	return { score, tier, label: EFFORT_LABEL[tier], active: m.active, total: m.total, items, steps };
+}
+const EFFORT_EASY = 2.3;
+const EFFORT_MEDIUM = 3;
+
+export function fmtMins(n) {
+	if (n < 60) return n + ' min';
+	const h = Math.floor(n / 60),
+		m = n % 60;
+	return h + ' hr' + (m ? ' ' + m + ' min' : '');
+}
+
 /* ---- meal-plan recommendations ---- */
 export const WEEK_MEALS = 14; // 7 days x lunch + dinner
 
@@ -375,9 +404,14 @@ export function proteinOf(r) {
 	if (/meatball/.test(meat)) return 'Meatballs';
 	return 'Plant-based';
 }
-export function planPool(all) {
-	return all.filter((r) => r.kind === 'Main' && r.weekly);
+/** The meals plans draw from: everyday ones by default, or the special-occasion mains. */
+export function planPool(all, occasion) {
+	return all.filter(
+		(r) =>
+			r.kind === 'Main' && (occasion === 'special' ? (r.meal ?? []).includes('special') : r.weekly)
+	);
 }
+export const hasSpecial = (all) => planPool(all, 'special').length > 0;
 export function hashStr(s) {
 	let h = 0;
 	for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0;
@@ -405,6 +439,13 @@ export function makeCombo(all, ids) {
 		by: '',
 		servings: 1,
 		parts: ids,
+		// The parts cook side by side: work adds up, but the clock runs once.
+		mins: rs.every((r) => r.mins)
+			? {
+					active: rs.reduce((t, r) => t + r.mins.active, 0),
+					total: Math.max(...rs.map((r) => r.mins.total))
+				}
+			: undefined,
 		freezer: false,
 		veg: rs.every((r) => r.veg),
 		ing: rs.flatMap((r) =>
@@ -537,9 +578,12 @@ export function buildPlans(all, n, shuffle, opts) {
 	n = Math.max(1, n || 3);
 	shuffle = shuffle || 0;
 	opts = opts || {};
-	let pool = planPool(all)
-		.concat(comboList(all))
+	const special = opts.occasion === 'special';
+	// Combos are built from the everyday proteins, veg and carbs, so they only belong to everyday plans.
+	let pool = planPool(all, opts.occasion)
+		.concat(special ? [] : comboList(all))
 		.filter((r) => !(opts.exclude || []).includes(proteinOf(r)));
+	if (opts.easy) pool = pool.filter((r) => effort(r).tier === 'easy');
 	if (opts.plant) pool = pool.filter((r) => proteinOf(r) === 'Plant-based');
 	if (opts.fresh) pool = pool.filter((r) => !r.ing.some((x) => x.dept === 'frozen'));
 	const maxSoups = Math.max(1, Math.min(2, n - 1)); // never three soups

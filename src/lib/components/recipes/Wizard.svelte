@@ -1,9 +1,23 @@
 <script lang="ts">
 	import { S, byId, allRecipes } from '$lib/recipes/store.svelte';
-	import { buildPlans, haveOptions, proteinOf } from '$lib/recipes/engine';
-	import { choosePlan, toggleExclude, toggleFilter, toggleHave } from '$lib/recipes/plan';
+	import {
+		buildPlans,
+		haveOptions,
+		proteinOf,
+		hasSpecial,
+		effort,
+		fmtMins
+	} from '$lib/recipes/engine';
+	import {
+		choosePlan,
+		toggleExclude,
+		toggleFilter,
+		toggleHave,
+		setOccasion
+	} from '$lib/recipes/plan';
 	import type { Recipe } from '$lib/recipes/types';
 	import Controls from './Controls.svelte';
+	import EffortBadge from './EffortBadge.svelte';
 
 	const MEATS = ['Chicken', 'Turkey', 'Beef', 'Pork', 'Fish'];
 
@@ -13,9 +27,18 @@
 			exclude: [...S.filters.exclude],
 			plant: S.filters.plant,
 			fresh: S.filters.fresh,
+			easy: S.filters.easy,
+			occasion: S.filters.occasion,
 			have: [...S.filters.have]
 		}) as { name: string; why: string; ids: string[]; shared: string[]; uses: string[] }[]
 	);
+	// The everyday / special occasion switch appears once there are special-occasion recipes to plan from.
+	const showOccasion = $derived(hasSpecial(allRecipes()));
+	const handsOn = (ids: string[]) =>
+		ids.reduce((t, id) => {
+			const r = byId(id);
+			return t + (r ? effort(r).active : 0);
+		}, 0);
 	const short = $derived(plans.length > 0 && plans[0].ids.length < S.perPlan);
 	// Ingredients already in the kitchen: plans lean towards recipes that use them.
 	const options = $derived(haveOptions(allRecipes()) as string[]);
@@ -37,7 +60,29 @@
 <section class="mx-auto max-w-6xl px-5 pt-12 md:px-8">
 	<div class="brutal-box bg-white p-6">
 		<Controls withCount={true} />
+		{#if showOccasion}
+			<div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Occasion">
+				<button
+					type="button"
+					class="brutal-chip"
+					aria-pressed={S.filters.occasion === 'everyday'}
+					onclick={() => setOccasion('everyday')}>Everyday</button
+				>
+				<button
+					type="button"
+					class="brutal-chip"
+					aria-pressed={S.filters.occasion === 'special'}
+					onclick={() => setOccasion('special')}>Special occasion</button
+				>
+			</div>
+		{/if}
 		<div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Plan filters">
+			<button
+				type="button"
+				class="brutal-chip"
+				aria-pressed={S.filters.easy}
+				onclick={() => toggleFilter('easy')}>Quick &amp; easy</button
+			>
 			{#each MEATS as m (m)}
 				<button
 					type="button"
@@ -136,10 +181,14 @@
 								<p class="font-mono text-xs font-bold tracking-wide text-ink/60 uppercase">
 									{proteinOf(r)}{r.freezer ? ' · freezes well' : ''}
 								</p>
+								<div class="mt-1"><EffortBadge {r} mode="short" /></div>
 							</li>
 						{/each}
 					</ol>
 					<div class="flex flex-col gap-3 border-t-[2.5px] border-ink bg-cream-2 p-5">
+						<p class="text-xs font-semibold text-ink/80">
+							About {fmtMins(handsOn(p.ids))} of hands-on cooking across the plan
+						</p>
 						{#if p.uses.length}
 							<p class="text-xs text-ink/70">Uses: {p.uses.join(', ')}</p>
 						{/if}
