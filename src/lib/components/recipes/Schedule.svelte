@@ -11,7 +11,9 @@
 		moveCook,
 		moveEat,
 		nextChef,
-		slotName
+		slotName,
+		weekOf,
+		MAX_WEEKS
 	} from '$lib/recipes/plan';
 	import type { PlanItem } from '$lib/recipes/types';
 	import CookIcon from './CookIcon.svelte';
@@ -27,6 +29,23 @@
 		) % STRONG.length;
 	const title = (id: string) => items.find((x) => x.r.id === id)?.r.title ?? '';
 	const overIds = $derived(Object.keys(lay.over));
+	// The week on screen (0 = the week that starts on "Week of"). Not saved.
+	let week = $state(0);
+	const lastUsed = $derived(
+		Math.max(
+			0,
+			...items.flatMap((x) => {
+				const sc = S.sched[x.r.id];
+				return sc ? [weekOf(sc.slot), ...sc.eats.map(weekOf)] : [];
+			})
+		)
+	);
+	// One empty week past the last used one, so things can be moved forward.
+	const maxWeek = $derived(Math.min(MAX_WEEKS - 1, lastUsed + 1));
+	const shownWeek = $derived(Math.min(week, maxWeek));
+	const base = $derived(shownWeek * 7);
+	const fmt = (d: Date) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+	const rangeText = $derived(`${fmt(dayDate(base))} – ${fmt(dayDate(base + 6))}`);
 	const ROWS = [
 		{ label: 'Lunch', offset: 0 },
 		{ label: 'Dinner', offset: 1 }
@@ -47,6 +66,20 @@
 		slot: number | null;
 	};
 	let drag: Drag | null = null;
+	let navTimer: ReturnType<typeof setTimeout> | undefined;
+	let navDir = 0;
+	/** Holding a dragged tile over the arrows flips the week. */
+	function hoverNav(dir: number) {
+		if (dir === navDir) return;
+		navDir = dir;
+		clearTimeout(navTimer);
+		if (!dir) return;
+		const tick = () => {
+			week = Math.max(0, Math.min(maxWeek, shownWeek + dir));
+			navTimer = setTimeout(tick, 700);
+		};
+		navTimer = setTimeout(tick, 500);
+	}
 	let overSlot = $state<number | null>(null);
 	let dragging = $state('');
 
@@ -85,6 +118,8 @@
 			drag.ghost.style.top = e.clientY - 18 + 'px';
 		}
 		const t = document.elementFromPoint(e.clientX, e.clientY);
+		const nav = t?.closest<HTMLElement>('[data-weeknav]');
+		hoverNav(nav ? Number(nav.dataset.weeknav) : 0);
 		const cell = t?.closest<HTMLElement>('[data-slot]');
 		drag.slot = cell ? Number(cell.dataset.slot) : null;
 		overSlot = drag.slot;
@@ -94,6 +129,7 @@
 		if (!drag) return;
 		const d = drag;
 		drag = null;
+		hoverNav(0);
 		d.ghost?.remove();
 		overSlot = null;
 		dragging = '';
@@ -104,9 +140,13 @@
 			return;
 		}
 		if (d.slot == null || d.slot === d.from) return;
-		if (d.kind === 'cook') moveCook(d.id, d.slot);
-		else moveEat(d.id, d.from, d.slot);
-		toast(`Moved to ${CDAYS[Math.floor(d.slot / 2)]} ${slotName(d.slot).toLowerCase()}`);
+		const note = d.kind === 'cook' ? moveCook(d.id, d.slot) : moveEat(d.id, d.from, d.slot);
+		const refused = note?.startsWith("Can't");
+		toast(
+			note ??
+				`Moved to ${CDAYS[Math.floor(d.slot / 2) % 7]} ${slotName(d.slot).toLowerCase()}, week ${weekOf(d.slot) + 1}`
+		);
+		if (!refused) week = weekOf(d.slot);
 	}
 </script>
 
@@ -134,21 +174,46 @@
 		{/each}
 	</div>
 
-	<div class="brutal-box mt-6 overflow-x-auto bg-white">
+	<div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+		<button
+			type="button"
+			class="brutal-btn bg-white"
+			data-weeknav="-1"
+			disabled={shownWeek === 0}
+			onclick={() => (week = shownWeek - 1)}>← Earlier</button
+		>
+		<p class="text-center font-mono text-xs font-bold tracking-wide uppercase">
+			Week {shownWeek + 1}
+			<span class="block text-ink/60">{rangeText}</span>
+		</p>
+		<button
+			type="button"
+			class="brutal-btn bg-white"
+			data-weeknav="1"
+			disabled={shownWeek >= maxWeek}
+			onclick={() => (week = shownWeek + 1)}>Later →</button
+		>
+	</div>
+	<p class="mt-3 text-sm text-ink/70">
+		Cook a meal before you eat it: the meal tiles can only sit on or after their cooking day. Drag a
+		tile onto Earlier or Later to carry it to another week.
+	</p>
+
+	<div class="brutal-box mt-4 overflow-x-auto bg-white">
 		<div class="min-w-[44rem] p-3" role="table" aria-label="Weekly schedule">
 			<div class="grid grid-cols-[3.5rem_repeat(7,minmax(0,1fr))] gap-1.5">
 				<span></span>
 				{#each CDAYS as d, i (d)}
 					<div class="py-1 text-center font-mono text-xs font-bold uppercase">
 						{d}
-						<small class="block text-ink/50">{dayDate(i).getDate()}</small>
+						<small class="block text-ink/50">{dayDate(base + i).getDate()}</small>
 					</div>
 				{/each}
 
 				{#each ROWS as row (row.label)}
 					<span class="self-center font-mono text-xs font-bold uppercase">{row.label}</span>
 					{#each CDAYS as d, i (d)}
-						{@const slot = i * 2 + row.offset}
+						{@const slot = (base + i) * 2 + row.offset}
 						{@const eatId = lay.eat[slot]}
 						<div
 							class="flex min-h-20 flex-col gap-1.5 rounded-md border-2 border-dashed p-1 {overSlot ===
@@ -200,7 +265,7 @@
 
 	{#if overIds.length}
 		<p class="mt-2 font-mono text-xs font-bold text-ink/80 uppercase">
-			Past Saturday: {overIds
+			Doesn't fit in {MAX_WEEKS} weeks: {overIds
 				.map((id) => shortName(title(id)) + ' (' + lay.over[id] + ')')
 				.join(', ')}
 		</p>

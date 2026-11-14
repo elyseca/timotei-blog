@@ -44,10 +44,16 @@ export function planItems(): PlanItem[] {
 }
 
 /* ---------- schedule ----------
- * A slot is one lunch or dinner: slot = day * 2 + (0 lunch | 1 dinner), 0..13 for Sun..Sat.
+ * A slot is one lunch or dinner: slot = day * 2 + (0 lunch | 1 dinner), 0..13 for the first
+ * Sun..Sat, then 14..27 for the next week, and so on.
+ * Rule: a recipe can only be eaten in the slot it is cooked in, or later.
  * Each planned recipe has the slot it is cooked in, who cooks, and the slots its servings are eaten in.
  */
 export const slotDay = (slot: number) => Math.floor(slot / 2);
+/** The calendar scrolls through this many weeks; slots keep counting past the first week. */
+export const MAX_WEEKS = 8;
+export const HORIZON = WEEK_MEALS * MAX_WEEKS;
+export const weekOf = (slot: number) => Math.floor(slot / WEEK_MEALS);
 export const slotName = (slot: number) => (slot % 2 ? 'Dinner' : 'Lunch');
 
 /** Give every planned recipe a cook slot and eating slots, and keep them matching the servings. */
@@ -59,16 +65,19 @@ export function ensureSched() {
 	items.forEach((x, i) => {
 		let sc = S.sched[x.r.id];
 		if (!sc) {
-			const slot = Math.min(WEEK_MEALS - 1, cursor);
+			const slot = Math.min(HORIZON - 1, cursor);
 			sc = S.sched[x.r.id] = { slot, chef: S.cooks[i % S.cooks.length].id, eats: [] };
 		}
+		// Nothing is eaten before it is cooked.
+		sc.eats.filter((e) => e < sc.slot).forEach((e) => taken.delete(e));
+		sc.eats = sc.eats.filter((e) => e >= sc.slot);
 		const need = mealsOf(x.servings);
 		if (sc.eats.length > need) {
 			sc.eats.slice(need).forEach((e) => taken.delete(e));
 			sc.eats = sc.eats.slice(0, need);
 		}
 		let p = Math.max(sc.slot, sc.eats.length ? Math.max(...sc.eats) + 1 : sc.slot);
-		while (sc.eats.length < need && p < WEEK_MEALS) {
+		while (sc.eats.length < need && p < HORIZON) {
 			if (!taken.has(p)) {
 				sc.eats.push(p);
 				taken.add(p);
@@ -84,8 +93,8 @@ export function ensureSched() {
 
 /** What sits in each of the 14 slots: who is cooked, and which recipe is eaten. */
 export function layout(items: PlanItem[]) {
-	const eat: (string | null)[] = Array(WEEK_MEALS).fill(null);
-	const cook: string[][] = Array.from({ length: WEEK_MEALS }, () => []);
+	const eat: (string | null)[] = Array(HORIZON).fill(null);
+	const cook: string[][] = Array.from({ length: HORIZON }, () => []);
 	const over: Record<string, number> = {};
 	items.forEach((x) => {
 		const sc = S.sched[x.r.id];
@@ -98,18 +107,31 @@ export function layout(items: PlanItem[]) {
 	return { eat, cook, over };
 }
 
-/** Drag actions. Dropping a meal on another meal swaps them. */
-export function moveCook(id: string, slot: number) {
+/**
+ * Drag actions. Dropping a meal on another meal swaps them.
+ * A meal can't be eaten before it is cooked: those moves are refused with a reason.
+ */
+export function moveCook(id: string, slot: number): string | null {
 	const sc = S.sched[id];
-	if (sc && sc.slot !== slot) sc.slot = slot;
+	if (!sc || sc.slot === slot) return null;
+	const eatsBefore = sc.eats.filter((e) => e < slot).length;
+	sc.slot = slot;
+	// Servings that would now be eaten before cooking slide to the next free meals after it.
+	ensureSched();
+	return eatsBefore
+		? `Moved. ${eatsBefore} meal${eatsBefore === 1 ? '' : 's'} shifted to after cooking`
+		: null;
 }
-export function moveEat(id: string, from: number, to: number) {
-	if (from === to) return;
+export function moveEat(id: string, from: number, to: number): string | null {
+	if (from === to) return null;
 	const mine = S.sched[id];
-	if (!mine) return;
+	if (!mine) return null;
+	if (to < mine.slot) return "Can't eat it before it's cooked";
 	const other = Object.entries(S.sched).find(([k, v]) => k !== id && v.eats.includes(to));
+	if (other && from < other[1].slot) return "Can't swap: that meal isn't cooked yet by then";
 	mine.eats = mine.eats.map((e) => (e === from ? to : e === to ? from : e));
 	if (other) other[1].eats = other[1].eats.map((e) => (e === to ? from : e));
+	return null;
 }
 export function nextChef(id: string) {
 	const sc = S.sched[id];
