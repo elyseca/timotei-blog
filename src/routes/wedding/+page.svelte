@@ -48,8 +48,12 @@
 
 <article class="mx-auto max-w-3xl px-5 py-14 md:px-8">
 	{#if metadata.cover}
-		<div class="rise-in brutal-box overflow-hidden" style="--delay: 240ms">
-			<img src={metadata.cover} alt="" class="aspect-video w-full object-cover" />
+		<div class="rise-in brutal-box mx-auto max-w-md overflow-hidden" style="--delay: 240ms">
+			<img
+				src={metadata.cover}
+				alt="Gabe dipping Elyse for a kiss in the aisle after the ceremony"
+				class="w-full"
+			/>
 		</div>
 	{/if}
 
