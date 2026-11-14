@@ -89,6 +89,16 @@ export function ensureSched() {
 	Object.keys(S.sched).forEach((id) => {
 		if (!S.plan.some((p) => p.id === id)) delete S.sched[id];
 	});
+	// The grocery run happens on or before the first cooking slot.
+	const first = firstCook();
+	if (first == null) S.shop = null;
+	else if (S.shop == null || S.shop > first) S.shop = Math.max(0, first - 1);
+}
+
+/** The earliest slot anything is cooked in, or null with no plan. */
+export function firstCook(): number | null {
+	const slots = Object.values(S.sched).map((sc) => sc.slot);
+	return slots.length ? Math.min(...slots) : null;
 }
 
 /** What sits in each of the 14 slots: who is cooked, and which recipe is eaten. */
@@ -104,7 +114,7 @@ export function layout(items: PlanItem[]) {
 		const short = mealsOf(x.servings) - sc.eats.length;
 		if (short > 0) over[x.r.id] = short;
 	});
-	return { eat, cook, over };
+	return { eat, cook, over, shop: S.shop };
 }
 
 /**
@@ -115,12 +125,23 @@ export function moveCook(id: string, slot: number): string | null {
 	const sc = S.sched[id];
 	if (!sc || sc.slot === slot) return null;
 	const eatsBefore = sc.eats.filter((e) => e < slot).length;
+	const shopBefore = S.shop;
 	sc.slot = slot;
-	// Servings that would now be eaten before cooking slide to the next free meals after it.
+	// Servings that would now be eaten before cooking slide to the next free meals after it,
+	// and the grocery run steps back if it would now come after the first cook.
 	ensureSched();
-	return eatsBefore
-		? `Moved. ${eatsBefore} meal${eatsBefore === 1 ? '' : 's'} shifted to after cooking`
-		: null;
+	const notes: string[] = [];
+	if (eatsBefore)
+		notes.push(`${eatsBefore} meal${eatsBefore === 1 ? '' : 's'} shifted to after cooking`);
+	if (S.shop !== shopBefore) notes.push('grocery run moved earlier');
+	return notes.length ? 'Moved. ' + notes.join(', ') : null;
+}
+/** The grocery run must come on or before the first cook. */
+export function moveShop(slot: number): string | null {
+	const first = firstCook();
+	if (first != null && slot > first) return "Can't shop after the first cook";
+	S.shop = slot;
+	return null;
 }
 export function moveEat(id: string, from: number, to: number): string | null {
 	if (from === to) return null;

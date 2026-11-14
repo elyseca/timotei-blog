@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { S } from '$lib/recipes/store.svelte';
-	import { setHousehold, setServingsPer, setPerPlan, mealsOf } from '$lib/recipes/plan';
+	import { setHousehold, setPerPlan, mealsOf } from '$lib/recipes/plan';
 	import { WEEK_MEALS } from '$lib/recipes/engine';
 	import Stepper from './Stepper.svelte';
 
@@ -19,15 +19,6 @@
 			label="People"
 			ondec={() => setHousehold(-1)}
 			oninc={() => setHousehold(1)}
-		/>
-	</div>
-	<div class="flex items-center gap-3">
-		<span class="font-mono text-xs font-bold tracking-wide uppercase">Servings per recipe</span>
-		<Stepper
-			value={S.servingsPer}
-			label="Servings per recipe"
-			ondec={() => setServingsPer(-1)}
-			oninc={() => setServingsPer(1)}
 		/>
 	</div>
 	{#if withCount}

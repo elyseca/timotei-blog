@@ -31,11 +31,7 @@
 		</div>
 	</div>
 {:else}
-	<div
-		class="brutal-box grid aspect-video place-items-center bg-cream-2 text-center"
-	>
-		<p class="font-mono text-sm font-bold tracking-wide text-ink/50 uppercase">
-			Video coming soon
-		</p>
+	<div class="brutal-box grid aspect-video place-items-center bg-cream-2 text-center">
+		<p class="font-mono text-sm font-bold tracking-wide text-ink/50 uppercase">Video coming soon</p>
 	</div>
 {/if}

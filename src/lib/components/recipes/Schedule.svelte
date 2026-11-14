@@ -10,6 +10,7 @@
 		dayDate,
 		moveCook,
 		moveEat,
+		moveShop,
 		nextChef,
 		slotName,
 		weekOf,
@@ -54,7 +55,7 @@
 	/* ---- drag a tile to another lunch or dinner (pointer events: mouse + touch) ----
 	 * Cook tiles move when the recipe is cooked; meal tiles move where a serving is eaten. */
 	type Drag = {
-		kind: 'cook' | 'eat';
+		kind: 'cook' | 'eat' | 'shop';
 		id: string;
 		from: number;
 		el: HTMLElement;
@@ -83,7 +84,7 @@
 	let overSlot = $state<number | null>(null);
 	let dragging = $state('');
 
-	function down(e: PointerEvent, kind: 'cook' | 'eat', id: string, from: number) {
+	function down(e: PointerEvent, kind: 'cook' | 'eat' | 'shop', id: string, from: number) {
 		if (e.pointerType === 'mouse' && e.button !== 0) return;
 		drag = {
 			kind,
@@ -140,7 +141,12 @@
 			return;
 		}
 		if (d.slot == null || d.slot === d.from) return;
-		const note = d.kind === 'cook' ? moveCook(d.id, d.slot) : moveEat(d.id, d.from, d.slot);
+		const note =
+			d.kind === 'cook'
+				? moveCook(d.id, d.slot)
+				: d.kind === 'shop'
+					? moveShop(d.slot)
+					: moveEat(d.id, d.from, d.slot);
 		const refused = note?.startsWith("Can't");
 		toast(
 			note ??
@@ -195,8 +201,9 @@
 		>
 	</div>
 	<p class="mt-3 text-sm text-ink/70">
-		Cook a meal before you eat it: the meal tiles can only sit on or after their cooking day. Drag a
-		tile onto Earlier or Later to carry it to another week.
+		Shop, then cook, then eat: the grocery run comes on or before the first cook, and meal tiles can
+		only sit on or after their cooking day. Drag a tile onto Earlier or Later to carry it to another
+		week.
 	</p>
 
 	<div class="brutal-box mt-4 overflow-x-auto bg-white">
@@ -222,6 +229,35 @@
 								: 'border-ink/25'}"
 							data-slot={slot}
 						>
+							{#if lay.shop === slot}
+								<div
+									class="flex cursor-grab touch-none items-center gap-1 rounded-md border-2 border-ink bg-lime px-1.5 py-1 text-xs leading-tight font-bold select-none active:cursor-grabbing {dragging ===
+									'shop' + 'shop' + slot
+										? 'opacity-30'
+										: ''}"
+									role="button"
+									tabindex="-1"
+									title="Grocery run. Drag to move; it has to come on or before the first cook."
+									onpointerdown={(e) => down(e, 'shop', 'shop', slot)}
+								>
+									<span class="shrink-0" aria-hidden="true">
+										<svg
+											width="18"
+											height="18"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2.4"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><circle cx="9" cy="20" r="1.5" /><circle cx="18" cy="20" r="1.5" /><path
+												d="M2 3h3l2.7 12.4a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 7H6"
+											/></svg
+										>
+									</span>
+									<span class="min-w-0 break-words">Grocery run</span>
+								</div>
+							{/if}
 							{#each lay.cook[slot] as id (id)}
 								{@const chef = cookOf(S.sched[id].chef)}
 								<div

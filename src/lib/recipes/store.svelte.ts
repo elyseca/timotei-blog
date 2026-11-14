@@ -27,6 +27,8 @@ function fresh() {
 		checks: {} as Record<string, boolean>,
 		user: [] as Recipe[],
 		sched: {} as Record<string, { slot: number; chef: string; eats: number[] }>,
+		// The slot of the grocery run (null until there is a plan). It stays on or before the first cook.
+		shop: null as number | null,
 		filters: { exclude: [] as string[], plant: false, fresh: false, have: [] as string[] },
 		weekStart: comingSunday(),
 		cooks: [

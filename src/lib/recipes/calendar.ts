@@ -3,8 +3,9 @@
 // Nothing here knows anyone's email address. Google Calendar opens in whatever account the
 // visitor is already signed into, so every event lands in their own calendar.
 import { S } from './store.svelte';
-import { lineText } from './engine';
-import { cookOf, dayDate, slotDay } from './plan';
+import { lineText, groceryList } from './engine';
+import { DEPTS } from './data';
+import { cookOf, dayDate, slotDay, GORDER } from './plan';
 import type { PlanItem } from './types';
 
 export interface CalEvent {
@@ -43,6 +44,41 @@ function detailsHtml(x: PlanItem) {
 	h += '<br>' + steps.map(escHtml).join('<br>');
 	if (notes.length) h += '<br><br><b>Notes</b><br>' + notes.map(escHtml).join('<br>');
 	return h;
+}
+
+/** The grocery run: the shopping list, grouped by department, as the event's details. */
+export function shopEventFor(items: PlanItem[]): CalEvent | null {
+	if (S.shop == null || !items.length) return null;
+	const list = groceryList(items, { hideStaples: true }) as {
+		dept: string;
+		qty: number | null;
+		unit: string;
+		name: string;
+	}[];
+	const label = (k: string) => (DEPTS.find((d) => d[0] === k) ?? [k, k])[1];
+	let h = '<b>Grocery list</b>';
+	GORDER.forEach((k) => {
+		const rows = list.filter((e) => e.dept === k);
+		if (!rows.length) return;
+		h += `<br><br><b>${escHtml(label(k))}</b>`;
+		rows.forEach((e) => {
+			const t =
+				e.qty == null
+					? e.name + ' (to taste)'
+					: lineText({ qty: e.qty, unit: e.unit, name: e.name });
+			h += '<br>• ' + escHtml(t);
+		});
+	});
+	h += '<br><br>Salt and pepper';
+	const d = dayDate(slotDay(S.shop));
+	// Shopping is in the morning before a lunch slot, or in the afternoon before a dinner slot.
+	const hour = S.shop % 2 ? 16 : 10;
+	return {
+		title: 'Grocery run',
+		start: new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0),
+		end: new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour + 1, 0),
+		html: h
+	};
 }
 
 export function eventFor(x: PlanItem): CalEvent | null {
