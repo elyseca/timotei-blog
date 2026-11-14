@@ -1,27 +1,24 @@
 ---
 title: 'Our Wedding'
-date: '2025-09-13'
-location: 'Replace with your venue'
-excerpt: 'The whole day, from getting ready to the last song of the night.'
-cover: '/images/placeholder-wedding-cover.svg'
+date: '2026-08-01'
+location: 'Chimney Pond Farm · Glenville, North Carolina'
+excerpt: 'After 6 years, 5 addresses and 4 states, we got married in the mountains of North Carolina.'
+cover: ''
 video: ''
-gallery:
-  - '/images/placeholder-wedding-1.svg'
-  - '/images/placeholder-wedding-2.svg'
-  - '/images/placeholder-wedding-3.svg'
-  - '/images/placeholder-wedding-4.svg'
-  - '/images/placeholder-wedding-5.svg'
+gallery: []
 ---
 
-Replace this with the real story of the day — how the morning started, the ceremony,
-what you remember most clearly, the toast that made everyone cry or laugh, the first
-dance, whatever stands out.
+After 6 years, 5 addresses, and 4 states together, Gabe proposed to Elyse in January during a
+trip to Chile and Patagonia. We were married on August 1, 2026, in the beautiful mountains of
+North Carolina, surrounded by our family and friends.
 
 ## The details
 
-A good spot for the small facts future-you will want to remember: the date, the
-venue, who officiated, what was playing when you walked down the aisle.
+- **Date:** Saturday, August 1, 2026
+- **Ceremony:** 4:30 PM (guests arrived at 4:00 PM), with the reception to follow
+- **Venue:** Chimney Pond Farm, 240 Chimney Pond Rd, Glenville, North Carolina
+- **Attire:** Semi-formal, garden party
 
 ## Thank you
 
-Anything you want to say to the people who were there.
+To everyone who came, and everyone who sent love from afar: thank you for celebrating with us.
