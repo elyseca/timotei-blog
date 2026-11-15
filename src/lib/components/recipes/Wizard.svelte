@@ -1,13 +1,6 @@
 <script lang="ts">
 	import { S, byId, allRecipes } from '$lib/recipes/store.svelte';
-	import {
-		buildPlans,
-		haveOptions,
-		proteinOf,
-		hasSpecial,
-		effort,
-		fmtMins
-	} from '$lib/recipes/engine';
+	import { buildPlans, haveOptions, proteinOf, hasSpecial } from '$lib/recipes/engine';
 	import {
 		choosePlan,
 		toggleExclude,
@@ -34,11 +27,6 @@
 	);
 	// The everyday / special occasion switch appears once there are special-occasion recipes to plan from.
 	const showOccasion = $derived(hasSpecial(allRecipes()));
-	const handsOn = (ids: string[]) =>
-		ids.reduce((t, id) => {
-			const r = byId(id);
-			return t + (r ? effort(r).active : 0);
-		}, 0);
 	const short = $derived(plans.length > 0 && plans[0].ids.length < S.perPlan);
 	// Ingredients already in the kitchen: plans lean towards recipes that use them.
 	const options = $derived(haveOptions(allRecipes()) as string[]);
@@ -181,14 +169,11 @@
 								<p class="font-mono text-xs font-bold tracking-wide text-ink/60 uppercase">
 									{proteinOf(r)}{r.freezer ? ' · freezes well' : ''}
 								</p>
-								<div class="mt-1"><EffortBadge {r} mode="short" /></div>
+								<div class="mt-1"><EffortBadge {r} /></div>
 							</li>
 						{/each}
 					</ol>
 					<div class="flex flex-col gap-3 border-t-[2.5px] border-ink bg-cream-2 p-5">
-						<p class="text-xs font-semibold text-ink/80">
-							About {fmtMins(handsOn(p.ids))} of hands-on cooking across the plan
-						</p>
 						{#if p.uses.length}
 							<p class="text-xs text-ink/70">Uses: {p.uses.join(', ')}</p>
 						{/if}

@@ -7,5 +7,5 @@
 	<title>Meal Plan Approach — timotei.blog</title>
 </svelte:head>
 
-<SectionHero tag="Meal plan approach" title="One plate, every meal" bg="bg-blue" />
+<SectionHero tag="Meal plan approach" title="One plate, every everyday meal" bg="bg-blue" />
 <ApproachContent />

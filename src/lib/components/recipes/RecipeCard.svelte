@@ -21,7 +21,7 @@
 		{#if r.blurb}<p class="line-clamp-3 flex-1 text-sm text-ink/75">{r.blurb}</p>{:else}<span
 				class="flex-1"
 			></span>{/if}
-		{#if r.mins}<EffortBadge {r} mode="short" />{/if}
+		{#if r.mins}<EffortBadge {r} />{/if}
 	</a>
 	<div
 		class="flex items-center justify-between gap-3 border-t-[2.5px] border-ink bg-cream-2 px-5 py-3"

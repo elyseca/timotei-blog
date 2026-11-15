@@ -378,6 +378,45 @@ export function effort(r) {
 	const tier = score <= EFFORT_EASY ? 'easy' : score <= EFFORT_MEDIUM ? 'medium' : 'involved';
 	return { score, tier, label: EFFORT_LABEL[tier], active: m.active, total: m.total, items, steps };
 }
+/** The 1 to 5 level shown as dots. The minutes are the typical range behind each level. */
+export const effortLevel = (score) => clamp(Math.round(score), 1, 5);
+export const EFFORT_SCALE = [
+	{
+		level: 1,
+		name: 'Almost nothing',
+		active: 'Under 10 min',
+		total: 'Under 30 min',
+		feel: 'A handful of ingredients, a couple of steps.'
+	},
+	{
+		level: 2,
+		name: 'Easy',
+		active: '10 to 20 min',
+		total: '30 min to 1 hr',
+		feel: 'Simple prep, mostly hands-off once it is going.'
+	},
+	{
+		level: 3,
+		name: 'Moderate',
+		active: '20 to 30 min',
+		total: '1 to 1½ hr',
+		feel: 'A real cook: some chopping and a few steps to keep track of.'
+	},
+	{
+		level: 4,
+		name: 'Involved',
+		active: '30 to 45 min',
+		total: '1½ to 2½ hr',
+		feel: 'Plenty of prep, or a long cook with things to do along the way.'
+	},
+	{
+		level: 5,
+		name: 'A project',
+		active: '45 min or more',
+		total: '2½ hr or more',
+		feel: 'Save it for a weekend.'
+	}
+];
 const EFFORT_EASY = 2.3;
 const EFFORT_MEDIUM = 3;
 
