@@ -35,6 +35,10 @@ function fresh() {
 			fresh: false,
 			// Only recipes that are quick and easy to make.
 			easy: false,
+			// Dietary: only recipes that are gluten-free, nut-free or dairy-free.
+			gf: false,
+			nf: false,
+			df: false,
 			// Which meals plans draw from.
 			occasion: 'everyday' as 'everyday' | 'special',
 			have: [] as string[]
@@ -51,7 +55,18 @@ export const S = $state(fresh());
 
 // Not saved: search/filter state, toast, and the step of the calendar button.
 export const ui = $state({
-	F: { q: '', meal: '', by: '', equip: '', freezer: false, veg: false, gf: false },
+	F: {
+		q: '',
+		meal: '',
+		by: '',
+		equip: '',
+		freezer: false,
+		veg: false,
+		garlicFree: false,
+		gf: false,
+		nf: false,
+		df: false
+	},
 	calStep: 0,
 	// Id of the protein, veggie or carb being turned into a combo (opens the pop-up).
 	comboFrom: '',

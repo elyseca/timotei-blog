@@ -12,6 +12,11 @@
 	import Controls from './Controls.svelte';
 	import EffortBadge from './EffortBadge.svelte';
 
+	const DIETS = [
+		['gf', 'Gluten-free'],
+		['nf', 'Nut-free'],
+		['df', 'Dairy-free']
+	] as const;
 	const MEATS = ['Chicken', 'Turkey', 'Beef', 'Pork', 'Fish'];
 
 	// Suggested plans. The rules live in engine.ts (buildPlans): never three soups or stews, plus these filters.
@@ -21,6 +26,9 @@
 			plant: S.filters.plant,
 			fresh: S.filters.fresh,
 			easy: S.filters.easy,
+			gf: S.filters.gf,
+			nf: S.filters.nf,
+			df: S.filters.df,
 			occasion: S.filters.occasion,
 			have: [...S.filters.have]
 		}) as { name: string; why: string; ids: string[]; shared: string[]; uses: string[] }[]
@@ -71,6 +79,14 @@
 				aria-pressed={S.filters.easy}
 				onclick={() => toggleFilter('easy')}>Quick &amp; easy</button
 			>
+			{#each DIETS as d (d[0])}
+				<button
+					type="button"
+					class="brutal-chip"
+					aria-pressed={S.filters[d[0]]}
+					onclick={() => toggleFilter(d[0])}>{d[1]}</button
+				>
+			{/each}
 			{#each MEATS as m (m)}
 				<button
 					type="button"

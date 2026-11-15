@@ -1,0 +1,286 @@
+<script lang="ts">
+	import { MEALS } from '$lib/recipes/data';
+	import { EQUIPMENT, UNITS, WEB3FORMS_KEY, sendSubmission } from '$lib/recipes/submit';
+	import type { Submission } from '$lib/recipes/submit';
+
+	const blankIng = () => ({ qty: '', unit: '', name: '' });
+	let f = $state<Submission>({
+		title: '',
+		by: '',
+		note: '',
+		meal: 'everyday',
+		servings: 4,
+		active: null,
+		total: null,
+		equip: [],
+		veg: false,
+		freezer: false,
+		ing: [blankIng(), blankIng(), blankIng()],
+		steps: ['', ''],
+		tips: '',
+		source: ''
+	});
+	let pick = $state('');
+	let custom = $state('');
+	let trap = $state(''); // hidden field: real people leave it empty
+	let status = $state<'idle' | 'sending' | 'done' | 'error'>('idle');
+
+	const ready = $derived(
+		f.title.trim() &&
+			f.by.trim() &&
+			f.ing.some((i) => i.name.trim()) &&
+			f.steps.some((x) => x.trim())
+	);
+
+	function addEquip(name: string) {
+		const n = name.trim();
+		if (n && !f.equip.some((e) => e.toLowerCase() === n.toLowerCase())) f.equip.push(n);
+	}
+	function onPick() {
+		if (pick && pick !== '__other') {
+			addEquip(pick);
+			pick = '';
+		}
+	}
+	function addCustom() {
+		addEquip(custom);
+		custom = '';
+		pick = '';
+	}
+
+	async function submit(e: SubmitEvent) {
+		e.preventDefault();
+		if (trap || !ready || status === 'sending') return;
+		status = 'sending';
+		try {
+			status = (await sendSubmission($state.snapshot(f))) ? 'done' : 'error';
+		} catch {
+			status = 'error';
+		}
+	}
+	function again() {
+		f.title = f.note = f.tips = f.source = '';
+		f.ing = [blankIng(), blankIng(), blankIng()];
+		f.steps = ['', ''];
+		f.equip = [];
+		f.active = f.total = null;
+		f.veg = f.freezer = false;
+		status = 'idle';
+	}
+	const label = 'flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase';
+</script>
+
+<section class="mx-auto max-w-3xl px-5 py-12 md:px-8">
+	{#if status === 'done'}
+		<div class="brutal-box bg-lime p-8 text-center">
+			<h2 class="font-display text-3xl font-black">Thank you!</h2>
+			<p class="mt-3 text-ink/85">
+				Your recipe is on its way to us. We'll take a look and add it to the recipe book soon.
+			</p>
+			<button type="button" class="brutal-btn mt-6 bg-white" onclick={again}>
+				Share another recipe
+			</button>
+		</div>
+	{:else}
+		<p class="max-w-2xl text-lg text-ink/80">
+			Got a recipe you love? Share it here. We read every one and add the ones that fit to the book.
+			Only the name, your name, the ingredients and the steps are required.
+		</p>
+
+		<form class="mt-8 flex flex-col gap-8" onsubmit={submit}>
+			<div class="brutal-box flex flex-col gap-5 bg-white p-6">
+				<h2 class="font-display text-2xl font-black">The basics</h2>
+				<label class={label}>
+					Recipe name
+					<input class="brutal-field normal-case" bind:value={f.title} required maxlength="120" />
+				</label>
+				<label class={label}>
+					Your name
+					<input class="brutal-field normal-case" bind:value={f.by} required maxlength="80" />
+				</label>
+				<label class={label}>
+					Inspiration or note (optional)
+					<textarea
+						class="brutal-field min-h-20 normal-case"
+						bind:value={f.note}
+						maxlength="600"
+						placeholder="Where it came from, who made it for you, why you love it"></textarea>
+				</label>
+				<div class="flex flex-wrap gap-5">
+					<label class={label}>
+						Meal
+						<select class="brutal-field w-auto normal-case" bind:value={f.meal}>
+							{#each Object.entries(MEALS) as [k, v] (k)}<option value={k}>{v}</option>{/each}
+						</select>
+					</label>
+					<label class={label}>
+						Servings
+						<input
+							type="number"
+							min="1"
+							max="50"
+							class="brutal-field w-24"
+							bind:value={f.servings}
+						/>
+					</label>
+					<label class={label}>
+						Hands-on minutes
+						<input type="number" min="1" class="brutal-field w-28" bind:value={f.active} />
+					</label>
+					<label class={label}>
+						Total minutes
+						<input type="number" min="1" class="brutal-field w-28" bind:value={f.total} />
+					</label>
+				</div>
+				<div class="flex flex-wrap gap-6">
+					<label class="flex items-center gap-2 text-sm">
+						<input type="checkbox" class="brutal-check" bind:checked={f.veg} /> Vegetarian
+					</label>
+					<label class="flex items-center gap-2 text-sm">
+						<input type="checkbox" class="brutal-check" bind:checked={f.freezer} /> Freezer-friendly
+					</label>
+				</div>
+			</div>
+
+			<div class="brutal-box flex flex-col gap-4 bg-white p-6">
+				<h2 class="font-display text-2xl font-black">Equipment</h2>
+				{#if f.equip.length}
+					<div class="flex flex-wrap gap-2">
+						{#each f.equip as e (e)}
+							<button
+								type="button"
+								class="brutal-chip"
+								aria-pressed="true"
+								onclick={() => (f.equip = f.equip.filter((x) => x !== e))}
+							>
+								{e} ×
+							</button>
+						{/each}
+					</div>
+				{/if}
+				<div class="flex flex-wrap items-center gap-3">
+					<select
+						class="brutal-field w-auto"
+						aria-label="Add equipment"
+						bind:value={pick}
+						onchange={onPick}
+					>
+						<option value="">Add equipment…</option>
+						{#each EQUIPMENT.filter((x) => !f.equip.includes(x)) as x (x)}
+							<option value={x}>{x}</option>
+						{/each}
+						<option value="__other">Something else…</option>
+					</select>
+					{#if pick === '__other'}
+						<input
+							class="brutal-field w-56"
+							placeholder="Name it"
+							bind:value={custom}
+							aria-label="Other equipment"
+							onkeydown={(e) => {
+								if (e.key === 'Enter') {
+									e.preventDefault();
+									addCustom();
+								}
+							}}
+						/>
+						<button type="button" class="brutal-btn" onclick={addCustom}>Add</button>
+					{/if}
+				</div>
+			</div>
+
+			<div class="brutal-box flex flex-col gap-4 bg-white p-6">
+				<h2 class="font-display text-2xl font-black">Ingredients</h2>
+				<p class="text-sm text-ink/70">One per line, for the whole recipe as written.</p>
+				{#each f.ing as ing, i (i)}
+					<div class="grid grid-cols-[4.5rem_6rem_1fr_auto] items-center gap-2">
+						<input
+							class="brutal-field"
+							placeholder="Qty"
+							inputmode="decimal"
+							aria-label="Quantity"
+							bind:value={ing.qty}
+						/>
+						<select class="brutal-field" aria-label="Unit" bind:value={ing.unit}>
+							{#each UNITS as u (u)}<option value={u}>{u || 'unit'}</option>{/each}
+						</select>
+						<input class="brutal-field" placeholder="Ingredient" bind:value={ing.name} />
+						<button
+							type="button"
+							class="font-mono text-xs font-bold uppercase underline"
+							aria-label="Remove ingredient"
+							onclick={() => f.ing.length > 1 && f.ing.splice(i, 1)}>×</button
+						>
+					</div>
+				{/each}
+				<button
+					type="button"
+					class="brutal-btn self-start bg-white"
+					onclick={() => f.ing.push(blankIng())}>+ Add ingredient</button
+				>
+			</div>
+
+			<div class="brutal-box flex flex-col gap-4 bg-white p-6">
+				<h2 class="font-display text-2xl font-black">Steps</h2>
+				{#each f.steps as _, i (i)}
+					<div class="flex items-start gap-3">
+						<span class="mt-2 font-display text-lg font-black">{i + 1}</span>
+						<textarea class="brutal-field min-h-16 flex-1" bind:value={f.steps[i]}></textarea>
+						<button
+							type="button"
+							class="mt-2 font-mono text-xs font-bold uppercase underline"
+							aria-label="Remove step"
+							onclick={() => f.steps.length > 1 && f.steps.splice(i, 1)}>×</button
+						>
+					</div>
+				{/each}
+				<button
+					type="button"
+					class="brutal-btn self-start bg-white"
+					onclick={() => f.steps.push('')}>+ Add step</button
+				>
+			</div>
+
+			<div class="brutal-box flex flex-col gap-5 bg-white p-6">
+				<h2 class="font-display text-2xl font-black">Anything else?</h2>
+				<label class={label}>
+					Tips or swaps (optional)
+					<textarea class="brutal-field min-h-20 normal-case" bind:value={f.tips}></textarea>
+				</label>
+				<label class={label}>
+					Link to the original (optional)
+					<input type="url" class="brutal-field normal-case" bind:value={f.source} />
+				</label>
+			</div>
+
+			<input
+				class="hidden"
+				tabindex="-1"
+				autocomplete="off"
+				aria-hidden="true"
+				bind:value={trap}
+				name="website"
+			/>
+
+			{#if status === 'error'}
+				<p class="brutal-box bg-coral p-4 font-semibold">
+					Something went wrong sending that. Please try again in a moment.
+				</p>
+			{/if}
+			{#if !WEB3FORMS_KEY}
+				<p class="font-mono text-xs font-bold text-ink/60 uppercase">
+					Sending isn't switched on yet: the site needs its Web3Forms key.
+				</p>
+			{/if}
+			<div>
+				<button
+					type="submit"
+					class="brutal-btn"
+					disabled={!ready || !WEB3FORMS_KEY || status === 'sending'}
+				>
+					{status === 'sending' ? 'Sending…' : 'Send for review'}
+				</button>
+			</div>
+		</form>
+	{/if}
+</section>

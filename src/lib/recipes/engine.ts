@@ -100,6 +100,34 @@ export function hasGarlic(r) {
 	);
 }
 
+/* ---- dietary flags ----
+ * Worked out from the ingredient names and the steps, so every recipe (and every recipe someone
+ * adds) is flagged the same way. It is cautious: anything that might contain the allergen counts
+ * as containing it. It cannot see inside packaged foods, so labels still need checking. */
+const GLUTEN =
+	/\b(flour|bread|breadcrumbs?|panko|pasta|noodles?|spaghetti|orzo|couscous|farro|barley|bulgur|rye|wheat|semolina|seitan|tortillas?|pita|naan|bagels?|buns?|rolls?|crackers?|croutons?|pizza dough|soy sauce|soy glaze|teriyaki|worcestershire|beer|oats|meatballs?)\b/i;
+const NUTS =
+	/\b(almonds?|walnuts?|pecans?|cashews?|pistachios?|hazelnuts?|macadamias?|pine nuts?|brazil nuts?|peanuts?|peanut butter|nut butters?|almond butter|almond milk|nut milk|marzipan|praline|nutella)\b/i;
+const DAIRY =
+	/\b(milk|cheese|feta|parmesan|mozzarella|cheddar|ricotta|goat cheese|cream|half-and-half|yogurt|yoghurt|ghee|kefir|whey|casein|custard|paneer|mascarpone|buttermilk|butter|sour cream)\b/i;
+const NOT_DAIRY =
+	/\b(coconut|almond|oat|soy|cashew|rice) (milk|cream|yogurt)|butter beans?|butternut|peanut butter|nut butter|almond butter|cocoa butter|cream of tartar/i;
+
+export function diet(r) {
+	const text = [
+		...r.ing.map((x) => x.name),
+		...r.steps.map((s) => (Array.isArray(s) ? s.join(' ') : s))
+	].join(' | ');
+	const clean = text.replace(NOT_DAIRY, ' ');
+	const nuts = text.replace(/gluten-free/gi, ' ');
+	return {
+		gf: !GLUTEN.test(nuts),
+		nf: !NUTS.test(text),
+		df: !DAIRY.test(clean)
+	};
+}
+export const DIET_LABEL = { gf: 'Gluten-free', nf: 'Nut-free', df: 'Dairy-free' };
+
 export const DROP = new Set([
 	'chopped',
 	'diced',
@@ -622,6 +650,7 @@ export function buildPlans(all, n, shuffle, opts) {
 	let pool = planPool(all, opts.occasion)
 		.concat(special ? [] : comboList(all))
 		.filter((r) => !(opts.exclude || []).includes(proteinOf(r)));
+	for (const k of ['gf', 'nf', 'df']) if (opts[k]) pool = pool.filter((r) => diet(r)[k]);
 	if (opts.easy) pool = pool.filter((r) => effort(r).tier === 'easy');
 	if (opts.plant) pool = pool.filter((r) => proteinOf(r) === 'Plant-based');
 	if (opts.fresh) pool = pool.filter((r) => !r.ing.some((x) => x.dept === 'frozen'));

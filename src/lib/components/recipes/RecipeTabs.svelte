@@ -6,7 +6,8 @@
 		{ href: '/recipes/plan', label: 'Meal Plan' },
 		{ href: '/recipes/groceries', label: 'Grocery List' },
 		{ href: '/recipes', label: 'Recipes' },
-		{ href: '/recipes/approach', label: 'Meal Plan Approach' }
+		{ href: '/recipes/approach', label: 'Meal Plan Approach' },
+		{ href: '/recipes/add', label: 'Add a Recipe' }
 	];
 
 	function isActive(href: string) {

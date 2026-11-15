@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { S, byId, allRecipes } from '$lib/recipes/store.svelte';
 	import { MEALS } from '$lib/recipes/data';
-	import { lineText, similar } from '$lib/recipes/engine';
+	import { lineText, similar, diet, DIET_LABEL } from '$lib/recipes/engine';
 	import { togglePlan } from '$lib/recipes/plan';
 	import EffortBadge from './EffortBadge.svelte';
 
@@ -25,6 +25,7 @@
 			? [
 					...(r.meal ?? []).map((m) => (MEALS as Record<string, string>)[m] ?? m),
 					...(r.veg ? ['Vegetarian'] : []),
+					...(['gf', 'nf', 'df'] as const).filter((k) => diet(r)[k]).map((k) => DIET_LABEL[k]),
 					...(r.freezer ? ['Freezer-friendly'] : []),
 					...(r.equip ?? []),
 					...(r.tags ?? [])

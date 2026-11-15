@@ -3,10 +3,12 @@
 	import { togglePlan } from '$lib/recipes/plan';
 	import type { Recipe } from '$lib/recipes/types';
 	import EffortBadge from './EffortBadge.svelte';
+	import { diet, DIET_LABEL } from '$lib/recipes/engine';
 
 	let { r }: { r: Recipe } = $props();
 	// Proteins, veggies and carbs are built into a meal; everything else goes straight to the plan.
 	const builds = $derived(['Protein', 'Side', 'Carb'].includes(r.kind ?? ''));
+	const dt = $derived(diet(r));
 	const inPlan = $derived(S.plan.some((p) => p.id === r.id));
 	const note = $derived(
 		[r.freezer ? 'Freezes' : '', r.by && r.by !== 'Elyse' ? r.by : ''].filter(Boolean).join(' · ')
@@ -22,6 +24,13 @@
 				class="flex-1"
 			></span>{/if}
 		{#if r.mins}<EffortBadge {r} />{/if}
+		<div class="flex flex-wrap gap-1.5">
+			{#each ['gf', 'nf', 'df'] as k (k)}
+				{#if dt[k as 'gf' | 'nf' | 'df']}<span class="brutal-tag bg-lime"
+						>{DIET_LABEL[k as 'gf' | 'nf' | 'df']}</span
+					>{/if}
+			{/each}
+		</div>
 	</a>
 	<div
 		class="flex items-center justify-between gap-3 border-t-[2.5px] border-ink bg-cream-2 px-5 py-3"

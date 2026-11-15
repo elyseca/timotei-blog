@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ui, allRecipes } from '$lib/recipes/store.svelte';
 	import { SECTIONS } from '$lib/recipes/data';
-	import { hasGarlic } from '$lib/recipes/engine';
+	import { hasGarlic, diet, DIET_LABEL } from '$lib/recipes/engine';
 	import type { Recipe } from '$lib/recipes/types';
 	import RecipeCard from './RecipeCard.svelte';
 
@@ -29,7 +29,9 @@
 		if (F.equip && !(r.equip ?? []).includes(F.equip)) return false;
 		if (F.freezer && !r.freezer) return false;
 		if (F.veg && !r.veg) return false;
-		if (F.gf && hasGarlic(r)) return false;
+		if (F.garlicFree && hasGarlic(r)) return false;
+		const d = diet(r);
+		if ((F.gf && !d.gf) || (F.nf && !d.nf) || (F.df && !d.df)) return false;
 		if (F.q) {
 			const hay = [
 				r.title,
@@ -59,6 +61,23 @@
 
 <section class="mx-auto max-w-6xl px-5 pt-12 md:px-8">
 	<div class="brutal-box bg-white p-6">
+		<div class="mb-4 flex flex-wrap items-center gap-2" role="group" aria-label="Dietary needs">
+			<span class="font-mono text-xs font-bold tracking-wide uppercase">Dietary</span>
+			{#each ['gf', 'nf', 'df'] as k (k)}
+				<button
+					type="button"
+					class="brutal-chip"
+					aria-pressed={F[k as 'gf' | 'nf' | 'df']}
+					onclick={() => (F[k as 'gf' | 'nf' | 'df'] = !F[k as 'gf' | 'nf' | 'df'])}
+				>
+					{DIET_LABEL[k as 'gf' | 'nf' | 'df']}
+				</button>
+			{/each}
+		</div>
+		<p class="mb-4 text-xs text-ink/60">
+			Flags come from the ingredient names. Check the labels on packaged foods like broth, soy sauce
+			and oats.
+		</p>
 		<input
 			type="search"
 			class="brutal-field"
@@ -100,7 +119,7 @@
 				<input type="checkbox" class="brutal-check" bind:checked={F.veg} /> Vegetarian
 			</label>
 			<label class="flex items-center gap-2 pb-2 text-sm">
-				<input type="checkbox" class="brutal-check" bind:checked={F.gf} /> Garlic-free
+				<input type="checkbox" class="brutal-check" bind:checked={F.garlicFree} /> Garlic-free
 			</label>
 		</div>
 	</div>

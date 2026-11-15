@@ -227,7 +227,7 @@ export function toggleHave(name: string) {
 	else S.filters.have.push(name);
 	S.shuffle = 0;
 }
-export function toggleFilter(key: 'plant' | 'fresh' | 'easy') {
+export function toggleFilter(key: 'plant' | 'fresh' | 'easy' | 'gf' | 'nf' | 'df') {
 	S.filters[key] = !S.filters[key];
 	S.shuffle = 0;
 }
