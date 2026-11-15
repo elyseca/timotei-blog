@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { S, ui, allRecipes } from '$lib/recipes/store.svelte';
 	import { SECTIONS } from '$lib/recipes/data';
-	import { diet, DIETS, swapRecipe } from '$lib/recipes/engine';
+	import { diet, DIETS, swapRecipe, effort, effortLevel, EFFORT_SCALE } from '$lib/recipes/engine';
 	import DietPill from './DietPill.svelte';
-	import Legend from './Legend.svelte';
 	import type { Recipe } from '$lib/recipes/types';
 	import RecipeCard from './RecipeCard.svelte';
 
@@ -33,7 +32,29 @@
 		else S.filters[k as 'gf' | 'nf' | 'df' | 'veg'] = !S.filters[k as 'gf' | 'nf' | 'df' | 'veg'];
 	}
 
+	let showFilters = $state(false);
+	const activeCount = $derived(
+		DIETS.filter((x) => on(x.key)).length +
+			F.effort.length +
+			(F.meal ? 1 : 0) +
+			(F.by ? 1 : 0) +
+			(F.equip ? 1 : 0) +
+			(F.freezer ? 1 : 0)
+	);
+	function clearFilters() {
+		for (const x of DIETS) if (on(x.key)) flip(x.key);
+		F.effort = [];
+		F.meal = '';
+		F.by = '';
+		F.equip = '';
+		F.freezer = false;
+	}
+	const flipEffort = (n: number) =>
+		(F.effort = F.effort.includes(n) ? F.effort.filter((x) => x !== n) : [...F.effort, n]);
+
 	function matches(r: Recipe) {
+		if (F.effort.length && !(r.mins && F.effort.includes(effortLevel(effort(r).score))))
+			return false;
 		if (F.meal && !(r.meal ?? []).includes(F.meal)) return false;
 		if (F.by && r.by !== F.by) return false;
 		if (F.equip && !(r.equip ?? []).includes(F.equip)) return false;
@@ -69,61 +90,103 @@
 
 <section class="mx-auto max-w-6xl px-5 pt-6 md:px-8">
 	<div class="brutal-box bg-white p-4">
-		<div class="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="Dietary needs">
-			<span class="font-mono text-xs font-bold tracking-wide uppercase">Dietary</span>
-			{#each DIETS as x (x.key)}
-				{@const k = x.key as 'gf' | 'nf' | 'df' | 'veg' | 'garlic'}
-				<DietPill {k} pressed={on(k)} onclick={() => flip(k)} />
-			{/each}
+		<div class="flex gap-2">
+			<input
+				type="search"
+				class="brutal-field"
+				placeholder="Search recipes"
+				bind:value={F.q}
+				aria-label="Search recipes"
+			/>
+			<button
+				type="button"
+				class="brutal-btn shrink-0 bg-white md:hidden"
+				aria-expanded={showFilters}
+				onclick={() => (showFilters = !showFilters)}
+			>
+				Filters{activeCount ? ` · ${activeCount}` : ''}
+			</button>
 		</div>
-		<p class="mb-3 text-xs text-ink/60">
-			Vegetarian swaps broth for vegetable broth, and gluten-free swaps pasta for chickpea pasta, in
-			recipes, plans and the grocery list. Flags come from the ingredient names, so check labels on
-			packaged foods.
-		</p>
-		<input
-			type="search"
-			class="brutal-field"
-			placeholder="Search recipes or ingredients"
-			bind:value={F.q}
-			aria-label="Search recipes"
-		/>
-		<div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Meal type">
-			{#each chips as c (c[0])}
+		<div class="mt-3 {showFilters ? 'block' : 'hidden'} md:block">
+			<div class="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="Dietary needs">
+				<span class="font-mono text-xs font-bold tracking-wide uppercase">Dietary</span>
+				{#each DIETS as x (x.key)}
+					{@const k = x.key as 'gf' | 'nf' | 'df' | 'veg' | 'garlic'}
+					<DietPill {k} pressed={on(k)} onclick={() => flip(k)} />
+				{/each}
+			</div>
+			<div class="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="Effort">
+				<span class="font-mono text-xs font-bold tracking-wide uppercase">Effort</span>
+				{#each EFFORT_SCALE as l (l.level)}
+					<button
+						type="button"
+						class="brutal-chip inline-flex items-center gap-2"
+						aria-pressed={F.effort.includes(l.level)}
+						onclick={() => flipEffort(l.level)}
+					>
+						<span class="inline-flex gap-px" aria-hidden="true">
+							{#each [1, 2, 3, 4, 5] as n (n)}
+								<span
+									class="h-1.5 w-1.5 rounded-full border border-current {n <= l.level
+										? 'bg-current'
+										: 'bg-transparent'}"
+								></span>
+							{/each}
+						</span>
+						{l.name}
+					</button>
+				{/each}
+			</div>
+			<p class="mb-3 text-xs text-ink/60">
+				Vegetarian swaps broth for vegetable broth, and gluten-free swaps pasta for chickpea pasta,
+				in recipes, plans and the grocery list. Flags come from the ingredient names, so check
+				labels on packaged foods.
+			</p>
+			<div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Meal type">
+				{#each chips as c (c[0])}
+					<button
+						type="button"
+						class="brutal-chip"
+						aria-pressed={F.meal === c[0]}
+						onclick={() => (F.meal = c[0])}
+					>
+						{c[1]}
+					</button>
+				{/each}
+			</div>
+			<div class="mt-3 flex flex-wrap items-end gap-x-5 gap-y-2">
+				<label class="flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase">
+					Contributor
+					<select class="brutal-field w-auto" bind:value={F.by}>
+						<option value="">Anyone</option>
+						{#each contributors as b (b)}<option value={b}>{b}</option>{/each}
+					</select>
+				</label>
+				<label class="flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase">
+					Equipment
+					<select class="brutal-field w-auto" bind:value={F.equip}>
+						<option value="">Any</option>
+						{#each equipment as b (b)}<option value={b}>{b}</option>{/each}
+					</select>
+				</label>
+				<label class="flex items-center gap-2 pb-2 text-sm">
+					<input type="checkbox" class="brutal-check" bind:checked={F.freezer} /> Freezer-friendly
+				</label>
+			</div>
+			{#if activeCount}
 				<button
 					type="button"
-					class="brutal-chip"
-					aria-pressed={F.meal === c[0]}
-					onclick={() => (F.meal = c[0])}
+					class="mt-3 font-mono text-xs font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
+					onclick={clearFilters}
 				>
-					{c[1]}
+					Clear filters
 				</button>
-			{/each}
-		</div>
-		<div class="mt-3 flex flex-wrap items-end gap-x-5 gap-y-2">
-			<label class="flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase">
-				Contributor
-				<select class="brutal-field w-auto" bind:value={F.by}>
-					<option value="">Anyone</option>
-					{#each contributors as b (b)}<option value={b}>{b}</option>{/each}
-				</select>
-			</label>
-			<label class="flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase">
-				Equipment
-				<select class="brutal-field w-auto" bind:value={F.equip}>
-					<option value="">Any</option>
-					{#each equipment as b (b)}<option value={b}>{b}</option>{/each}
-				</select>
-			</label>
-			<label class="flex items-center gap-2 pb-2 text-sm">
-				<input type="checkbox" class="brutal-check" bind:checked={F.freezer} /> Freezer-friendly
-			</label>
+			{/if}
 		</div>
 	</div>
 </section>
 
 <section class="mx-auto max-w-6xl px-5 py-6 md:px-8">
-	<div class="mb-5"><Legend diet /></div>
 	{#if !list.length}
 		<div class="brutal-box bg-white p-12 text-center text-ink/60">
 			<p class="font-mono text-sm uppercase">No recipes match.</p>

@@ -4,8 +4,8 @@
 </script>
 
 <svelte:head>
-	<title>Meal Plan Approach — timotei.blog</title>
+	<title>Our Method — timotei.blog</title>
 </svelte:head>
 
-<SectionHero tag="Meal plan approach" title="One plate, every everyday meal" bg="bg-blue" />
+<SectionHero tag="Our method" title="One plate, every everyday meal" bg="bg-blue" />
 <ApproachContent />

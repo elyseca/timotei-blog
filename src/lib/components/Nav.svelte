@@ -3,10 +3,9 @@
 	import { slide, fly } from 'svelte/transition';
 	import { prefersReducedMotion } from 'svelte/motion';
 
+	// Home and Travel are paused for now (not linked here); their pages are still in the project.
 	const links = [
-		{ href: '/', label: 'Home' },
 		{ href: '/wedding', label: 'Wedding' },
-		{ href: '/travel', label: 'Travel' },
 		{ href: '/recipes', label: 'Recipes' }
 	];
 

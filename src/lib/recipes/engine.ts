@@ -566,6 +566,7 @@ export function makeCombo(all, ids) {
 				}
 			: undefined,
 		freezer: false,
+		equip: [...new Set(rs.flatMap((r) => r.equip ?? []))],
 		veg: rs.every((r) => r.veg),
 		ing: rs.flatMap((r) =>
 			r.ing.map((x) => ({ ...x, qty: x.qty == null ? null : x.qty / r.servings }))
@@ -702,7 +703,8 @@ export function buildPlans(all, n, shuffle, opts) {
 	let pool = planPool(all, opts.occasion)
 		.concat(special ? [] : comboList(all))
 		.filter((r) => !(opts.exclude || []).includes(proteinOf(r)));
-	for (const k of ['gf', 'nf', 'df', 'veg']) if (opts[k]) pool = pool.filter((r) => diet(r)[k]);
+	for (const k of ['gf', 'nf', 'df', 'veg'])
+		if (opts[k]) pool = pool.filter((r) => diet(swapRecipe(r, opts))[k]);
 	if (opts.easy) pool = pool.filter((r) => effort(r).tier === 'easy');
 	if (opts.plant) pool = pool.filter((r) => proteinOf(r) === 'Plant-based');
 	if (opts.fresh) pool = pool.filter((r) => !r.ing.some((x) => x.dept === 'frozen'));
@@ -745,7 +747,17 @@ export function buildPlans(all, n, shuffle, opts) {
 				let s = chosen.reduce((t, c) => t + pair(r, c), 0) * (o.overlap || 0);
 				if (!chosen.length && o.overlap) s += hub(r) * 0.3;
 				if (o.distinct && chosen.some((c) => proteinOf(c) === proteinOf(r))) s -= 3;
-				if (o.freezer && r.freezer) s += 4;
+				if (o.freezer && r.freezer) s += o.freezer;
+				if (o.parallel) {
+					// All the meals cook at the same time: low hands-on time, and no two meals fighting
+					// over the same oven, stovetop or pot.
+					s -= effort(r).active / o.parallel;
+					const eq = r.equip ?? [];
+					s -=
+						chosen.reduce((t, c) => t + (c.equip ?? []).filter((e) => eq.includes(e)).length, 0) *
+						5;
+					s += new Set([...chosen.flatMap((c) => c.equip ?? []), ...eq]).size * 1.5;
+				}
 				if (o.veg && r.veg && !chosen.some((c) => c.veg)) s += 2;
 				s += matches(r) * 6; // ingredients already on hand
 				s += r.fit || 0; // how well a combo's parts go together
@@ -765,14 +777,14 @@ export function buildPlans(all, n, shuffle, opts) {
 		chosen.forEach((r) => (r.parts || []).forEach((id) => used.set(id, (used.get(id) || 0) + 1)));
 		return chosen;
 	}
-	const freezer = pool.filter((r) => r.freezer);
+	// Cook once: lean hard on recipes that freeze well, so the week is stocked from one big cook.
 	const defs = [
 		{
 			key: 'batch',
 			name: 'Cook once, eat all week',
-			why: 'Soups, stews, and chili that freeze well, so one big cook covers many meals.',
+			why: 'Meals that freeze well, so one big cook stocks the freezer for the whole week.',
 			sub: pool,
-			o: { overlap: 0.8, freezer: true }
+			o: { overlap: 0.4, freezer: 12 }
 		},
 		{
 			key: 'shop',
@@ -782,11 +794,11 @@ export function buildPlans(all, n, shuffle, opts) {
 			o: { overlap: 1.5 }
 		},
 		{
-			key: 'variety',
-			name: 'Most variety',
-			why: 'Different proteins, including a vegetarian meal, so the week never repeats.',
+			key: 'fast',
+			name: 'Minimal time in the kitchen',
+			why: 'Low hands-on time, with each meal on a different oven, burner or Instant Pot so everything cooks at once.',
 			sub: pool,
-			o: { distinct: true, veg: true, overlap: 0.3 }
+			o: { parallel: 6, overlap: 0.2 }
 		}
 	];
 	const seen = new Set();

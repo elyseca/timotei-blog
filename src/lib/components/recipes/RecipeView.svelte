@@ -5,6 +5,7 @@
 	import { togglePlan } from '$lib/recipes/plan';
 	import EffortBadge from './EffortBadge.svelte';
 	import type { Recipe } from '$lib/recipes/types';
+	import PhotoForm from './PhotoForm.svelte';
 	import DietPill from './DietPill.svelte';
 
 	let { id }: { id: string } = $props();
@@ -166,6 +167,9 @@
 					{#each r.notes as n, i (i)}<li>{n}</li>{/each}
 				</ul>
 			{/if}
+
+			<h2 class="mt-12 font-display text-3xl font-black">Photos</h2>
+			<PhotoForm id={r.id} title={r.title} />
 
 			{#if sim.length}
 				<h2 class="mt-12 font-display text-3xl font-black">Shares ingredients with</h2>

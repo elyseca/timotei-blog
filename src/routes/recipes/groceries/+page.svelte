@@ -2,6 +2,7 @@
 	import { S } from '$lib/recipes/store.svelte';
 	import { planItems } from '$lib/recipes/plan';
 	import SectionHero from '$lib/components/recipes/SectionHero.svelte';
+	import PlanSteps from '$lib/components/recipes/PlanSteps.svelte';
 	import GroceryList from '$lib/components/recipes/GroceryList.svelte';
 
 	const items = $derived(planItems());
@@ -12,6 +13,7 @@
 </svelte:head>
 
 <SectionHero tag="Meal plan" title="Grocery list" bg="bg-mustard" />
+<PlanSteps step={3} />
 
 <div class="mx-auto max-w-6xl px-5 pt-10 md:px-8">
 	<a

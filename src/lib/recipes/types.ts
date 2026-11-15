@@ -44,5 +44,5 @@ export interface PlanItem {
 export interface Cook {
 	id: string;
 	name: string;
-	icon: 'shark' | 'jellyfish';
+	icon: string;
 }

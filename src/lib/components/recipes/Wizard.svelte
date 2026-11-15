@@ -33,6 +33,13 @@
 	);
 	// The everyday / special occasion switch appears once there are special-occasion recipes to plan from.
 	const showOccasion = $derived(hasSpecial(allRecipes()));
+	let showFilters = $state(false);
+	const activeCount = $derived(
+		(['easy', 'veg', 'gf', 'nf', 'df', 'plant', 'fresh'] as const).filter((k) => S.filters[k])
+			.length +
+			S.filters.exclude.length +
+			S.filters.have.length
+	);
 	const short = $derived(plans.length > 0 && plans[0].ids.length < S.perPlan);
 	// Ingredients already in the kitchen: plans lean towards recipes that use them.
 	const options = $derived(haveOptions(allRecipes()) as string[]);
@@ -54,98 +61,113 @@
 <section class="mx-auto max-w-6xl px-5 pt-6 md:px-8">
 	<div class="brutal-box bg-white p-6">
 		<Controls withCount={true} />
-		{#if showOccasion}
-			<div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Occasion">
+		<button
+			type="button"
+			class="brutal-btn mt-4 bg-white md:hidden"
+			aria-expanded={showFilters}
+			onclick={() => (showFilters = !showFilters)}
+		>
+			Filters{activeCount ? ` · ${activeCount}` : ''}
+		</button>
+		<div class="{showFilters ? 'block' : 'hidden'} md:block">
+			{#if showOccasion}
+				<div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Occasion">
+					<button
+						type="button"
+						class="brutal-chip"
+						aria-pressed={S.filters.occasion === 'everyday'}
+						onclick={() => setOccasion('everyday')}>Everyday</button
+					>
+					<button
+						type="button"
+						class="brutal-chip"
+						aria-pressed={S.filters.occasion === 'special'}
+						onclick={() => setOccasion('special')}>Special occasion</button
+					>
+				</div>
+			{/if}
+			<div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Plan filters">
 				<button
 					type="button"
 					class="brutal-chip"
-					aria-pressed={S.filters.occasion === 'everyday'}
-					onclick={() => setOccasion('everyday')}>Everyday</button
+					aria-pressed={S.filters.easy}
+					onclick={() => toggleFilter('easy')}>Quick &amp; easy</button
+				>
+				{#each ['veg', 'gf', 'nf', 'df'] as const as k (k)}
+					<DietPill {k} pressed={S.filters[k]} onclick={() => toggleFilter(k)} />
+				{/each}
+				{#each MEATS as m (m)}
+					<button
+						type="button"
+						class="brutal-chip"
+						aria-pressed={S.filters.exclude.includes(m)}
+						onclick={() => toggleExclude(m)}
+					>
+						No {m.toLowerCase()}
+					</button>
+				{/each}
+				<button
+					type="button"
+					class="brutal-chip"
+					aria-pressed={S.filters.plant}
+					onclick={() => toggleFilter('plant')}>Plant-based</button
 				>
 				<button
 					type="button"
 					class="brutal-chip"
-					aria-pressed={S.filters.occasion === 'special'}
-					onclick={() => setOccasion('special')}>Special occasion</button
+					aria-pressed={S.filters.fresh}
+					onclick={() => toggleFilter('fresh')}>Fresh ingredients only</button
 				>
 			</div>
-		{/if}
-		<div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Plan filters">
-			<button
-				type="button"
-				class="brutal-chip"
-				aria-pressed={S.filters.easy}
-				onclick={() => toggleFilter('easy')}>Quick &amp; easy</button
-			>
-			{#each ['veg', 'gf', 'nf', 'df'] as const as k (k)}
-				<DietPill {k} pressed={S.filters[k]} onclick={() => toggleFilter(k)} />
-			{/each}
-			{#each MEATS as m (m)}
-				<button
-					type="button"
-					class="brutal-chip"
-					aria-pressed={S.filters.exclude.includes(m)}
-					onclick={() => toggleExclude(m)}
-				>
-					No {m.toLowerCase()}
-				</button>
-			{/each}
-			<button
-				type="button"
-				class="brutal-chip"
-				aria-pressed={S.filters.plant}
-				onclick={() => toggleFilter('plant')}>Plant-based</button
-			>
-			<button
-				type="button"
-				class="brutal-chip"
-				aria-pressed={S.filters.fresh}
-				onclick={() => toggleFilter('fresh')}>Fresh ingredients only</button
-			>
-		</div>
-		<div class="mt-5 flex flex-wrap items-center gap-2">
-			<span class="font-mono text-xs font-bold tracking-wide uppercase">Have on hand</span>
-			{#each S.filters.have as h (h)}
-				<button type="button" class="brutal-chip" aria-pressed="true" onclick={() => toggleHave(h)}>
-					{h} ×
-				</button>
-			{/each}
-			<div class="relative">
-				<input
-					type="search"
-					class="brutal-field w-56"
-					placeholder="Search ingredients"
-					aria-label="Search ingredients you have"
-					autocomplete="off"
-					bind:value={q}
-					oninput={() => (open = true)}
-					onfocus={() => (open = true)}
-					onblur={() => (open = false)}
-					onkeydown={(e) => {
-						if (e.key === 'Enter' && found.length) {
-							e.preventDefault();
-							add(found[0]);
-						}
-					}}
-				/>
-				{#if open && found.length}
-					<ul
-						class="brutal-box absolute top-full left-0 z-20 mt-1 max-h-60 w-full overflow-y-auto bg-white"
+			<div class="mt-5 flex flex-wrap items-center gap-2">
+				<span class="font-mono text-xs font-bold tracking-wide uppercase">Have on hand</span>
+				{#each S.filters.have as h (h)}
+					<button
+						type="button"
+						class="brutal-chip"
+						aria-pressed="true"
+						onclick={() => toggleHave(h)}
 					>
-						{#each found as o (o)}
-							<li>
-								<button
-									type="button"
-									class="w-full px-3 py-1.5 text-left text-sm hover:bg-lime"
-									onmousedown={(e) => e.preventDefault()}
-									onclick={() => add(o)}
-								>
-									{o}
-								</button>
-							</li>
-						{/each}
-					</ul>
-				{/if}
+						{h} ×
+					</button>
+				{/each}
+				<div class="relative">
+					<input
+						type="search"
+						class="brutal-field w-56"
+						placeholder="Search ingredients"
+						aria-label="Search ingredients you have"
+						autocomplete="off"
+						bind:value={q}
+						oninput={() => (open = true)}
+						onfocus={() => (open = true)}
+						onblur={() => (open = false)}
+						onkeydown={(e) => {
+							if (e.key === 'Enter' && found.length) {
+								e.preventDefault();
+								add(found[0]);
+							}
+						}}
+					/>
+					{#if open && found.length}
+						<ul
+							class="brutal-box absolute top-full left-0 z-20 mt-1 max-h-60 w-full overflow-y-auto bg-white"
+						>
+							{#each found as o (o)}
+								<li>
+									<button
+										type="button"
+										class="w-full px-3 py-1.5 text-left text-sm hover:bg-lime"
+										onmousedown={(e) => e.preventDefault()}
+										onclick={() => add(o)}
+									>
+										{o}
+									</button>
+								</li>
+							{/each}
+						</ul>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</div>

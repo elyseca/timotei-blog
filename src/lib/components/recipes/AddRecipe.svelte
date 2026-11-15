@@ -17,7 +17,8 @@
 		ing: [blankIng(), blankIng(), blankIng()],
 		steps: ['', ''],
 		tips: '',
-		source: ''
+		dishPhoto: '',
+		cookPhoto: ''
 	});
 	let pick = $state('');
 	let custom = $state('');
@@ -58,7 +59,7 @@
 		}
 	}
 	function again() {
-		f.title = f.note = f.tips = f.source = '';
+		f.title = f.note = f.tips = f.dishPhoto = f.cookPhoto = '';
 		f.ing = [blankIng(), blankIng(), blankIng()];
 		f.steps = ['', ''];
 		f.equip = [];
@@ -191,7 +192,9 @@
 				<h2 class="font-display text-2xl font-black">Ingredients</h2>
 				<p class="text-sm text-ink/70">One per line, for the whole recipe as written.</p>
 				{#each f.ing as ing, i (i)}
-					<div class="grid grid-cols-[4.5rem_6rem_1fr_auto] items-center gap-2">
+					<div
+						class="grid grid-cols-[4.5rem_1fr_auto] items-center gap-2 sm:grid-cols-[4.5rem_6rem_1fr_auto]"
+					>
 						<input
 							class="brutal-field"
 							placeholder="Qty"
@@ -202,10 +205,14 @@
 						<select class="brutal-field" aria-label="Unit" bind:value={ing.unit}>
 							{#each UNITS as u (u)}<option value={u}>{u || 'unit'}</option>{/each}
 						</select>
-						<input class="brutal-field" placeholder="Ingredient" bind:value={ing.name} />
+						<input
+							class="brutal-field order-last col-span-3 sm:order-none sm:col-span-1"
+							placeholder="Ingredient"
+							bind:value={ing.name}
+						/>
 						<button
 							type="button"
-							class="font-mono text-xs font-bold uppercase underline"
+							class="p-2 font-mono text-lg font-bold uppercase"
 							aria-label="Remove ingredient"
 							onclick={() => f.ing.length > 1 && f.ing.splice(i, 1)}>×</button
 						>
@@ -226,7 +233,7 @@
 						<textarea class="brutal-field min-h-16 flex-1" bind:value={f.steps[i]}></textarea>
 						<button
 							type="button"
-							class="mt-2 font-mono text-xs font-bold uppercase underline"
+							class="p-2 font-mono text-lg font-bold uppercase"
 							aria-label="Remove step"
 							onclick={() => f.steps.length > 1 && f.steps.splice(i, 1)}>×</button
 						>
@@ -245,9 +252,22 @@
 					Tips or swaps (optional)
 					<textarea class="brutal-field min-h-20 normal-case" bind:value={f.tips}></textarea>
 				</label>
+			</div>
+
+			<div class="brutal-box flex flex-col gap-3 bg-white p-4">
+				<h2 class="font-display text-2xl font-black">Photos (optional)</h2>
+				<p class="text-sm text-ink/70">
+					A picture of the dish as it's meant to look, and one of you making it yourself, make the
+					recipe feel like ours. Upload them to Google Photos, iCloud or Drive, then paste the share
+					links here.
+				</p>
 				<label class={label}>
-					Link to the original (optional)
-					<input type="url" class="brutal-field normal-case" bind:value={f.source} />
+					The finished dish
+					<input type="url" class="brutal-field normal-case" bind:value={f.dishPhoto} />
+				</label>
+				<label class={label}>
+					You making it
+					<input type="url" class="brutal-field normal-case" bind:value={f.cookPhoto} />
 				</label>
 			</div>
 

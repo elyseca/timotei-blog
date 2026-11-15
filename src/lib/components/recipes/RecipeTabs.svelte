@@ -2,13 +2,21 @@
 	import { page } from '$app/state';
 	import { S } from '$lib/recipes/store.svelte';
 
+	// In the order people use them: browse, plan the week, shop, then give back, with the method last.
 	const tabs = [
+		{ href: '/recipes', label: 'Recipes' },
 		{ href: '/recipes/plan', label: 'Meal Plan' },
 		{ href: '/recipes/groceries', label: 'Grocery List' },
-		{ href: '/recipes', label: 'Recipes' },
-		{ href: '/recipes/approach', label: 'Meal Plan Approach' },
-		{ href: '/recipes/add', label: 'Add a Recipe' }
+		{ href: '/recipes/add', label: 'Add a Recipe' },
+		{ href: '/recipes/approach', label: 'Our Method' }
 	];
+	let bar = $state<HTMLElement>();
+	// On a phone the tabs scroll sideways: bring the current one into view.
+	$effect(() => {
+		page.url.pathname;
+		const el = bar?.querySelector<HTMLElement>('[aria-current="page"]');
+		if (bar && el) bar.scrollLeft = el.offsetLeft - (bar.clientWidth - el.offsetWidth) / 2;
+	});
 
 	function isActive(href: string) {
 		const p = page.url.pathname.replace(/\/$/, '');
@@ -19,6 +27,7 @@
 
 <div class="border-b-[2.5px] border-ink bg-cream-2">
 	<nav
+		bind:this={bar}
 		class="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 py-3 md:px-8"
 		aria-label="Recipe book"
 	>

@@ -1,5 +1,6 @@
 // Meal-plan helpers and actions. They read and write the shared state S.
 import { S, byId, toast } from './store.svelte';
+import { COOK_ICONS } from './cookIcons';
 import { lineText, fmtQty, WEEK_MEALS, comboId, swapRecipe } from './engine';
 import type { PlanItem } from './types';
 
@@ -154,9 +155,30 @@ export function moveEat(id: string, from: number, to: number): string | null {
 	if (other) other[1].eats = other[1].eats.map((e) => (e === to ? from : e));
 	return null;
 }
+export const MAX_CHEFS = 4;
+/** Add a chef with the first face nobody has yet. */
+export function addChef() {
+	if (S.cooks.length >= MAX_CHEFS) return;
+	const icon = COOK_ICONS.find((k) => !S.cooks.some((c) => c.icon === k)) ?? COOK_ICONS[0];
+	let n = S.cooks.length + 1;
+	while (S.cooks.some((c) => c.id === 'c' + n)) n++;
+	S.cooks.push({ id: 'c' + n, name: 'Chef ' + (S.cooks.length + 1), icon });
+}
+/** Remove a chef (there is always at least one); their cooking goes to the first chef left. */
+export function removeChef(id: string) {
+	if (S.cooks.length < 2) return;
+	S.cooks = S.cooks.filter((c) => c.id !== id);
+	for (const sc of Object.values(S.sched)) if (sc.chef === id) sc.chef = S.cooks[0].id;
+}
+/** Two chefs never share a face: a face another chef has is refused. */
+export function setChefIcon(id: string, icon: string) {
+	if (S.cooks.some((c) => c.id !== id && c.icon === icon)) return;
+	const c = S.cooks.find((x) => x.id === id);
+	if (c) c.icon = icon;
+}
 export function nextChef(id: string) {
 	const sc = S.sched[id];
-	if (!sc) return;
+	if (!sc || S.cooks.length < 2) return;
 	const i = S.cooks.findIndex((c) => c.id === sc.chef);
 	sc.chef = S.cooks[(i + 1) % S.cooks.length].id;
 }

@@ -3,6 +3,7 @@
 import { browser } from '$app/environment';
 import { RECIPES } from './data';
 import { makeCombo } from './engine';
+import { COOK_ICONS } from './cookIcons';
 import type { Cook, Recipe } from './types';
 
 const KEY = 'timotei-recipes-v1';
@@ -62,13 +63,10 @@ export const ui = $state({
 		by: '',
 		equip: '',
 		freezer: false,
-		veg: false,
 		garlic: false,
-		gf: false,
-		nf: false,
-		df: false
+		// Effort levels (1 to 5) to show; none picked shows everything.
+		effort: [] as number[]
 	},
-	calStep: 0,
 	// Id of the protein, veggie or carb being turned into a combo (opens the pop-up).
 	comboFrom: '',
 	toast: '',
@@ -85,7 +83,23 @@ export function hydrate() {
 			// Older saves used a cook time and per-day cooking; start the schedule fresh.
 			delete saved.cookTime;
 			delete saved.calendar;
-			delete saved.cooks; // the two chefs are fixed
+			// Chefs can be renamed, added (up to four) and given faces; ignore anything not that shape,
+			// and never let two chefs share a face.
+			const base = fresh().cooks;
+			const seen = new Set<string>();
+			const cooks: Cook[] = [];
+			for (const c of Array.isArray(saved.cooks) ? saved.cooks.slice(0, 4) : []) {
+				if (typeof c?.id !== 'string' || cooks.some((x) => x.id === c.id)) continue;
+				let icon = COOK_ICONS.includes(c.icon) && !seen.has(c.icon) ? c.icon : '';
+				icon ||= COOK_ICONS.find((k) => !seen.has(k)) ?? 'shark';
+				seen.add(icon);
+				cooks.push({
+					id: c.id,
+					name: typeof c.name === 'string' && c.name.trim() ? c.name.slice(0, 20) : 'Chef',
+					icon
+				});
+			}
+			saved.cooks = cooks.length ? cooks : base;
 			const first = Object.values(saved.sched ?? {})[0] as Record<string, unknown> | undefined;
 			if (first && !('slot' in first)) saved.sched = {};
 			saved.filters = { ...fresh().filters, ...saved.filters };

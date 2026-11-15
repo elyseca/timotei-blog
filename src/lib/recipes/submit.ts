@@ -35,7 +35,8 @@ export type Submission = {
 	ing: { qty: string; unit: string; name: string }[];
 	steps: string[];
 	tips: string;
-	source: string;
+	dishPhoto: string;
+	cookPhoto: string;
 };
 
 /** The email body: easy to read, followed by the recipe in the site's own format. */
@@ -57,7 +58,7 @@ export function submissionText(s: Submission) {
 		})),
 		steps,
 		notes: s.tips.trim() ? [s.tips.trim()] : undefined,
-		source: s.source.trim() || undefined
+		photos: [s.dishPhoto.trim(), s.cookPhoto.trim()].filter(Boolean)
 	};
 	return [
 		`Recipe: ${s.title}`,
@@ -74,7 +75,8 @@ export function submissionText(s: Submission) {
 		'STEPS',
 		...steps.map((x, n) => `${n + 1}. ${x}`),
 		s.tips.trim() ? `\nTIPS\n${s.tips.trim()}` : null,
-		s.source.trim() ? `\nSource: ${s.source.trim()}` : null,
+		s.dishPhoto.trim() ? `\nPhoto of the dish: ${s.dishPhoto.trim()}` : null,
+		s.cookPhoto.trim() ? `Photo of making it: ${s.cookPhoto.trim()}` : null,
 		'',
 		'--- as recipe data ---',
 		JSON.stringify(json, null, 2)
@@ -92,6 +94,39 @@ export async function sendSubmission(s: Submission): Promise<boolean> {
 			subject: `New recipe to review: ${s.title}`,
 			from_name: s.by,
 			message: submissionText(s)
+		})
+	});
+	const out = await res.json().catch(() => ({}));
+	return res.ok && out.success !== false;
+}
+
+export type PhotoSubmission = {
+	recipeId: string;
+	recipe: string;
+	by: string;
+	kind: 'dish' | 'cooking';
+	link: string;
+	caption: string;
+};
+
+/** A photo for an existing recipe page: emailed for review, never published automatically. */
+export async function sendPhoto(p: PhotoSubmission): Promise<boolean> {
+	const res = await fetch('https://api.web3forms.com/submit', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+		body: JSON.stringify({
+			access_key: WEB3FORMS_KEY,
+			subject: `Photo to review: ${p.recipe}`,
+			from_name: p.by,
+			message: [
+				`Recipe: ${p.recipe} (${p.recipeId})`,
+				`From: ${p.by}`,
+				`Photo of: ${p.kind === 'dish' ? 'the finished dish' : 'them making it'}`,
+				`Link: ${p.link}`,
+				p.caption.trim() && `Caption: ${p.caption.trim()}`
+			]
+				.filter(Boolean)
+				.join('\n')
 		})
 	});
 	const out = await res.json().catch(() => ({}));

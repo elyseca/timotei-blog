@@ -2,6 +2,7 @@
 	import { S } from '$lib/recipes/store.svelte';
 	import SectionHero from '$lib/components/recipes/SectionHero.svelte';
 	import Wizard from '$lib/components/recipes/Wizard.svelte';
+	import PlanSteps from '$lib/components/recipes/PlanSteps.svelte';
 	import Chosen from '$lib/components/recipes/Chosen.svelte';
 </script>
 
@@ -10,6 +11,7 @@
 </svelte:head>
 
 <SectionHero tag="Meal plan" title="Plan the week" bg="bg-mustard" />
+<PlanSteps step={S.plan.length ? 2 : 1} />
 {#if S.plan.length}
 	<Chosen />
 {:else}

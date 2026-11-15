@@ -11,6 +11,10 @@
 		moveCook,
 		moveEat,
 		moveShop,
+		addChef,
+		removeChef,
+		setChefIcon,
+		MAX_CHEFS,
 		nextChef,
 		slotName,
 		weekOf,
@@ -18,6 +22,7 @@
 	} from '$lib/recipes/plan';
 	import type { PlanItem } from '$lib/recipes/types';
 	import CookIcon from './CookIcon.svelte';
+	import { COOK_ICONS } from '$lib/recipes/cookIcons';
 	import CalendarPicker from './CalendarPicker.svelte';
 
 	let { items }: { items: PlanItem[] } = $props();
@@ -32,6 +37,7 @@
 	const overIds = $derived(Object.keys(lay.over));
 	// The week on screen (0 = the week that starts on "Week of"). Not saved.
 	let week = $state(0);
+	let editChefs = $state(false);
 	const lastUsed = $derived(
 		Math.max(
 			0,
@@ -81,6 +87,21 @@
 		};
 		navTimer = setTimeout(tick, 500);
 	}
+	// Holding a tile near the top or bottom of the screen scrolls the page, so a long phone
+	// layout can still be dragged across.
+	let scrollTimer: ReturnType<typeof setInterval> | undefined;
+	let lastY = 0;
+	function autoScroll(on: boolean) {
+		clearInterval(scrollTimer);
+		scrollTimer = undefined;
+		if (!on) return;
+		scrollTimer = setInterval(() => {
+			const edge = 90;
+			if (lastY < edge) window.scrollBy(0, -(edge - lastY) / 4);
+			else if (lastY > window.innerHeight - edge)
+				window.scrollBy(0, (lastY - (window.innerHeight - edge)) / 4);
+		}, 16);
+	}
 	let overSlot = $state<number | null>(null);
 	let dragging = $state('');
 
@@ -104,6 +125,7 @@
 		if (!drag.on) {
 			if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return;
 			drag.on = true;
+			autoScroll(true);
 			dragging = drag.kind + drag.id + drag.from;
 			const g = drag.el.cloneNode(true) as HTMLElement;
 			g.style.cssText +=
@@ -114,6 +136,7 @@
 			document.body.appendChild(g);
 			drag.ghost = g;
 		}
+		lastY = e.clientY;
 		if (drag.ghost) {
 			drag.ghost.style.left = e.clientX - drag.ghost.offsetWidth / 2 + 'px';
 			drag.ghost.style.top = e.clientY - 18 + 'px';
@@ -131,6 +154,7 @@
 		const d = drag;
 		drag = null;
 		hoverNav(0);
+		autoScroll(false);
 		d.ghost?.remove();
 		overSlot = null;
 		dragging = '';
@@ -162,6 +186,82 @@
 	onpointercancel={() => end(false)}
 />
 
+{#snippet cell(slot: number, min: string)}
+	{@const eatId = lay.eat[slot]}
+	<div
+		class="flex {min} flex-col gap-1.5 rounded-md border-2 border-dashed p-1 {overSlot === slot
+			? 'border-ink bg-lime/50'
+			: 'border-ink/25'}"
+		data-slot={slot}
+	>
+		{#if lay.shop === slot}
+			<div
+				class="flex cursor-grab touch-none items-center gap-1 rounded-md border-2 border-ink bg-lime px-1.5 py-1 text-xs leading-tight font-bold select-none active:cursor-grabbing {dragging ===
+				'shop' + 'shop' + slot
+					? 'opacity-30'
+					: ''}"
+				role="button"
+				tabindex="-1"
+				title="Grocery run. Drag to move; it has to come on or before the first cook."
+				onpointerdown={(e) => down(e, 'shop', 'shop', slot)}
+			>
+				<span class="shrink-0" aria-hidden="true">
+					<svg
+						width="18"
+						height="18"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2.4"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						><circle cx="9" cy="20" r="1.5" /><circle cx="18" cy="20" r="1.5" /><path
+							d="M2 3h3l2.7 12.4a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 7H6"
+						/></svg
+					>
+				</span>
+				<span class="min-w-0 break-words">Grocery run</span>
+			</div>
+		{/if}
+		{#each lay.cook[slot] as id (id)}
+			{@const chef = cookOf(S.sched[id].chef)}
+			<div
+				class="flex cursor-grab touch-none items-center gap-1 rounded-md border-2 border-ink px-1.5 py-1 text-xs leading-tight font-bold select-none active:cursor-grabbing {dragging ===
+				'cook' + id + slot
+					? 'opacity-30'
+					: ''}"
+				role="button"
+				tabindex="-1"
+				style="background:{STRONG[idx(id)]}"
+				title="{chef.name} cooks {title(id)}. Drag to move{S.cooks.length > 1
+					? ', tap to switch chef'
+					: ''}."
+				onpointerdown={(e) => down(e, 'cook', id, slot)}
+			>
+				<span class="shrink-0 rounded-full bg-white/90 p-0.5"
+					><CookIcon kind={chef.icon} size={22} /></span
+				>
+				<span class="min-w-0 break-words">{shortName(title(id))}</span>
+			</div>
+		{/each}
+		{#if eatId}
+			<div
+				class="min-h-9 cursor-grab touch-none rounded-md border-l-[5px] px-1.5 py-1 text-[0.7rem] leading-tight font-semibold text-ink select-none active:cursor-grabbing {dragging ===
+				'eat' + eatId + slot
+					? 'opacity-30'
+					: ''}"
+				role="button"
+				tabindex="-1"
+				style="background:{TINT[idx(eatId)]};border-color:{STRONG[idx(eatId)]}"
+				title="{title(eatId)}. Drag to move."
+				onpointerdown={(e) => down(e, 'eat', eatId, slot)}
+			>
+				{shortName(title(eatId))}
+			</div>
+		{/if}
+	</div>
+{/snippet}
+
 <section class="mx-auto max-w-6xl px-5 py-5 md:px-8">
 	<h2 class="font-display text-3xl font-black">Schedule</h2>
 
@@ -170,20 +270,85 @@
 			Week of
 			<input type="date" class="brutal-field" bind:value={S.weekStart} />
 		</label>
-		{#each S.cooks as c (c.id)}
-			<span
-				class="flex items-center gap-2 pb-2 font-mono text-xs font-bold tracking-wide uppercase"
+		<div class="flex flex-col gap-0.5 pb-0.5">
+			<div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+				{#each S.cooks as c (c.id)}
+					<span class="flex items-center gap-1 font-mono text-xs font-bold tracking-wide uppercase">
+						<CookIcon kind={c.icon} size={26} />{c.name}
+					</span>
+				{/each}
+			</div>
+			<button
+				type="button"
+				class="self-start font-mono text-[0.65rem] tracking-wide text-ink/50 uppercase underline underline-offset-2 hover:text-ink"
+				aria-expanded={editChefs}
+				onclick={() => (editChefs = !editChefs)}
 			>
-				<CookIcon kind={c.icon} size={30} />
-				{c.name}
-			</span>
-		{/each}
+				{editChefs ? 'Done' : 'Edit chefs'}
+			</button>
+		</div>
 	</div>
 
-	<div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+	{#if editChefs}
+		<div class="brutal-box mt-4 flex flex-col gap-4 bg-white p-4">
+			<p class="text-sm text-ink/70">
+				Add everyone who cooks in your household, up to {MAX_CHEFS}. Each gets a name and their own
+				face, shown on the calendar and in the events you add to your calendar.
+				{#if S.cooks.length > 1}Tap a cooking tile to hand it to the next chef.{/if}
+			</p>
+			{#each S.cooks as c (c.id)}
+				<div class="flex flex-wrap items-center gap-3">
+					<CookIcon kind={c.icon} size={34} />
+					<input
+						class="brutal-field w-44"
+						aria-label="Chef name"
+						maxlength="20"
+						bind:value={c.name}
+					/>
+					<div class="flex flex-wrap gap-1.5" role="group" aria-label="{c.name} icon">
+						{#each COOK_ICONS as k (k)}
+							{@const taken = S.cooks.some((o) => o.id !== c.id && o.icon === k)}
+							<button
+								type="button"
+								class="rounded-lg border-2 p-0.5 {c.icon === k
+									? 'border-ink bg-lime'
+									: 'border-transparent bg-cream-2'} {taken
+									? 'opacity-25'
+									: c.icon === k
+										? ''
+										: 'hover:border-ink'}"
+								aria-label={taken ? `${k} (taken)` : k}
+								aria-pressed={c.icon === k}
+								disabled={taken}
+								onclick={() => setChefIcon(c.id, k)}
+							>
+								<CookIcon kind={k} size={30} />
+							</button>
+						{/each}
+					</div>
+					{#if S.cooks.length > 1}
+						<button
+							type="button"
+							class="font-mono text-xs font-bold uppercase underline decoration-2 underline-offset-4"
+							onclick={() => removeChef(c.id)}
+						>
+							Remove
+						</button>
+					{/if}
+				</div>
+			{/each}
+			{#if S.cooks.length < MAX_CHEFS}
+				<button type="button" class="brutal-btn self-start bg-white" onclick={addChef}>
+					+ Add a chef
+				</button>
+			{/if}
+		</div>
+	{/if}
+
+	<div class="mt-4 flex items-center justify-between gap-2">
 		<button
 			type="button"
-			class="brutal-btn bg-white"
+			class="brutal-btn bg-white px-3! text-xs! sm:px-5! sm:text-sm!"
 			data-weeknav="-1"
 			disabled={shownWeek === 0}
 			onclick={() => (week = shownWeek - 1)}>← Earlier</button
@@ -194,7 +359,7 @@
 		</p>
 		<button
 			type="button"
-			class="brutal-btn bg-white"
+			class="brutal-btn bg-white px-3! text-xs! sm:px-5! sm:text-sm!"
 			data-weeknav="1"
 			disabled={shownWeek >= maxWeek}
 			onclick={() => (week = shownWeek + 1)}>Later →</button
@@ -206,7 +371,30 @@
 		week.
 	</p>
 
-	<div class="brutal-box mt-4 overflow-x-auto bg-white">
+	<!-- Phones: one card per day, lunch and dinner stacked, so tiles stay readable. -->
+	<div class="mt-4 flex flex-col gap-3 md:hidden" role="table" aria-label="Weekly schedule">
+		{#each CDAYS as d, i (d)}
+			<div class="brutal-box bg-white p-2.5">
+				<p class="mb-1.5 font-mono text-xs font-bold uppercase">
+					{d}
+					<span class="text-ink/50"
+						>{dayDate(base + i).toLocaleDateString(undefined, {
+							month: 'short',
+							day: 'numeric'
+						})}</span
+					>
+				</p>
+				<div class="grid grid-cols-[4rem_1fr] items-stretch gap-x-2 gap-y-1.5">
+					{#each ROWS as row (row.label)}
+						<span class="self-center font-mono text-[0.7rem] font-bold uppercase">{row.label}</span>
+						{@render cell((base + i) * 2 + row.offset, 'min-h-11')}
+					{/each}
+				</div>
+			</div>
+		{/each}
+	</div>
+
+	<div class="brutal-box mt-4 hidden overflow-x-auto bg-white md:block">
 		<div class="min-w-[44rem] p-3" role="table" aria-label="Weekly schedule">
 			<div class="grid grid-cols-[3.5rem_repeat(7,minmax(0,1fr))] gap-1.5">
 				<span></span>
@@ -220,79 +408,7 @@
 				{#each ROWS as row (row.label)}
 					<span class="self-center font-mono text-xs font-bold uppercase">{row.label}</span>
 					{#each CDAYS as d, i (d)}
-						{@const slot = (base + i) * 2 + row.offset}
-						{@const eatId = lay.eat[slot]}
-						<div
-							class="flex min-h-20 flex-col gap-1.5 rounded-md border-2 border-dashed p-1 {overSlot ===
-							slot
-								? 'border-ink bg-lime/50'
-								: 'border-ink/25'}"
-							data-slot={slot}
-						>
-							{#if lay.shop === slot}
-								<div
-									class="flex cursor-grab touch-none items-center gap-1 rounded-md border-2 border-ink bg-lime px-1.5 py-1 text-xs leading-tight font-bold select-none active:cursor-grabbing {dragging ===
-									'shop' + 'shop' + slot
-										? 'opacity-30'
-										: ''}"
-									role="button"
-									tabindex="-1"
-									title="Grocery run. Drag to move; it has to come on or before the first cook."
-									onpointerdown={(e) => down(e, 'shop', 'shop', slot)}
-								>
-									<span class="shrink-0" aria-hidden="true">
-										<svg
-											width="18"
-											height="18"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2.4"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											><circle cx="9" cy="20" r="1.5" /><circle cx="18" cy="20" r="1.5" /><path
-												d="M2 3h3l2.7 12.4a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 7H6"
-											/></svg
-										>
-									</span>
-									<span class="min-w-0 break-words">Grocery run</span>
-								</div>
-							{/if}
-							{#each lay.cook[slot] as id (id)}
-								{@const chef = cookOf(S.sched[id].chef)}
-								<div
-									class="flex cursor-grab touch-none items-center gap-1 rounded-md border-2 border-ink px-1.5 py-1 text-xs leading-tight font-bold select-none active:cursor-grabbing {dragging ===
-									'cook' + id + slot
-										? 'opacity-30'
-										: ''}"
-									role="button"
-									tabindex="-1"
-									style="background:{STRONG[idx(id)]}"
-									title="{chef.name} cooks {title(id)}. Drag to move, tap to switch chef."
-									onpointerdown={(e) => down(e, 'cook', id, slot)}
-								>
-									<span class="shrink-0 rounded-full bg-white/90 p-0.5"
-										><CookIcon kind={chef.icon} size={22} /></span
-									>
-									<span class="min-w-0 break-words">{shortName(title(id))}</span>
-								</div>
-							{/each}
-							{#if eatId}
-								<div
-									class="min-h-9 cursor-grab touch-none rounded-md border-l-[5px] px-1.5 py-1 text-[0.7rem] leading-tight font-semibold text-ink select-none active:cursor-grabbing {dragging ===
-									'eat' + eatId + slot
-										? 'opacity-30'
-										: ''}"
-									role="button"
-									tabindex="-1"
-									style="background:{TINT[idx(eatId)]};border-color:{STRONG[idx(eatId)]}"
-									title="{title(eatId)}. Drag to move."
-									onpointerdown={(e) => down(e, 'eat', eatId, slot)}
-								>
-									{shortName(title(eatId))}
-								</div>
-							{/if}
-						</div>
+						{@render cell((base + i) * 2 + row.offset, 'min-h-20')}
 					{/each}
 				{/each}
 			</div>
