@@ -64,7 +64,7 @@
 		<textarea readonly rows="8" class="brutal-field mt-4" bind:this={boxEl} value={copyText}
 		></textarea>
 	{/if}
-	<div class="brutal-box mt-6 columns-1 gap-x-10 bg-white p-6 sm:columns-2">
+	<div class="brutal-box mt-4 columns-1 gap-x-8 bg-white p-4 sm:columns-2">
 		{#each depts as d (d.k)}
 			<section class="mb-6 break-inside-avoid">
 				<h3 class="border-b-2 border-ink pb-1 font-mono text-sm font-bold tracking-wide uppercase">

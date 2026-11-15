@@ -13,6 +13,7 @@
 	import Stepper from './Stepper.svelte';
 	import Controls from './Controls.svelte';
 	import EffortBadge from './EffortBadge.svelte';
+	import Legend from './Legend.svelte';
 	import Schedule from './Schedule.svelte';
 
 	const items = $derived(planItems());
@@ -47,7 +48,7 @@
 	}
 </script>
 
-<div class="mx-auto max-w-6xl px-5 pt-10 md:px-8">
+<div class="mx-auto max-w-6xl px-5 pt-5 md:px-8">
 	<button
 		type="button"
 		class="font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
@@ -57,12 +58,12 @@
 	</button>
 </div>
 
-<section class="mx-auto max-w-6xl px-5 py-8 md:px-8">
-	<div class="brutal-box bg-white p-6">
+<section class="mx-auto max-w-6xl px-5 py-5 md:px-8">
+	<div class="brutal-box bg-white p-4">
 		<Controls />
 	</div>
 
-	<h2 class="mt-10 font-display text-3xl font-black">Plan</h2>
+	<h2 class="mt-6 font-display text-3xl font-black">Plan</h2>
 	<p class="mt-3 max-w-2xl text-ink/80">
 		Change the servings on any recipe to make more or less. The calendar below and the grocery list
 		update to match, so set the quantities however suits you.
@@ -70,10 +71,11 @@
 	<p class="mt-3 font-mono text-xs font-bold tracking-wide uppercase">
 		{total} servings · {meals} meals each{meals > WEEK_MEALS ? ' (over a week)' : ''}
 	</p>
-	<div class="brutal-box mt-6 flex flex-col bg-white">
+	<div class="mt-4"><Legend /></div>
+	<div class="brutal-box mt-2 flex flex-col bg-white">
 		{#each items as x (x.r.id)}
 			<div
-				class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink/15 p-4 last:border-0"
+				class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink/15 p-3 last:border-0"
 			>
 				<div>
 					<a
@@ -106,7 +108,7 @@
 		{/each}
 	</div>
 
-	<div class="brutal-box mt-6 bg-white p-6">
+	<div class="brutal-box mt-4 bg-white p-4">
 		<h3 class="font-mono text-xs font-bold tracking-wide uppercase">Add a combo</h3>
 		{#if suggestions.length}
 			<div class="mt-3 flex flex-wrap gap-2">

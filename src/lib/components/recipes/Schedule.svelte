@@ -162,7 +162,7 @@
 	onpointercancel={() => end(false)}
 />
 
-<section class="mx-auto max-w-6xl px-5 py-8 md:px-8">
+<section class="mx-auto max-w-6xl px-5 py-5 md:px-8">
 	<h2 class="font-display text-3xl font-black">Schedule</h2>
 
 	<div class="mt-5 flex flex-wrap items-end gap-x-6 gap-y-3">
@@ -180,7 +180,7 @@
 		{/each}
 	</div>
 
-	<div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+	<div class="mt-4 flex flex-wrap items-center justify-between gap-3">
 		<button
 			type="button"
 			class="brutal-btn bg-white"

@@ -11,12 +11,9 @@
 	import type { Recipe } from '$lib/recipes/types';
 	import Controls from './Controls.svelte';
 	import EffortBadge from './EffortBadge.svelte';
+	import DietPill from './DietPill.svelte';
+	import Legend from './Legend.svelte';
 
-	const DIETS = [
-		['gf', 'Gluten-free'],
-		['nf', 'Nut-free'],
-		['df', 'Dairy-free']
-	] as const;
 	const MEATS = ['Chicken', 'Turkey', 'Beef', 'Pork', 'Fish'];
 
 	// Suggested plans. The rules live in engine.ts (buildPlans): never three soups or stews, plus these filters.
@@ -26,6 +23,7 @@
 			plant: S.filters.plant,
 			fresh: S.filters.fresh,
 			easy: S.filters.easy,
+			veg: S.filters.veg,
 			gf: S.filters.gf,
 			nf: S.filters.nf,
 			df: S.filters.df,
@@ -53,7 +51,7 @@
 	const accents = ['bg-mustard', 'bg-blue text-cream', 'bg-teal'];
 </script>
 
-<section class="mx-auto max-w-6xl px-5 pt-12 md:px-8">
+<section class="mx-auto max-w-6xl px-5 pt-6 md:px-8">
 	<div class="brutal-box bg-white p-6">
 		<Controls withCount={true} />
 		{#if showOccasion}
@@ -79,13 +77,8 @@
 				aria-pressed={S.filters.easy}
 				onclick={() => toggleFilter('easy')}>Quick &amp; easy</button
 			>
-			{#each DIETS as d (d[0])}
-				<button
-					type="button"
-					class="brutal-chip"
-					aria-pressed={S.filters[d[0]]}
-					onclick={() => toggleFilter(d[0])}>{d[1]}</button
-				>
+			{#each ['veg', 'gf', 'nf', 'df'] as const as k (k)}
+				<DietPill {k} pressed={S.filters[k]} onclick={() => toggleFilter(k)} />
 			{/each}
 			{#each MEATS as m (m)}
 				<button
@@ -158,7 +151,8 @@
 	</div>
 </section>
 
-<section class="mx-auto max-w-6xl px-5 py-12 md:px-8">
+<section class="mx-auto max-w-6xl px-5 py-6 md:px-8">
+	<div class="mb-4"><Legend /></div>
 	<h2 class="font-display text-3xl font-black">Pick a plan</h2>
 	{#if plans.length}
 		{#if short}

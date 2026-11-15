@@ -31,7 +31,6 @@ export type Submission = {
 	active: number | null;
 	total: number | null;
 	equip: string[];
-	veg: boolean;
 	freezer: boolean;
 	ing: { qty: string; unit: string; name: string }[];
 	steps: string[];
@@ -50,7 +49,6 @@ export function submissionText(s: Submission) {
 		servings: s.servings,
 		mins: s.active && s.total ? { active: s.active, total: s.total } : undefined,
 		equip: s.equip,
-		veg: s.veg || undefined,
 		freezer: s.freezer || undefined,
 		ing: ing.map((i) => ({
 			qty: i.qty.trim() === '' ? null : Number(i.qty) || i.qty,
@@ -68,7 +66,7 @@ export function submissionText(s: Submission) {
 		`Meal: ${s.meal} · Serves ${s.servings}` +
 			(s.active ? ` · ${s.active} min hands-on, ${s.total ?? '?'} min total` : ''),
 		s.equip.length ? `Equipment: ${s.equip.join(', ')}` : null,
-		[s.veg && 'Vegetarian', s.freezer && 'Freezer-friendly'].filter(Boolean).join(', ') || null,
+		[s.freezer && 'Freezer-friendly'].filter(Boolean).join(', ') || null,
 		'',
 		'INGREDIENTS',
 		...ing.map((i) => `- ${[i.qty, i.unit, i.name].filter((x) => String(x).trim()).join(' ')}`),

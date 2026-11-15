@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { effort, effortLevel } from '$lib/recipes/engine';
+	import { effort, effortLevel, EFFORT_SCALE } from '$lib/recipes/engine';
 	import type { Recipe } from '$lib/recipes/types';
 
-	// Shows the effort level only. The minutes behind it live in the Method tab's scale.
-	let { r }: { r: Recipe } = $props();
-	const e = $derived(effort(r));
-	const level = $derived(effortLevel(e.score));
+	// Dots only; the Legend explains them. Pass `label` on a recipe's own page to name the level.
+	let { r, label = false }: { r: Recipe; label?: boolean } = $props();
+	const level = $derived(effortLevel(effort(r).score));
+	const name = $derived(EFFORT_SCALE[level - 1].name);
 </script>
 
 <span
-	class="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-xs font-bold tracking-wide uppercase"
-	title="Effort {level} of 5"
+	class="inline-flex items-center gap-2 font-mono text-xs font-bold tracking-wide uppercase"
+	title="Effort {level} of 5: {name}"
 >
 	<span class="inline-flex gap-0.5" aria-hidden="true">
 		{#each [1, 2, 3, 4, 5] as n (n)}
@@ -21,5 +21,5 @@
 			></span>
 		{/each}
 	</span>
-	<span>{e.label}</span>
+	{#if label}<span>{name}</span>{:else}<span class="sr-only">Effort {level} of 5, {name}</span>{/if}
 </span>

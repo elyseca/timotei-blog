@@ -442,8 +442,8 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'vodka-sauce',
-		mins: { active: 20, total: 35 },
-		title: 'Vegan Vodka Sauce (Silken Tofu)',
+		mins: { active: 25, total: 40 },
+		title: 'Vegan Vodka Pasta (Silken Tofu Sauce)',
 		section: 'Easy Weekly Meals',
 		kind: 'Main',
 		weekly: true,
@@ -453,8 +453,9 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Elyse',
-		blurb: 'Creamy tomato sauce with roasted red pepper.',
+		blurb: 'Creamy roasted red pepper and tomato sauce, tossed through pasta.',
 		ing: [
+			i(1, 'lb', 'pasta', 'dry', 'penne, rigatoni or spaghetti'),
 			i(1, 'tbsp', 'olive oil', 'oil'),
 			i(1, '', 'onion', 'produce', 'small, diced'),
 			i(24, 'oz', 'silken tofu', 'dairy'),
@@ -470,11 +471,13 @@ export const RECIPES: Recipe[] = [
 			i(null, '', 'smoked paprika', 'spice', 'optional')
 		],
 		steps: [
-			'Sauté the diced onion in 1 tbsp olive oil until soft and golden, about 8 minutes. Blend it with all remaining ingredients until smooth.',
-			'Adjust the seasoning.',
-			'Gently warm before serving.'
+			'Cook the pasta in well-salted water until just al dente. Save a mug of the pasta water, then drain.',
+			'Meanwhile, sauté the diced onion in 1 tbsp olive oil until soft and golden, about 8 minutes. Blend it with all remaining ingredients until smooth.',
+			'Adjust the seasoning, then warm the sauce gently in the pot.',
+			'Toss the pasta through the sauce, loosening it with a splash of the pasta water until it coats every piece. Serve right away.'
 		],
 		notes: [
+			'About 2 oz of dry pasta per serving. Use a gluten-free pasta if you need it. The sauce alone keeps well, so if you are cooking ahead, store the sauce and pasta separately.',
 			'About the cashews: "Raw" means plain, unroasted, unsalted cashews, not the roasted, salted snack kind. Soaking softens them so they blend into a smooth, creamy base instead of a gritty one. Cover them with water and soak 2–4 hours, or overnight in the fridge. For a quick soak, cover with just-boiled water for 15–20 minutes. Drain and rinse before blending.'
 		]
 	},

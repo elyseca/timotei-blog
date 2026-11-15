@@ -113,20 +113,72 @@ const DAIRY =
 const NOT_DAIRY =
 	/\b(coconut|almond|oat|soy|cashew|rice) (milk|cream|yogurt)|butter beans?|butternut|peanut butter|nut butter|almond butter|cocoa butter|cream of tartar/i;
 
+/* ---- swaps ----
+ * When someone is vegetarian or gluten-free, a few ingredients are swapped for a safe version in
+ * the recipe, the plan and the grocery list: broth becomes vegetable broth, pasta becomes
+ * chickpea pasta. prefs is the filters object (only veg and gf are read). */
+const SWAPS = [
+	{
+		pref: 'veg',
+		test: /(?<!vegetable )\b((?:low-sodium |reduced-sodium )?)(?:chicken |beef |turkey )?(broth|stock)\b/gi,
+		to: (_m, a, b) => `${a}vegetable ${b}`
+	},
+	{ pref: 'gf', test: /(?<!chickpea )\bpasta\b/gi, to: () => 'chickpea pasta' }
+];
+const swapText = (t, prefs) => {
+	let out = t;
+	for (const w of SWAPS) if (prefs[w.pref]) out = out.replace(w.test, w.to);
+	return out;
+};
+export function swapRecipe(r, prefs) {
+	if (!r || !prefs || (!prefs.veg && !prefs.gf)) return r;
+	const swaps = [];
+	const ing = r.ing.map((x) => {
+		const name = swapText(x.name, prefs);
+		if (name !== x.name) swaps.push({ from: x.name, to: name });
+		return name === x.name ? x : { ...x, name };
+	});
+	if (!swaps.length) return r;
+	const steps = r.steps.map((st) =>
+		Array.isArray(st) ? st.map((t) => swapText(t, prefs)) : swapText(st, prefs)
+	);
+	return { ...r, ing, steps, swaps };
+}
+
 export function diet(r) {
 	const text = [
 		...r.ing.map((x) => x.name),
 		...r.steps.map((s) => (Array.isArray(s) ? s.join(' ') : s))
-	].join(' | ');
+	]
+		.join(' | ')
+		.replace(/chickpea pasta/gi, 'chickpea-based')
+		.replace(/vegetable (broth|stock)/gi, 'veg$1');
 	const clean = text.replace(NOT_DAIRY, ' ');
 	const nuts = text.replace(/gluten-free/gi, ' ');
 	return {
 		gf: !GLUTEN.test(nuts),
 		nf: !NUTS.test(text),
-		df: !DAIRY.test(clean)
+		df: !DAIRY.test(clean),
+		veg: isVegetarian(r),
+		garlic: !hasGarlic(r)
 	};
 }
-export const DIET_LABEL = { gf: 'Gluten-free', nf: 'Nut-free', df: 'Dairy-free' };
+// Vegetarian: marked as such, or with no meat, fish or stock-from-meat in the ingredients.
+const MEAT =
+	/\b(chicken|beef|pork|turkey|sausage|bacon|ham|lamb|veal|salmon|fish|tuna|cod|shrimp|prawns?|anchov(y|ies)|meatballs?|wings?|broth|stock|gelatin)\b/i;
+function isVegetarian(r) {
+	return (
+		!!r.veg || !r.ing.some((x) => MEAT.test(x.name.replace(/vegetable (broth|stock)/gi, 'veg$1')))
+	);
+}
+export const DIETS = [
+	{ key: 'gf', label: 'Gluten-free', color: 'mustard' },
+	{ key: 'nf', label: 'Nut-free', color: 'coral' },
+	{ key: 'df', label: 'Dairy-free', color: 'blue' },
+	{ key: 'veg', label: 'Vegetarian', color: 'lime' },
+	{ key: 'garlic', label: 'Garlic-free', color: 'teal' }
+];
+export const DIET_LABEL = Object.fromEntries(DIETS.map((d) => [d.key, d.label]));
 
 export const DROP = new Set([
 	'chopped',
@@ -650,7 +702,7 @@ export function buildPlans(all, n, shuffle, opts) {
 	let pool = planPool(all, opts.occasion)
 		.concat(special ? [] : comboList(all))
 		.filter((r) => !(opts.exclude || []).includes(proteinOf(r)));
-	for (const k of ['gf', 'nf', 'df']) if (opts[k]) pool = pool.filter((r) => diet(r)[k]);
+	for (const k of ['gf', 'nf', 'df', 'veg']) if (opts[k]) pool = pool.filter((r) => diet(r)[k]);
 	if (opts.easy) pool = pool.filter((r) => effort(r).tier === 'easy');
 	if (opts.plant) pool = pool.filter((r) => proteinOf(r) === 'Plant-based');
 	if (opts.fresh) pool = pool.filter((r) => !r.ing.some((x) => x.dept === 'frozen'));

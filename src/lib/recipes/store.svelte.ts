@@ -36,6 +36,7 @@ function fresh() {
 			// Only recipes that are quick and easy to make.
 			easy: false,
 			// Dietary: only recipes that are gluten-free, nut-free or dairy-free.
+			veg: false,
 			gf: false,
 			nf: false,
 			df: false,
@@ -62,7 +63,7 @@ export const ui = $state({
 		equip: '',
 		freezer: false,
 		veg: false,
-		garlicFree: false,
+		garlic: false,
 		gf: false,
 		nf: false,
 		df: false

@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { S, byId, allRecipes } from '$lib/recipes/store.svelte';
 	import { MEALS } from '$lib/recipes/data';
-	import { lineText, similar, diet, DIET_LABEL } from '$lib/recipes/engine';
+	import { lineText, similar, diet, DIETS, swapRecipe } from '$lib/recipes/engine';
 	import { togglePlan } from '$lib/recipes/plan';
 	import EffortBadge from './EffortBadge.svelte';
+	import type { Recipe } from '$lib/recipes/types';
+	import DietPill from './DietPill.svelte';
 
 	let { id }: { id: string } = $props();
 
-	const r = $derived(byId(id));
+	const r = $derived(swapRecipe(byId(id), S.filters) as Recipe | undefined);
 
 	// A combo's amounts are per serving: show them for a standard plan serving count.
 	const f = $derived(r?.parts ? S.servingsPer / r.servings : 1);
@@ -20,12 +22,11 @@
 				}[])
 			: []
 	);
+	const dt = $derived(r ? diet(r) : null);
 	const tags = $derived(
 		r
 			? [
 					...(r.meal ?? []).map((m) => (MEALS as Record<string, string>)[m] ?? m),
-					...(r.veg ? ['Vegetarian'] : []),
-					...(['gf', 'nf', 'df'] as const).filter((k) => diet(r)[k]).map((k) => DIET_LABEL[k]),
 					...(r.freezer ? ['Freezer-friendly'] : []),
 					...(r.equip ?? []),
 					...(r.tags ?? [])
@@ -45,7 +46,7 @@
 	</div>
 {:else}
 	<section class="grid-bg border-b-[2.5px] border-ink bg-coral">
-		<div class="mx-auto max-w-6xl px-5 py-12 md:px-8">
+		<div class="mx-auto max-w-6xl px-5 py-7 md:px-8">
 			<a
 				href="/recipes"
 				class="rise-in font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
@@ -53,7 +54,7 @@
 				← All recipes
 			</a>
 			<h1
-				class="rise-in mt-5 max-w-3xl font-display text-4xl font-black md:text-6xl"
+				class="rise-in mt-5 max-w-3xl font-display text-4xl font-black md:text-5xl"
 				style="--delay: 80ms"
 			>
 				{r.title}
@@ -62,9 +63,12 @@
 					{r.blurb}
 				</p>{/if}
 			{#if r.mins}
-				<div class="rise-in mt-5" style="--delay: 180ms"><EffortBadge {r} /></div>
+				<div class="rise-in mt-5" style="--delay: 180ms"><EffortBadge {r} label /></div>
 			{/if}
 			<div class="rise-in mt-5 flex flex-wrap gap-2" style="--delay: 200ms">
+				{#if dt}{#each DIETS.filter((x) => dt[x.key as keyof typeof dt]) as x (x.key)}<DietPill
+							k={x.key}
+						/>{/each}{/if}
 				{#each tags as t (t)}<span class="brutal-tag">{t}</span>{/each}
 			</div>
 			<p
@@ -94,9 +98,14 @@
 		</div>
 	</section>
 
-	<div class="mx-auto grid max-w-6xl gap-10 px-5 py-12 md:px-8 lg:grid-cols-[22rem_1fr]">
-		<aside class="flex flex-col gap-6">
+	<div class="mx-auto grid max-w-6xl gap-6 px-5 py-7 md:px-8 lg:grid-cols-[22rem_1fr]">
+		<aside class="flex flex-col gap-4">
 			<div class="brutal-box bg-white p-5">
+				{#if r.swaps?.length}
+					<p class="mb-2 rounded-md bg-lime/40 px-2 py-1 text-xs font-semibold">
+						Swapped for your diet: {r.swaps.map((x) => `${x.from} → ${x.to}`).join(', ')}
+					</p>
+				{/if}
 				<ul class="flex flex-col">
 					{#each r.ing as x, i (i)}
 						<li

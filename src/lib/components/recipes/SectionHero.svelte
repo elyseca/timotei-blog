@@ -9,9 +9,9 @@
 </script>
 
 <section class="grid-bg border-b-[2.5px] border-ink {bg}">
-	<div class="mx-auto max-w-6xl px-5 py-14 md:px-8">
+	<div class="mx-auto max-w-6xl px-5 py-8 md:px-8">
 		<span class="rise-in brutal-tag bg-cream">{tag}</span>
-		<h1 class="rise-in mt-5 font-display text-5xl font-black md:text-6xl" style="--delay: 80ms">
+		<h1 class="rise-in mt-3 font-display text-4xl font-black md:text-5xl" style="--delay: 80ms">
 			{title}
 		</h1>
 		{#if blurb}

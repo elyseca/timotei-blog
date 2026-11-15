@@ -13,7 +13,6 @@
 		active: null,
 		total: null,
 		equip: [],
-		veg: false,
 		freezer: false,
 		ing: [blankIng(), blankIng(), blankIng()],
 		steps: ['', ''],
@@ -64,13 +63,13 @@
 		f.steps = ['', ''];
 		f.equip = [];
 		f.active = f.total = null;
-		f.veg = f.freezer = false;
+		f.freezer = false;
 		status = 'idle';
 	}
 	const label = 'flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase';
 </script>
 
-<section class="mx-auto max-w-3xl px-5 py-12 md:px-8">
+<section class="mx-auto max-w-3xl px-5 py-6 md:px-8">
 	{#if status === 'done'}
 		<div class="brutal-box bg-lime p-8 text-center">
 			<h2 class="font-display text-3xl font-black">Thank you!</h2>
@@ -83,12 +82,14 @@
 		</div>
 	{:else}
 		<p class="max-w-2xl text-lg text-ink/80">
-			Got a recipe you love? Share it here. We read every one and add the ones that fit to the book.
-			Only the name, your name, the ingredients and the steps are required.
+			We'd love for everyone close to us to help start a family recipe archive. Share the dishes you
+			make on repeat to get through the week, and the ones saved for the most important days of the
+			year. Every recipe you add becomes part of something we all get to cook from and pass along.
 		</p>
+		<p class="mt-3 max-w-2xl text-sm text-ink/70">We read each one before it goes in the book.</p>
 
-		<form class="mt-8 flex flex-col gap-8" onsubmit={submit}>
-			<div class="brutal-box flex flex-col gap-5 bg-white p-6">
+		<form class="mt-5 flex flex-col gap-4" onsubmit={submit}>
+			<div class="brutal-box flex flex-col gap-4 bg-white p-4">
 				<h2 class="font-display text-2xl font-black">The basics</h2>
 				<label class={label}>
 					Recipe name
@@ -134,15 +135,12 @@
 				</div>
 				<div class="flex flex-wrap gap-6">
 					<label class="flex items-center gap-2 text-sm">
-						<input type="checkbox" class="brutal-check" bind:checked={f.veg} /> Vegetarian
-					</label>
-					<label class="flex items-center gap-2 text-sm">
 						<input type="checkbox" class="brutal-check" bind:checked={f.freezer} /> Freezer-friendly
 					</label>
 				</div>
 			</div>
 
-			<div class="brutal-box flex flex-col gap-4 bg-white p-6">
+			<div class="brutal-box flex flex-col gap-3 bg-white p-4">
 				<h2 class="font-display text-2xl font-black">Equipment</h2>
 				{#if f.equip.length}
 					<div class="flex flex-wrap gap-2">
@@ -189,7 +187,7 @@
 				</div>
 			</div>
 
-			<div class="brutal-box flex flex-col gap-4 bg-white p-6">
+			<div class="brutal-box flex flex-col gap-3 bg-white p-4">
 				<h2 class="font-display text-2xl font-black">Ingredients</h2>
 				<p class="text-sm text-ink/70">One per line, for the whole recipe as written.</p>
 				{#each f.ing as ing, i (i)}
@@ -220,7 +218,7 @@
 				>
 			</div>
 
-			<div class="brutal-box flex flex-col gap-4 bg-white p-6">
+			<div class="brutal-box flex flex-col gap-3 bg-white p-4">
 				<h2 class="font-display text-2xl font-black">Steps</h2>
 				{#each f.steps as _, i (i)}
 					<div class="flex items-start gap-3">
@@ -241,7 +239,7 @@
 				>
 			</div>
 
-			<div class="brutal-box flex flex-col gap-5 bg-white p-6">
+			<div class="brutal-box flex flex-col gap-4 bg-white p-4">
 				<h2 class="font-display text-2xl font-black">Anything else?</h2>
 				<label class={label}>
 					Tips or swaps (optional)

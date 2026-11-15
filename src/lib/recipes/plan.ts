@@ -1,6 +1,6 @@
 // Meal-plan helpers and actions. They read and write the shared state S.
 import { S, byId, toast } from './store.svelte';
-import { lineText, fmtQty, WEEK_MEALS, comboId } from './engine';
+import { lineText, fmtQty, WEEK_MEALS, comboId, swapRecipe } from './engine';
 import type { PlanItem } from './types';
 
 export const CDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -39,7 +39,7 @@ export const cookOf = (id: string) => S.cooks.find((c) => c.id === id) ?? S.cook
 
 export function planItems(): PlanItem[] {
 	return S.plan
-		.map((p) => ({ r: byId(p.id), servings: p.servings }))
+		.map((p) => ({ r: swapRecipe(byId(p.id), S.filters), servings: p.servings }))
 		.filter((x): x is PlanItem => !!x.r);
 }
 
@@ -227,7 +227,7 @@ export function toggleHave(name: string) {
 	else S.filters.have.push(name);
 	S.shuffle = 0;
 }
-export function toggleFilter(key: 'plant' | 'fresh' | 'easy' | 'gf' | 'nf' | 'df') {
+export function toggleFilter(key: 'plant' | 'fresh' | 'easy' | 'veg' | 'gf' | 'nf' | 'df') {
 	S.filters[key] = !S.filters[key];
 	S.shuffle = 0;
 }

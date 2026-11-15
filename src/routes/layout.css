@@ -254,3 +254,32 @@
 		opacity: 0;
 	}
 }
+
+/* Dietary pills: each has its own colour, passed in as --diet */
+.diet-pill {
+	background: var(--diet);
+}
+.brutal-chip[data-diet] {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+.brutal-chip[data-diet]::before {
+	content: '';
+	width: 0.65rem;
+	height: 0.65rem;
+	border-radius: 999px;
+	border: 2px solid var(--color-ink);
+	background: var(--diet);
+}
+.brutal-chip[data-diet][aria-pressed='true'] {
+	background: var(--diet);
+	color: var(--color-ink);
+	box-shadow: var(--shadow-hard-sm);
+}
+.diet-pill {
+	font-size: 0.6rem;
+	padding: 0.1rem 0.45rem;
+	letter-spacing: 0.04em;
+	border-width: 1.5px;
+}

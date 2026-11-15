@@ -32,6 +32,8 @@ export interface Recipe {
 	user?: boolean;
 	/** Set on a combo: the ids of the protein, veg and carb recipes it is made from. */
 	parts?: string[];
+	/** Set when ingredients were swapped for the reader's diet (see swapRecipe). */
+	swaps?: { from: string; to: string }[];
 }
 
 export interface PlanItem {

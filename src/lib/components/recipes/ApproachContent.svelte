@@ -34,14 +34,14 @@
 	];
 </script>
 
-<div class="mx-auto flex max-w-4xl flex-col gap-8 px-5 py-12 md:px-8">
+<div class="mx-auto flex max-w-4xl flex-col gap-5 px-5 py-6 md:px-8">
 	<p class="brutal-box reveal bg-cream-2 p-5 font-semibold text-ink/90">
 		This method is for our everyday healthy meals, the ones listed in the recipe book and the meal
 		planner. It does not apply to special-occasion cooking.
 	</p>
 
 	<section
-		class="brutal-box reveal grid gap-8 bg-white p-6 md:grid-cols-[auto_1fr] md:items-center"
+		class="brutal-box reveal grid gap-5 bg-white p-4 md:grid-cols-[auto_1fr] md:items-center"
 	>
 		<div class="mx-auto"><PlateSVG size={190} /></div>
 		<div class="flex flex-col gap-4">
@@ -57,7 +57,7 @@
 		</div>
 	</section>
 
-	<section class="brutal-box reveal bg-mustard p-6">
+	<section class="brutal-box reveal bg-mustard p-4">
 		<h2 class="font-display text-3xl font-black">Breakfast</h2>
 		<div class="mt-4 flex flex-wrap items-center gap-6">
 			<div class="brutal-box bg-white px-6 py-4 text-center">
@@ -81,7 +81,7 @@
 		</p>
 	</section>
 
-	<section class="brutal-box reveal bg-white p-6">
+	<section class="brutal-box reveal bg-white p-4">
 		<h2 class="font-display text-3xl font-black">Lunch and dinner</h2>
 		<p class="mt-3 text-ink/85">The other two meals of the day follow the plate above.</p>
 		<div class="mt-5 overflow-x-auto">
@@ -105,7 +105,7 @@
 		</div>
 	</section>
 
-	<section class="brutal-box reveal bg-white p-6">
+	<section class="brutal-box reveal bg-white p-4">
 		<h2 class="font-display text-3xl font-black">How much effort a meal is</h2>
 		<p class="mt-3 text-ink/85">
 			Every everyday meal gets an effort level from 1 to 5, shown as dots on the recipe and in the
