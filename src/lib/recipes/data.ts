@@ -1518,6 +1518,40 @@ export const RECIPES: Recipe[] = [
 			"Fry each rosquilla for roughly 2–3 minutes per side, until evenly browned. Keep an eye on the oil temperature so it doesn't get too high or too low. Drain the finished rosquillas in a bowl lined with paper towels."
 		],
 		notes: ['From Santi: "This recipe was given to me by my grandmother, Concepción Fortún."']
+	},
+	{
+		id: 'flan',
+		mins: { active: 30, total: 75 },
+		title: 'Flan',
+		section: 'Sweet Treats',
+		kind: 'Treat',
+		meal: ['dessert'],
+		servings: 5,
+		equip: ['Oven', 'Stovetop', 'Ramekins'],
+		freezer: false,
+		veg: true,
+		by: 'Santi',
+		blurb: 'Silky baked custard with a golden caramel top.',
+		ing: [
+			i(3, '', 'eggs', 'dairy'),
+			i(3, '', 'egg yolks', 'dairy'),
+			i(2, 'cup', 'whole milk', 'dairy'),
+			i(1, 'tsp', 'vanilla extract', 'spice', 'or ½ tsp vanilla paste, or ½ a vanilla bean pod'),
+			i(0.5, 'cup', 'white granulated sugar', 'spice', 'for the custard'),
+			i(0.333, 'cup', 'white granulated sugar', 'spice', 'for the caramel')
+		],
+		steps: [
+			'Preheat the oven to 350°F. Place a deep oven dish, big enough to fit all your ramekins or your flan mold, in the center of the oven. Fill it with water that reaches just under half the height of the mold.',
+			'Add the ⅓ cup of sugar and 2 teaspoons of water to a frying pan on medium-low heat and let sit. Once the sugar begins to melt and brown, gently mix with a spatula to prevent burning. When the caramel is uniformly golden brown and no sugar crystals remain, cover the bottoms of the ramekins or flan mold with it.',
+			'Pour the milk and vanilla into a small pot, mix, and place on low heat. Heat until scalding but not boiling.',
+			'While the milk heats, in a large metal bowl, beat the eggs, egg yolks and remaining sugar until the sugar is completely dissolved.',
+			"Extremely slowly, ladle the milk into the egg mixture while whisking constantly. This keeps the eggs from scrambling in the heat. Once you've used half the milk, you can ladle in faster.",
+			'Strain the custard through a fine mesh sieve.',
+			'Pour the custard into the ramekins or flan mold and gently place into the water-filled dish in the oven. Bake for 45 minutes.',
+			'Cool for 15 minutes before taking the flan out of the hot-water bath. Cool on the counter for another 15 minutes, then refrigerate for at least 2 hours.',
+			'To serve, run a small knife around the edge of the flan to separate it from the mold. Place a serving dish over the top, flip, and wiggle until the flan overcomes the suction and settles onto the plate.'
+		],
+		notes: []
 	}
 ];
 
