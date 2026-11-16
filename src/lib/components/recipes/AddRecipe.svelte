@@ -31,6 +31,13 @@
 		dishPhoto: '',
 		cookPhoto: ''
 	});
+	// Phones fill the form one part at a time; wider screens see it all.
+	const LAST = 5;
+	let step = $state(0);
+	function go(n: number) {
+		step = n;
+		window.scrollTo({ top: 0 });
+	}
 	let pick = $state('');
 	let custom = $state('');
 	let trap = $state(''); // hidden field: real people leave it empty
@@ -95,7 +102,7 @@
 			</button>
 		</div>
 	{:else}
-		<p class="max-w-2xl text-lg text-ink/80">
+		<p class="max-w-2xl text-base text-ink/80 md:text-lg">
 			{t(
 				"We'd love for everyone close to us to help start a family recipe archive. Share the dishes you make on repeat to get through the week, and the ones saved for the most important days of the year. Every recipe you add becomes part of something we all get to cook from and pass along."
 			)}
@@ -105,7 +112,7 @@
 		</p>
 
 		<form class="mt-5 flex flex-col gap-4" onsubmit={submit}>
-			<div class="brutal-box flex flex-col gap-4 bg-white p-4">
+			<div class="brutal-box flex-col gap-4 bg-white p-4 {step === 0 ? 'flex' : 'hidden'} md:flex">
 				<h2 class="font-display text-2xl font-black">{t('The basics')}</h2>
 				<label class={label}>
 					{t('Recipe name')}
@@ -157,7 +164,7 @@
 				</div>
 			</div>
 
-			<div class="brutal-box flex flex-col gap-3 bg-white p-4">
+			<div class="brutal-box flex-col gap-3 bg-white p-4 {step === 1 ? 'flex' : 'hidden'} md:flex">
 				<h2 class="font-display text-2xl font-black">{t('Equipment')}</h2>
 				{#if f.equip.length}
 					<div class="flex flex-wrap gap-2">
@@ -204,7 +211,7 @@
 				</div>
 			</div>
 
-			<div class="brutal-box flex flex-col gap-3 bg-white p-4">
+			<div class="brutal-box flex-col gap-3 bg-white p-4 {step === 2 ? 'flex' : 'hidden'} md:flex">
 				<div class="flex items-center justify-between gap-3">
 					<h2 class="font-display text-2xl font-black">{t('Ingredients')}</h2>
 					<PrefsBar show="units" />
@@ -245,7 +252,7 @@
 				>
 			</div>
 
-			<div class="brutal-box flex flex-col gap-3 bg-white p-4">
+			<div class="brutal-box flex-col gap-3 bg-white p-4 {step === 3 ? 'flex' : 'hidden'} md:flex">
 				<h2 class="font-display text-2xl font-black">{t('Steps')}</h2>
 				{#each f.steps as _, i (i)}
 					<div class="flex items-start gap-3">
@@ -266,7 +273,7 @@
 				>
 			</div>
 
-			<div class="brutal-box flex flex-col gap-4 bg-white p-4">
+			<div class="brutal-box flex-col gap-4 bg-white p-4 {step === 4 ? 'flex' : 'hidden'} md:flex">
 				<h2 class="font-display text-2xl font-black">{t('Anything else?')}</h2>
 				<label class={label}>
 					{t('Tips or swaps (optional)')}
@@ -274,7 +281,7 @@
 				</label>
 			</div>
 
-			<div class="brutal-box flex flex-col gap-3 bg-white p-4">
+			<div class="brutal-box flex-col gap-3 bg-white p-4 {step === 5 ? 'flex' : 'hidden'} md:flex">
 				<h2 class="font-display text-2xl font-black">{t('Photos (optional)')}</h2>
 				<p class="text-sm text-ink/70">
 					{t(
@@ -310,10 +317,28 @@
 					{t("Sending isn't switched on yet: the site needs its Web3Forms key.")}
 				</p>
 			{/if}
-			<div>
+			<p class="font-mono text-xs font-bold tracking-wide uppercase md:hidden">
+				{t('Step {n} of {m}', { n: step + 1, m: LAST + 1 })}
+			</p>
+			<div class="flex items-center gap-2">
+				{#if step > 0}
+					<button type="button" class="brutal-btn bg-white md:hidden" onclick={() => go(step - 1)}>
+						{t('← Back')}
+					</button>
+				{/if}
+				{#if step < LAST}
+					<button
+						type="button"
+						class="brutal-btn ml-auto md:hidden"
+						disabled={step === 0 && !(f.title.trim() && f.by.trim())}
+						onclick={() => go(step + 1)}
+					>
+						{t('Next →')}
+					</button>
+				{/if}
 				<button
 					type="submit"
-					class="brutal-btn"
+					class="brutal-btn {step === LAST ? 'ml-auto md:ml-0' : 'hidden md:inline-flex'}"
 					disabled={!ready || !WEB3FORMS_KEY || status === 'sending'}
 				>
 					{status === 'sending' ? t('Sending…') : t('Send for review')}

@@ -90,6 +90,9 @@
 	}
 
 	// Versions of one dish show as a single card: the first that matches, with a count of versions.
+	let openSecs = $state<Record<string, boolean>>({});
+	// While searching or filtering every matching section is shown.
+	const searching = $derived(!!F.q || activeCount > 0);
 	const list = $derived.by(() => {
 		const seen = new Set<string>();
 		return allRecipes()
@@ -179,16 +182,20 @@
 				{/each}
 			</div>
 			<div class="mt-3 flex flex-wrap items-end gap-x-5 gap-y-2">
-				<label class="flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase">
+				<label
+					class="flex min-w-0 flex-1 basis-40 flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase sm:flex-none"
+				>
 					{t('Contributor')}
-					<select class="brutal-field w-auto" bind:value={F.by}>
+					<select class="brutal-field w-full sm:w-auto" bind:value={F.by}>
 						<option value="">{t('Anyone')}</option>
 						{#each contributors as b (b)}<option value={b}>{b}</option>{/each}
 					</select>
 				</label>
-				<label class="flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase">
+				<label
+					class="flex min-w-0 flex-1 basis-40 flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase sm:flex-none"
+				>
 					{t('Equipment')}
-					<select class="brutal-field w-auto" bind:value={F.equip}>
+					<select class="brutal-field w-full sm:w-auto" bind:value={F.equip}>
 						<option value="">{t('Any')}</option>
 						{#each equipment as b (b)}<option value={b}>{t(b)}</option>{/each}
 					</select>
@@ -217,15 +224,27 @@
 			<p class="font-mono text-sm uppercase">{t('No recipes match.')}</p>
 		</div>
 	{:else}
-		{#each sections as sec (sec)}
+		{#each sections as sec, si (sec)}
 			{@const rs = list.filter((r) => r.section === sec)}
 			{#if rs.length}
-				<div class="mb-8 last:mb-0">
-					<h2 class="flex items-baseline gap-3 font-display text-3xl font-black">
-						{t(sec)}
-						<span class="brutal-tag bg-lime">{rs.length}</span>
+				{@const isOpen = searching || (openSecs[sec] ?? si === 0)}
+				<div class="mb-4 last:mb-0 md:mb-8">
+					<h2 class="font-display text-2xl font-black md:text-3xl">
+						<!-- Phones: sections fold away so there is less to scroll. -->
+						<button
+							type="button"
+							class="flex w-full items-center gap-3 py-1 text-left md:pointer-events-none"
+							aria-expanded={isOpen}
+							onclick={() => (openSecs[sec] = !isOpen)}
+						>
+							{t(sec)}
+							<span class="brutal-tag bg-lime">{rs.length}</span>
+							<span class="ml-auto text-xl md:hidden" aria-hidden="true">{isOpen ? '−' : '+'}</span>
+						</button>
 					</h2>
-					<div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<div
+						class="mt-3 gap-4 sm:grid-cols-2 lg:grid-cols-3 {isOpen ? 'grid' : 'hidden'} md:grid"
+					>
 						{#each rs as r (r.id)}<RecipeCard {r} versions={versionCount(r)} />{/each}
 					</div>
 				</div>

@@ -73,7 +73,7 @@
 </script>
 
 <section class="mx-auto max-w-6xl px-5 pt-6 md:px-8">
-	<div class="brutal-box bg-white p-6">
+	<div class="brutal-box bg-white p-4 md:p-6">
 		<Controls withCount={true} />
 		<button
 			type="button"
@@ -100,41 +100,58 @@
 					>
 				</div>
 			{/if}
-			<div class="mt-5 flex flex-wrap gap-2" role="group" aria-label={t('Plan filters')}>
-				<button
-					type="button"
-					class="brutal-chip"
-					aria-pressed={S.filters.easy}
-					onclick={() => toggleFilter('easy')}>{t('Quick & easy')}</button
-				>
-				{#each ['veg', 'gf', 'nf', 'df'] as const as k (k)}
-					<DietPill {k} pressed={S.filters[k]} onclick={() => toggleFilter(k)} />
-				{/each}
-				{#each MEATS as m (m.key)}
-					<button
-						type="button"
-						class="brutal-chip"
-						aria-pressed={S.filters.exclude.includes(m.key)}
-						onclick={() => toggleExclude(m.key)}
-					>
-						{t(m.label)}
-					</button>
-				{/each}
-				<button
-					type="button"
-					class="brutal-chip"
-					aria-pressed={S.filters.plant}
-					onclick={() => toggleFilter('plant')}>{t('Plant-based')}</button
-				>
-				<button
-					type="button"
-					class="brutal-chip"
-					aria-pressed={S.filters.fresh}
-					onclick={() => toggleFilter('fresh')}>{t('Fresh ingredients only')}</button
-				>
+			<div class="mt-4 flex flex-col gap-4" role="group" aria-label={t('Plan filters')}>
+				<div>
+					<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Dietary')}</span>
+					<div class="mt-1.5 flex flex-wrap gap-2">
+						{#each ['veg', 'gf', 'nf', 'df'] as const as k (k)}
+							<DietPill {k} pressed={S.filters[k]} onclick={() => toggleFilter(k)} />
+						{/each}
+					</div>
+				</div>
+				<div>
+					<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Skip')}</span>
+					<div class="mt-1.5 flex flex-wrap gap-2">
+						{#each MEATS as m (m.key)}
+							<button
+								type="button"
+								class="brutal-chip"
+								aria-pressed={S.filters.exclude.includes(m.key)}
+								onclick={() => toggleExclude(m.key)}
+							>
+								{t(m.label)}
+							</button>
+						{/each}
+					</div>
+				</div>
+				<div>
+					<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Also')}</span>
+					<div class="mt-1.5 flex flex-wrap gap-2">
+						<button
+							type="button"
+							class="brutal-chip"
+							aria-pressed={S.filters.easy}
+							onclick={() => toggleFilter('easy')}>{t('Quick & easy')}</button
+						>
+						<button
+							type="button"
+							class="brutal-chip"
+							aria-pressed={S.filters.plant}
+							onclick={() => toggleFilter('plant')}>{t('Plant-based')}</button
+						>
+						<button
+							type="button"
+							class="brutal-chip"
+							aria-pressed={S.filters.fresh}
+							onclick={() => toggleFilter('fresh')}>{t('Fresh ingredients only')}</button
+						>
+					</div>
+				</div>
 			</div>
-			<div class="mt-5 flex flex-wrap items-center gap-2">
-				<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Have on hand')}</span>
+			<div class="mt-4 flex flex-wrap items-center gap-2">
+				<span class="w-full font-mono text-xs font-bold tracking-wide uppercase sm:w-auto"
+					>{t('Have on hand')}</span
+				>
 				{#each S.filters.have as h (h)}
 					<button
 						type="button"
@@ -145,10 +162,10 @@
 						{tIng(h)} ×
 					</button>
 				{/each}
-				<div class="relative">
+				<div class="relative w-full sm:w-auto">
 					<input
 						type="search"
-						class="brutal-field w-56"
+						class="brutal-field w-full sm:w-56"
 						placeholder={t('Search ingredients')}
 						aria-label={t('Search ingredients you have')}
 						autocomplete="off"
@@ -183,6 +200,16 @@
 					{/if}
 				</div>
 			</div>
+			<button
+				type="button"
+				class="brutal-btn mt-4 w-full md:hidden"
+				onclick={() => {
+					showFilters = false;
+					window.scrollTo({ top: 0 });
+				}}
+			>
+				{t('Show plans')}
+			</button>
 		</div>
 	</div>
 </section>

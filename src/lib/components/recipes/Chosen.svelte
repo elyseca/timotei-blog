@@ -19,6 +19,14 @@
 	import Legend from './Legend.svelte';
 	import Schedule from './Schedule.svelte';
 
+	// Phones show the plan and the schedule one after the other, with a Next button between them.
+	let stage = $state<'plan' | 'schedule'>('plan');
+	function go(to: 'plan' | 'schedule') {
+		stage = to;
+		window.scrollTo({ top: 0 });
+	}
+	let showCombo = $state(false);
+
 	const items = $derived(planItems());
 	const total = $derived(items.reduce((sum, x) => sum + x.servings, 0));
 	const meals = $derived(mealsOf(total));
@@ -61,7 +69,7 @@
 	</button>
 </div>
 
-<section class="mx-auto max-w-6xl px-5 py-5 md:px-8">
+<section class="mx-auto max-w-6xl px-5 py-5 md:px-8 {stage === 'plan' ? '' : 'hidden'} md:block">
 	<div class="brutal-box bg-white p-4">
 		<Controls />
 	</div>
@@ -114,7 +122,15 @@
 		{/each}
 	</div>
 
-	<div class="brutal-box mt-4 bg-white p-4">
+	<button
+		type="button"
+		class="brutal-btn mt-4 w-full bg-white md:hidden"
+		aria-expanded={showCombo}
+		onclick={() => (showCombo = !showCombo)}
+	>
+		{showCombo ? t('Hide combos') : t('+ Add a combo')}
+	</button>
+	<div class="brutal-box mt-4 bg-white p-4 {showCombo ? '' : 'hidden'} md:block">
 		<h3 class="font-mono text-xs font-bold tracking-wide uppercase">{t('Add a combo')}</h3>
 		{#if suggestions.length}
 			<div class="mt-3 flex flex-wrap gap-2">
@@ -148,10 +164,29 @@
 			</button>
 		</div>
 	</div>
+
+	<button type="button" class="brutal-btn mt-5 w-full md:hidden" onclick={() => go('schedule')}>
+		{t('Next: schedule →')}
+	</button>
 </section>
 
-<Schedule {items} />
+<div class="{stage === 'schedule' ? '' : 'hidden'} md:block">
+	<div class="mx-auto max-w-6xl px-5 pt-5 md:hidden">
+		<button
+			type="button"
+			class="tap font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
+			onclick={() => go('plan')}
+		>
+			{t('← Back to the plan list')}
+		</button>
+	</div>
+	<Schedule {items} />
+</div>
 
-<div class="mx-auto flex max-w-6xl justify-end px-5 pb-6 md:px-8">
+<div
+	class="mx-auto max-w-6xl justify-end px-5 pb-6 md:px-8 {stage === 'schedule'
+		? 'flex'
+		: 'hidden'} md:flex"
+>
 	<a href="/recipes/groceries" class="brutal-btn">{t('Next: grocery list →')}</a>
 </div>

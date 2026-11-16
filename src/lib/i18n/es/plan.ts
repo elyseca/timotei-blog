@@ -161,5 +161,12 @@ export const plan: Record<string, string> = {
 	'Spices & baking': 'Especias y repostería',
 	'Oils & condiments': 'Aceites y condimentos',
 	Frozen: 'Congelados',
-	Other: 'Otros'
+	Other: 'Otros',
+	'Hide combos': 'Ocultar combos',
+	'+ Add a combo': '+ Agregar un combo',
+	'Next: schedule →': 'Siguiente: calendario →',
+	'← Back to the plan list': '← Volver a la lista del plan',
+	Skip: 'Sin',
+	Also: 'También',
+	'Show plans': 'Ver planes'
 };

@@ -303,7 +303,7 @@
 
 	{#if editChefs}
 		<div class="brutal-box mt-4 flex flex-col gap-4 bg-white p-4">
-			<p class="text-sm text-ink/70">
+			<p class="hidden text-sm text-ink/70 sm:block">
 				{t(
 					'Add everyone who cooks in your household, up to {max}. Each gets a name and their own face, shown on the calendar and in the events you add to your calendar.',
 					{ max: MAX_CHEFS }
@@ -314,21 +314,23 @@
 				<div class="flex flex-wrap items-center gap-3">
 					<CookIcon kind={c.icon} size={34} />
 					<input
-						class="brutal-field w-44"
+						class="brutal-field min-w-0 flex-1 sm:w-44 sm:flex-none"
 						aria-label={t('Chef name')}
 						maxlength="20"
 						bind:value={c.name}
 					/>
 					<div
-						class="flex flex-wrap gap-1.5"
+						class="order-last flex basis-full flex-nowrap justify-between gap-1 sm:order-none sm:basis-auto sm:justify-start sm:gap-1.5"
 						role="group"
 						aria-label={t('{name} icon', { name: c.name })}
 					>
-						{#each COOK_ICONS as k (k)}
+						{#each COOK_ICONS as k, ki (k)}
 							{@const taken = S.cooks.some((o) => o.id !== c.id && o.icon === k)}
 							<button
 								type="button"
-								class="rounded-lg border-2 p-0.5 {c.icon === k
+								class="rounded-lg border-2 p-0.5 {ki >= 4 && c.icon !== k
+									? 'max-[359px]:hidden'
+									: ''} {c.icon === k
 									? 'border-ink bg-lime'
 									: 'border-transparent bg-cream-2'} {taken
 									? 'opacity-25'
@@ -340,7 +342,7 @@
 								disabled={taken}
 								onclick={() => setChefIcon(c.id, k)}
 							>
-								<CookIcon kind={k} size={30} />
+								<CookIcon kind={k} size={28} />
 							</button>
 						{/each}
 					</div>
@@ -383,7 +385,7 @@
 			onclick={() => (week = shownWeek + 1)}>{t('Later →')}</button
 		>
 	</div>
-	<p class="mt-3 text-sm text-ink/70">
+	<p class="mt-3 hidden text-sm text-ink/70 md:block">
 		{t(
 			'Shop, then cook, then eat: the grocery run comes on or before the first cook, and meal tiles can only sit on or after their cooking day. Drag a tile onto Earlier or Later to carry it to another week.'
 		)}

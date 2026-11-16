@@ -12,8 +12,8 @@
 	const meals = $derived(mealsOf(total));
 </script>
 
-<div class="flex flex-wrap gap-x-8 gap-y-3">
-	<div class="flex items-center gap-3">
+<div class="grid grid-cols-2 gap-x-4 gap-y-3 sm:flex sm:flex-wrap sm:gap-x-8">
+	<div class="flex flex-col items-start gap-1.5 sm:flex-row sm:items-center sm:gap-3">
 		<span class="font-mono text-xs font-bold tracking-wide uppercase">{t("Who's eating")}</span>
 		<Stepper
 			value={S.household}
@@ -23,7 +23,7 @@
 		/>
 	</div>
 	{#if withCount}
-		<div class="flex items-center gap-3">
+		<div class="flex flex-col items-start gap-1.5 sm:flex-row sm:items-center sm:gap-3">
 			<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Recipes')}</span>
 			<Stepper
 				value={S.perPlan}

@@ -28,6 +28,14 @@
 			: []
 	);
 	let showPhotoForm = $state(false);
+	// Phones show one part of the recipe at a time (ingredients, method, photos) with a Next button.
+	let tab = $state<'ing' | 'method' | 'more'>('ing');
+	let tabsEl = $state<HTMLElement>();
+	function go(to: 'ing' | 'method' | 'more') {
+		tab = to;
+		tabsEl?.scrollIntoView({ block: 'start' });
+		window.scrollBy(0, -80);
+	}
 	// Other versions of this dish (e.g. the two buffalo macs).
 	const variants = $derived(
 		r?.family ? allRecipes().filter((x) => x.family === r.family && x.id !== r.id) : []
@@ -81,7 +89,7 @@
 					{r.blurb}
 				</p>{/if}
 			{#if r.family}
-				<div class="rise-in mt-4 flex flex-wrap items-center gap-2" style="--delay: 160ms">
+				<div class="rise-in mt-3 flex flex-wrap items-center gap-2 md:mt-4" style="--delay: 160ms">
 					<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Versions:')}</span>
 					<span class="brutal-chip" aria-pressed="true">{r.variant ?? r.title}</span>
 					{#each variants as v (v.id)}
@@ -91,9 +99,9 @@
 				</div>
 			{/if}
 			{#if r.mins}
-				<div class="rise-in mt-5" style="--delay: 180ms"><EffortBadge {r} label /></div>
+				<div class="rise-in mt-3 md:mt-5" style="--delay: 180ms"><EffortBadge {r} label /></div>
 			{/if}
-			<div class="rise-in mt-5 flex flex-col gap-2" style="--delay: 200ms">
+			<div class="rise-in mt-3 flex flex-col gap-2 md:mt-5" style="--delay: 200ms">
 				{#if dt}
 					<div class="flex flex-wrap gap-2">
 						{#each DIETS.filter((x) => dt[x.key as keyof typeof dt]) as x (x.key)}<DietPill
@@ -106,7 +114,7 @@
 				</div>
 			</div>
 			<p
-				class="rise-in mt-4 font-mono text-xs font-bold tracking-wide text-ink/70 uppercase"
+				class="rise-in mt-3 font-mono text-xs font-bold tracking-wide text-ink/70 uppercase md:mt-4"
 				style="--delay: 240ms"
 			>
 				{r.by ? t('From {name}', { name: r.by }) : ''}
@@ -128,7 +136,7 @@
 					“{r.story}”
 				</blockquote>
 			{/if}
-			<div class="rise-in mt-6 flex flex-wrap gap-3" style="--delay: 280ms">
+			<div class="rise-in mt-4 flex flex-wrap gap-3 md:mt-6" style="--delay: 280ms">
 				<button
 					type="button"
 					class="brutal-btn {inPlan ? 'bg-white' : ''}"
@@ -144,8 +152,21 @@
 		</div>
 	</section>
 
-	<div class="mx-auto grid max-w-6xl gap-6 px-5 py-7 md:px-8 lg:grid-cols-[22rem_1fr]">
-		<aside class="flex flex-col gap-4">
+	<div bind:this={tabsEl} class="mx-auto max-w-6xl px-5 pt-4 md:px-8 lg:hidden">
+		<div class="flex gap-2" role="group" aria-label={t('Recipe sections')}>
+			{#each [['ing', 'Ingredients'], ['method', 'Method'], ['more', 'Photos']] as [k, label] (k)}
+				<button
+					type="button"
+					class="brutal-chip flex-1"
+					aria-pressed={tab === k}
+					onclick={() => go(k as 'ing' | 'method' | 'more')}>{t(label)}</button
+				>
+			{/each}
+		</div>
+	</div>
+
+	<div class="mx-auto grid max-w-6xl gap-6 px-5 py-5 md:px-8 lg:grid-cols-[22rem_1fr] lg:py-7">
+		<aside class="{tab === 'ing' ? 'flex' : 'hidden'} flex-col gap-4 lg:flex">
 			<div class="brutal-box bg-white p-5">
 				<div class="mb-3 flex items-center justify-between gap-3">
 					<h2 class="font-display text-xl font-black">{t('Ingredients')}</h2>
@@ -168,116 +189,134 @@
 					{/each}
 				</ul>
 			</div>
+			<button type="button" class="brutal-btn w-full lg:hidden" onclick={() => go('method')}>
+				{t('Next: method →')}
+			</button>
 		</aside>
 
 		<div class="min-w-0">
-			<h2 class="font-display text-3xl font-black">{t('Method')}</h2>
-			<ol class="mt-5 flex flex-col gap-4">
-				{#each r.steps as s, i (i)}
-					<li class="flex gap-4">
-						<span
-							class="grid size-8 shrink-0 place-items-center rounded-full border-2 border-ink bg-lime font-mono text-sm font-bold"
-							>{i + 1}</span
-						>
-						<p class="pt-0.5 text-[1.02rem] leading-relaxed">
-							{#if Array.isArray(s)}<strong>{s[0]}.</strong> {s[1]}{:else}{s}{/if}
-						</p>
-					</li>
-				{/each}
-			</ol>
-
-			{#if r.flavors}
-				<h2 class="mt-12 font-display text-3xl font-black">{t('Flavors')}</h2>
-				<div class="brutal-box mt-5 overflow-x-auto bg-white">
-					<table class="w-full text-left text-sm">
-						<thead class="border-b-[2.5px] border-ink bg-cream-2 font-mono text-xs uppercase">
-							<tr
-								><th class="p-3">{t('Flavor')}</th><th class="p-3">{t('Stir in')}</th><th
-									class="p-3">{t('Sweetener')}</th
-								><th class="p-3">{t('Top with')}</th></tr
+			<div class="{tab === 'method' ? '' : 'hidden'} lg:block">
+				<h2 class="font-display text-3xl font-black">{t('Method')}</h2>
+				<ol class="mt-5 flex flex-col gap-4">
+					{#each r.steps as s, i (i)}
+						<li class="flex gap-4">
+							<span
+								class="grid size-8 shrink-0 place-items-center rounded-full border-2 border-ink bg-lime font-mono text-sm font-bold"
+								>{i + 1}</span
 							>
-						</thead>
-						<tbody>
-							{#each r.flavors as x (x.name)}
-								<tr class="border-b border-ink/10 last:border-0">
-									<th class="p-3 font-bold">{x.name}</th>
-									<td class="p-3">{x.add}</td>
-									<td class="p-3">{x.sweet || '—'}</td>
-									<td class="p-3">{x.top || '—'}</td>
-								</tr>
-							{/each}
-						</tbody>
-					</table>
-				</div>
-			{/if}
+							<p class="pt-0.5 text-[1.02rem] leading-relaxed">
+								{#if Array.isArray(s)}<strong>{s[0]}.</strong> {s[1]}{:else}{s}{/if}
+							</p>
+						</li>
+					{/each}
+				</ol>
 
-			{#if r.notes?.length}
-				<h2 class="mt-12 font-display text-3xl font-black">{t('Notes')}</h2>
-				<ul class="mt-5 list-disc space-y-2 pl-6">
-					{#each r.notes as n, i (i)}<li>{n}</li>{/each}
-				</ul>
-			{/if}
-
-			<div class="mt-12 flex items-baseline justify-between gap-3">
-				<h2 class="font-display text-3xl font-black">{t('Photos')}</h2>
-				{#if !showPhotoForm}
-					<button
-						type="button"
-						class="tap font-mono text-[0.7rem] font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
-						onclick={() => (showPhotoForm = true)}>{t('+ Add photo')}</button
-					>
+				{#if r.flavors}
+					<h2 class="mt-8 font-display text-3xl font-black lg:mt-12">{t('Flavors')}</h2>
+					<div class="brutal-box mt-5 overflow-x-auto bg-white">
+						<table class="w-full text-left text-sm">
+							<thead class="border-b-[2.5px] border-ink bg-cream-2 font-mono text-xs uppercase">
+								<tr
+									><th class="p-3">{t('Flavor')}</th><th class="p-3">{t('Stir in')}</th><th
+										class="p-3">{t('Sweetener')}</th
+									><th class="p-3">{t('Top with')}</th></tr
+								>
+							</thead>
+							<tbody>
+								{#each r.flavors as x (x.name)}
+									<tr class="border-b border-ink/10 last:border-0">
+										<th class="p-3 font-bold">{x.name}</th>
+										<td class="p-3">{x.add}</td>
+										<td class="p-3">{x.sweet || '—'}</td>
+										<td class="p-3">{x.top || '—'}</td>
+									</tr>
+								{/each}
+							</tbody>
+						</table>
+					</div>
 				{/if}
-			</div>
-			{#if r.photos?.length}
-				<div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-					{#each r.photos as ph (ph.src)}
-						<figure class="m-0">
-							<a
-								href={ph.src}
-								target="_blank"
-								rel="noopener"
-								class="brutal-box block overflow-hidden"
-							>
-								<img
-									src={ph.src}
-									alt="{r.title}, {ph.kind === 'dish' ? t('the finished dish') : t('being made')}"
-									loading="lazy"
-									class="aspect-square w-full object-cover"
-								/>
-							</a>
-							<figcaption class="mt-1 font-mono text-[0.65rem] tracking-wide text-ink/70 uppercase">
-								{ph.kind === 'dish' ? t('The dish') : t('Making it')}{ph.by ? ' · ' + ph.by : ''}
-								{#if ph.caption}<span class="block normal-case">{ph.caption}</span>{/if}
-							</figcaption>
-						</figure>
-					{/each}
-				</div>
-			{:else if !showPhotoForm}
-				<p class="mt-2 text-sm text-ink/60">{t('No photos yet.')}</p>
-			{/if}
-			{#if showPhotoForm}
-				<PhotoForm id={r.id} title={r.title} onclose={() => (showPhotoForm = false)} />
-			{/if}
 
-			{#if sim.length}
-				<h2 class="mt-12 font-display text-3xl font-black">{t('Shares ingredients with')}</h2>
-				<div class="mt-5 grid gap-4 sm:grid-cols-3">
-					{#each sim as s (s.r.id)}
-						<a
-							href="/recipes/view#{s.r.id}"
-							class="brutal-box flex flex-col gap-1 bg-white p-4 transition-[translate,box-shadow] duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-lg"
+				{#if r.notes?.length}
+					<h2 class="mt-8 font-display text-3xl font-black lg:mt-12">{t('Notes')}</h2>
+					<ul class="mt-5 list-disc space-y-2 pl-6">
+						{#each r.notes as n, i (i)}<li>{n}</li>{/each}
+					</ul>
+				{/if}
+
+				<button type="button" class="brutal-btn mt-6 w-full lg:hidden" onclick={() => go('more')}>
+					{t('Next: photos →')}
+				</button>
+			</div>
+
+			<div class="{tab === 'more' ? '' : 'hidden'} lg:block">
+				<div class="flex items-baseline justify-between gap-3 lg:mt-12">
+					<h2 class="font-display text-3xl font-black">{t('Photos')}</h2>
+					{#if !showPhotoForm}
+						<button
+							type="button"
+							class="tap font-mono text-[0.7rem] font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
+							onclick={() => (showPhotoForm = true)}>{t('+ Add photo')}</button
 						>
-							<strong class="font-display text-lg font-black">{tTitle(byId(s.r.id))}</strong>
-							<span class="text-xs text-ink/60"
-								>{s.shared
-									.slice(0, 4)
-									.map((n) => tIng(n))
-									.join(', ')}</span
-							>
-						</a>
-					{/each}
+					{/if}
 				</div>
-			{/if}
+				{#if r.photos?.length}
+					<div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+						{#each r.photos as ph (ph.src)}
+							<figure class="m-0">
+								<a
+									href={ph.src}
+									target="_blank"
+									rel="noopener"
+									class="brutal-box block overflow-hidden"
+								>
+									<img
+										src={ph.src}
+										alt="{r.title}, {ph.kind === 'dish' ? t('the finished dish') : t('being made')}"
+										loading="lazy"
+										class="aspect-square w-full object-cover"
+									/>
+								</a>
+								<figcaption
+									class="mt-1 font-mono text-[0.65rem] tracking-wide text-ink/70 uppercase"
+								>
+									{ph.kind === 'dish' ? t('The dish') : t('Making it')}{ph.by ? ' · ' + ph.by : ''}
+									{#if ph.caption}<span class="block normal-case">{ph.caption}</span>{/if}
+								</figcaption>
+							</figure>
+						{/each}
+					</div>
+				{:else if !showPhotoForm}
+					<p class="mt-2 text-sm text-ink/60">{t('No photos yet.')}</p>
+				{/if}
+				{#if showPhotoForm}
+					<PhotoForm id={r.id} title={r.title} onclose={() => (showPhotoForm = false)} />
+				{/if}
+
+				{#if sim.length}
+					<h2 class="mt-8 font-display text-3xl font-black lg:mt-12">
+						{t('Shares ingredients with')}
+					</h2>
+					<div class="mt-5 grid gap-4 sm:grid-cols-3">
+						{#each sim as s (s.r.id)}
+							<a
+								href="/recipes/view#{s.r.id}"
+								class="brutal-box flex flex-col gap-1 bg-white p-4 transition-[translate,box-shadow] duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-lg"
+							>
+								<strong class="font-display text-lg font-black">{tTitle(byId(s.r.id))}</strong>
+								<span class="text-xs text-ink/60"
+									>{s.shared
+										.slice(0, 4)
+										.map((n) => tIng(n))
+										.join(', ')}</span
+								>
+							</a>
+						{/each}
+					</div>
+				{/if}
+				<a href="/recipes" class="brutal-btn mt-6 w-full justify-center bg-white lg:hidden">
+					{t('← All recipes')}
+				</a>
+			</div>
 		</div>
 	</div>
 {/if}

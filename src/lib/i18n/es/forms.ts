@@ -201,5 +201,11 @@ export const forms: Record<string, string> = {
 		'Cocina de verdad: algo de picado y unos cuantos pasos que seguir.',
 	'Plenty of prep, or a long cook with things to do along the way.':
 		'Mucha preparación, o una cocción larga con cosas por hacer en el camino.',
-	'Save it for a weekend.': 'Déjala para el fin de semana.'
+	'Save it for a weekend.': 'Déjala para el fin de semana.',
+	'Recipe sections': 'Secciones de la receta',
+	'Next: method →': 'Siguiente: preparación →',
+	'Next: photos →': 'Siguiente: fotos →',
+	'Step {n} of {m}': 'Paso {n} de {m}',
+	'← Back': '← Atrás',
+	'Next →': 'Siguiente →'
 };

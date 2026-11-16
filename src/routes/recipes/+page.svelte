@@ -11,5 +11,5 @@
 	/>
 </svelte:head>
 
-<SectionHero tag="Recipe book" title="What are we cooking?" />
+<SectionHero title="What are we cooking?" />
 <Browse />

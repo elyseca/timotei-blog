@@ -8,5 +8,5 @@
 	<title>{t('Add a Recipe')} — timotei.blog</title>
 </svelte:head>
 
-<SectionHero tag={t('Recipe book')} title={t('Add a recipe')} bg="bg-teal" />
+<SectionHero title={t('Add a recipe')} bg="bg-teal" />
 <AddRecipe />
