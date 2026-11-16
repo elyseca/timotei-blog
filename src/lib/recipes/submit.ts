@@ -20,7 +20,21 @@ export const EQUIPMENT = [
 	'Microwave'
 ];
 
-export const UNITS = ['', 'tsp', 'tbsp', 'cup', 'oz', 'lb', 'g', 'ml', 'can', 'clove', 'pinch'];
+export const UNITS = [
+	'',
+	'tsp',
+	'tbsp',
+	'cup',
+	'oz',
+	'lb',
+	'g',
+	'kg',
+	'ml',
+	'L',
+	'can',
+	'clove',
+	'pinch'
+];
 
 export type Submission = {
 	title: string;

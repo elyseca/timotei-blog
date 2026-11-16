@@ -4,13 +4,14 @@
 	import Wizard from '$lib/components/recipes/Wizard.svelte';
 	import PlanSteps from '$lib/components/recipes/PlanSteps.svelte';
 	import Chosen from '$lib/components/recipes/Chosen.svelte';
+	import { t } from '$lib/i18n.svelte';
 </script>
 
 <svelte:head>
-	<title>Meal Plan — timotei.blog</title>
+	<title>{t('Meal Plan')} — timotei.blog</title>
 </svelte:head>
 
-<SectionHero tag="Meal plan" title="Plan the week" bg="bg-mustard" />
+<SectionHero tag={t('Meal plan')} title={t('Plan the week')} bg="bg-mustard" />
 <PlanSteps step={S.plan.length ? 2 : 1} />
 {#if S.plan.length}
 	<Chosen />

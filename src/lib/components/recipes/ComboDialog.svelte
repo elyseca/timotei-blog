@@ -3,6 +3,8 @@
 	import { comboParts, pairOk, pairFit } from '$lib/recipes/engine';
 	import { addCombo } from '$lib/recipes/plan';
 	import type { Recipe } from '$lib/recipes/types';
+	import { t } from '$lib/i18n.svelte';
+	import { tTitle } from '$lib/recipes/localize';
 
 	type Role = 'protein' | 'veg' | 'carb';
 	const ROLES: { key: Role; label: string; kind: string }[] = [
@@ -83,15 +85,15 @@
 		<div class="flex flex-col gap-5 p-6">
 			<div>
 				<p class="font-mono text-xs font-bold tracking-wide uppercase">
-					{ROLES.find((r) => r.kind === anchor.kind)?.label}
+					{t(ROLES.find((r) => r.kind === anchor.kind)?.label ?? '')}
 				</p>
-				<h2 class="font-display text-2xl font-black">{anchor.title}</h2>
+				<h2 class="font-display text-2xl font-black">{tTitle(anchor)}</h2>
 			</div>
 
 			{#each others as role (role.key)}
 				<div>
-					<p class="font-mono text-xs font-bold tracking-wide uppercase">{role.label}</p>
-					<div class="mt-2 flex flex-wrap gap-2" role="group" aria-label={role.label}>
+					<p class="font-mono text-xs font-bold tracking-wide uppercase">{t(role.label)}</p>
+					<div class="mt-2 flex flex-wrap gap-2" role="group" aria-label={t(role.label)}>
 						{#each options(role.key) as r (r.id)}
 							<button
 								type="button"
@@ -99,7 +101,7 @@
 								aria-pressed={picks[role.key] === r.id}
 								onclick={() => choose(role.key, r.id)}
 							>
-								{r.title}
+								{tTitle(r)}
 							</button>
 						{/each}
 					</div>
@@ -108,14 +110,14 @@
 
 			<div class="flex flex-wrap items-center gap-4">
 				<button type="button" class="brutal-btn" disabled={!ready} onclick={add}>
-					Add to plan
+					{t('Add to plan')}
 				</button>
 				<button
 					type="button"
 					class="font-mono text-xs font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
 					onclick={() => dlg?.close()}
 				>
-					Cancel
+					{t('Cancel')}
 				</button>
 			</div>
 		</div>

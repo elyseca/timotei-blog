@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { S, toast } from '$lib/recipes/store.svelte';
+	import { t } from '$lib/i18n.svelte';
+	import { tTitle } from '$lib/recipes/localize';
 	import {
 		CDAYS,
+		dayShort,
+		dateLoc,
 		STRONG,
 		TINT,
 		layout,
@@ -33,7 +37,7 @@
 			0,
 			items.findIndex((x) => x.r.id === id)
 		) % STRONG.length;
-	const title = (id: string) => items.find((x) => x.r.id === id)?.r.title ?? '';
+	const title = (id: string) => tTitle(items.find((x) => x.r.id === id)?.r);
 	const overIds = $derived(Object.keys(lay.over));
 	// The week on screen (0 = the week that starts on "Week of"). Not saved.
 	let week = $state(0);
@@ -51,7 +55,7 @@
 	const maxWeek = $derived(Math.min(MAX_WEEKS - 1, lastUsed + 1));
 	const shownWeek = $derived(Math.min(week, maxWeek));
 	const base = $derived(shownWeek * 7);
-	const fmt = (d: Date) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+	const fmt = (d: Date) => d.toLocaleDateString(dateLoc(), { month: 'short', day: 'numeric' });
 	const rangeText = $derived(`${fmt(dayDate(base))} – ${fmt(dayDate(base + 6))}`);
 	const ROWS = [
 		{ label: 'Lunch', offset: 0 },
@@ -141,10 +145,10 @@
 			drag.ghost.style.left = e.clientX - drag.ghost.offsetWidth / 2 + 'px';
 			drag.ghost.style.top = e.clientY - 18 + 'px';
 		}
-		const t = document.elementFromPoint(e.clientX, e.clientY);
-		const nav = t?.closest<HTMLElement>('[data-weeknav]');
+		const under = document.elementFromPoint(e.clientX, e.clientY);
+		const nav = under?.closest<HTMLElement>('[data-weeknav]');
 		hoverNav(nav ? Number(nav.dataset.weeknav) : 0);
-		const cell = t?.closest<HTMLElement>('[data-slot]');
+		const cell = under?.closest<HTMLElement>('[data-slot]');
 		drag.slot = cell ? Number(cell.dataset.slot) : null;
 		overSlot = drag.slot;
 		e.preventDefault();
@@ -171,10 +175,15 @@
 				: d.kind === 'shop'
 					? moveShop(d.slot)
 					: moveEat(d.id, d.from, d.slot);
-		const refused = note?.startsWith("Can't");
+		// Only shop and eat moves can be refused; cook moves just report what shifted.
+		const refused = d.kind !== 'cook' && !!note;
 		toast(
 			note ??
-				`Moved to ${CDAYS[Math.floor(d.slot / 2) % 7]} ${slotName(d.slot).toLowerCase()}, week ${weekOf(d.slot) + 1}`
+				t('Moved to {day} {meal}, week {n}', {
+					day: dayShort(Math.floor(d.slot / 2) % 7),
+					meal: slotName(d.slot).toLowerCase(),
+					n: weekOf(d.slot) + 1
+				})
 		);
 		if (!refused) week = weekOf(d.slot);
 	}
@@ -202,7 +211,7 @@
 					: ''}"
 				role="button"
 				tabindex="-1"
-				title="Grocery run. Drag to move; it has to come on or before the first cook."
+				title={t('Grocery run. Drag to move; it has to come on or before the first cook.')}
 				onpointerdown={(e) => down(e, 'shop', 'shop', slot)}
 			>
 				<span class="shrink-0" aria-hidden="true">
@@ -220,7 +229,7 @@
 						/></svg
 					>
 				</span>
-				<span class="min-w-0 break-words">Grocery run</span>
+				<span class="min-w-0 break-words">{t('Grocery run')}</span>
 			</div>
 		{/if}
 		{#each lay.cook[slot] as id (id)}
@@ -233,9 +242,12 @@
 				role="button"
 				tabindex="-1"
 				style="background:{STRONG[idx(id)]}"
-				title="{chef.name} cooks {title(id)}. Drag to move{S.cooks.length > 1
-					? ', tap to switch chef'
-					: ''}."
+				title={S.cooks.length > 1
+					? t('{chef} cooks {title}. Drag to move, tap to switch chef.', {
+							chef: chef.name,
+							title: title(id)
+						})
+					: t('{chef} cooks {title}. Drag to move.', { chef: chef.name, title: title(id) })}
 				onpointerdown={(e) => down(e, 'cook', id, slot)}
 			>
 				<span class="shrink-0 rounded-full bg-white/90 p-0.5"
@@ -253,7 +265,7 @@
 				role="button"
 				tabindex="-1"
 				style="background:{TINT[idx(eatId)]};border-color:{STRONG[idx(eatId)]}"
-				title="{title(eatId)}. Drag to move."
+				title={t('{title}. Drag to move.', { title: title(eatId) })}
 				onpointerdown={(e) => down(e, 'eat', eatId, slot)}
 			>
 				{shortName(title(eatId))}
@@ -263,11 +275,11 @@
 {/snippet}
 
 <section class="mx-auto max-w-6xl px-5 py-5 md:px-8">
-	<h2 class="font-display text-3xl font-black">Schedule</h2>
+	<h2 class="font-display text-3xl font-black">{t('Schedule')}</h2>
 
 	<div class="mt-5 flex flex-wrap items-end gap-x-6 gap-y-3">
 		<label class="flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase">
-			Week of
+			{t('Week of')}
 			<input type="date" class="brutal-field" bind:value={S.weekStart} />
 		</label>
 		<div class="flex flex-col gap-0.5 pb-0.5">
@@ -284,7 +296,7 @@
 				aria-expanded={editChefs}
 				onclick={() => (editChefs = !editChefs)}
 			>
-				{editChefs ? 'Done' : 'Edit chefs'}
+				{editChefs ? t('Done') : t('Edit chefs')}
 			</button>
 		</div>
 	</div>
@@ -292,20 +304,26 @@
 	{#if editChefs}
 		<div class="brutal-box mt-4 flex flex-col gap-4 bg-white p-4">
 			<p class="text-sm text-ink/70">
-				Add everyone who cooks in your household, up to {MAX_CHEFS}. Each gets a name and their own
-				face, shown on the calendar and in the events you add to your calendar.
-				{#if S.cooks.length > 1}Tap a cooking tile to hand it to the next chef.{/if}
+				{t(
+					'Add everyone who cooks in your household, up to {max}. Each gets a name and their own face, shown on the calendar and in the events you add to your calendar.',
+					{ max: MAX_CHEFS }
+				)}
+				{#if S.cooks.length > 1}{t('Tap a cooking tile to hand it to the next chef.')}{/if}
 			</p>
 			{#each S.cooks as c (c.id)}
 				<div class="flex flex-wrap items-center gap-3">
 					<CookIcon kind={c.icon} size={34} />
 					<input
 						class="brutal-field w-44"
-						aria-label="Chef name"
+						aria-label={t('Chef name')}
 						maxlength="20"
 						bind:value={c.name}
 					/>
-					<div class="flex flex-wrap gap-1.5" role="group" aria-label="{c.name} icon">
+					<div
+						class="flex flex-wrap gap-1.5"
+						role="group"
+						aria-label={t('{name} icon', { name: c.name })}
+					>
 						{#each COOK_ICONS as k (k)}
 							{@const taken = S.cooks.some((o) => o.id !== c.id && o.icon === k)}
 							<button
@@ -317,7 +335,7 @@
 									: c.icon === k
 										? ''
 										: 'hover:border-ink'}"
-								aria-label={taken ? `${k} (taken)` : k}
+								aria-label={taken ? t('{name} (taken)', { name: t(k) }) : t(k)}
 								aria-pressed={c.icon === k}
 								disabled={taken}
 								onclick={() => setChefIcon(c.id, k)}
@@ -332,14 +350,14 @@
 							class="font-mono text-xs font-bold uppercase underline decoration-2 underline-offset-4"
 							onclick={() => removeChef(c.id)}
 						>
-							Remove
+							{t('Remove')}
 						</button>
 					{/if}
 				</div>
 			{/each}
 			{#if S.cooks.length < MAX_CHEFS}
 				<button type="button" class="brutal-btn self-start bg-white" onclick={addChef}>
-					+ Add a chef
+					{t('+ Add a chef')}
 				</button>
 			{/if}
 		</div>
@@ -351,10 +369,10 @@
 			class="brutal-btn bg-white px-3! text-xs! sm:px-5! sm:text-sm!"
 			data-weeknav="-1"
 			disabled={shownWeek === 0}
-			onclick={() => (week = shownWeek - 1)}>← Earlier</button
+			onclick={() => (week = shownWeek - 1)}>{t('← Earlier')}</button
 		>
 		<p class="text-center font-mono text-xs font-bold tracking-wide uppercase">
-			Week {shownWeek + 1}
+			{t('Week {n}', { n: shownWeek + 1 })}
 			<span class="block text-ink/60">{rangeText}</span>
 		</p>
 		<button
@@ -362,23 +380,23 @@
 			class="brutal-btn bg-white px-3! text-xs! sm:px-5! sm:text-sm!"
 			data-weeknav="1"
 			disabled={shownWeek >= maxWeek}
-			onclick={() => (week = shownWeek + 1)}>Later →</button
+			onclick={() => (week = shownWeek + 1)}>{t('Later →')}</button
 		>
 	</div>
 	<p class="mt-3 text-sm text-ink/70">
-		Shop, then cook, then eat: the grocery run comes on or before the first cook, and meal tiles can
-		only sit on or after their cooking day. Drag a tile onto Earlier or Later to carry it to another
-		week.
+		{t(
+			'Shop, then cook, then eat: the grocery run comes on or before the first cook, and meal tiles can only sit on or after their cooking day. Drag a tile onto Earlier or Later to carry it to another week.'
+		)}
 	</p>
 
 	<!-- Phones: one card per day, lunch and dinner stacked, so tiles stay readable. -->
-	<div class="mt-4 flex flex-col gap-3 md:hidden" role="table" aria-label="Weekly schedule">
+	<div class="mt-4 flex flex-col gap-3 md:hidden" role="table" aria-label={t('Weekly schedule')}>
 		{#each CDAYS as d, i (d)}
 			<div class="brutal-box bg-white p-2.5">
 				<p class="mb-1.5 font-mono text-xs font-bold uppercase">
-					{d}
+					{dayShort(i)}
 					<span class="text-ink/50"
-						>{dayDate(base + i).toLocaleDateString(undefined, {
+						>{dayDate(base + i).toLocaleDateString(dateLoc(), {
 							month: 'short',
 							day: 'numeric'
 						})}</span
@@ -386,7 +404,9 @@
 				</p>
 				<div class="grid grid-cols-[4rem_1fr] items-stretch gap-x-2 gap-y-1.5">
 					{#each ROWS as row (row.label)}
-						<span class="self-center font-mono text-[0.7rem] font-bold uppercase">{row.label}</span>
+						<span class="self-center font-mono text-[0.7rem] font-bold uppercase"
+							>{t(row.label)}</span
+						>
 						{@render cell((base + i) * 2 + row.offset, 'min-h-11')}
 					{/each}
 				</div>
@@ -395,18 +415,18 @@
 	</div>
 
 	<div class="brutal-box mt-4 hidden overflow-x-auto bg-white md:block">
-		<div class="min-w-[44rem] p-3" role="table" aria-label="Weekly schedule">
+		<div class="min-w-[44rem] p-3" role="table" aria-label={t('Weekly schedule')}>
 			<div class="grid grid-cols-[3.5rem_repeat(7,minmax(0,1fr))] gap-1.5">
 				<span></span>
 				{#each CDAYS as d, i (d)}
 					<div class="py-1 text-center font-mono text-xs font-bold uppercase">
-						{d}
+						{dayShort(i)}
 						<small class="block text-ink/50">{dayDate(base + i).getDate()}</small>
 					</div>
 				{/each}
 
 				{#each ROWS as row (row.label)}
-					<span class="self-center font-mono text-xs font-bold uppercase">{row.label}</span>
+					<span class="self-center font-mono text-xs font-bold uppercase">{t(row.label)}</span>
 					{#each CDAYS as d, i (d)}
 						{@render cell((base + i) * 2 + row.offset, 'min-h-20')}
 					{/each}
@@ -417,9 +437,8 @@
 
 	{#if overIds.length}
 		<p class="mt-2 font-mono text-xs font-bold text-ink/80 uppercase">
-			Doesn't fit in {MAX_WEEKS} weeks: {overIds
-				.map((id) => shortName(title(id)) + ' (' + lay.over[id] + ')')
-				.join(', ')}
+			{t("Doesn't fit in {n} weeks:", { n: MAX_WEEKS })}
+			{overIds.map((id) => shortName(title(id)) + ' (' + lay.over[id] + ')').join(', ')}
 		</p>
 	{/if}
 

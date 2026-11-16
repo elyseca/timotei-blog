@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n.svelte';
 	const year = 2026;
 </script>
 
@@ -8,7 +9,7 @@
 			timotei<span class="text-purple">.</span>blog
 		</p>
 		<p class="font-mono text-xs tracking-wide text-ink/60 uppercase">
-			Gabe &amp; Elyse, since {year}
+			{t('Gabe & Elyse, since {year}', { year })}
 		</p>
 	</div>
 </footer>

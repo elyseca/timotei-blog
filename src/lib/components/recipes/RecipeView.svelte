@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { S, byId, allRecipes } from '$lib/recipes/store.svelte';
+	import { t } from '$lib/i18n.svelte';
+	import { localize, tTitle } from '$lib/recipes/localize';
 	import { MEALS } from '$lib/recipes/data';
 	import { lineText, similar, diet, DIETS, swapRecipe } from '$lib/recipes/engine';
 	import { togglePlan } from '$lib/recipes/plan';
@@ -8,9 +10,11 @@
 	import PhotoForm from './PhotoForm.svelte';
 	import DietPill from './DietPill.svelte';
 
+	import { tIng } from '$lib/recipes/words';
+	import PrefsBar from '$lib/components/PrefsBar.svelte';
 	let { id }: { id: string } = $props();
 
-	const r = $derived(swapRecipe(byId(id), S.filters) as Recipe | undefined);
+	const r = $derived(localize(swapRecipe(byId(id), S.filters)) as Recipe | undefined);
 
 	// A combo's amounts are per serving: show them for a standard plan serving count.
 	const f = $derived(r?.parts ? S.servingsPer / r.servings : 1);
@@ -22,6 +26,14 @@
 					shared: string[];
 				}[])
 			: []
+	);
+	let showPhotoForm = $state(false);
+	// Other versions of this dish (e.g. the two buffalo macs).
+	const variants = $derived(
+		r?.family ? allRecipes().filter((x) => x.family === r.family && x.id !== r.id) : []
+	);
+	const planSibling = $derived(
+		r?.family ? S.plan.find((p) => p.id !== id && byId(p.id)?.family === r.family) : undefined
 	);
 	const dt = $derived(r ? diet(r) : null);
 	const tags = $derived(
@@ -40,8 +52,10 @@
 	<div class="mx-auto max-w-3xl px-5 py-16 md:px-8">
 		<div class="brutal-box bg-white p-10 text-center">
 			<p class="font-mono text-sm uppercase">
-				That recipe isn't here.
-				<a href="/recipes" class="underline decoration-2 underline-offset-4">Back to all recipes</a>
+				{t("That recipe isn't here.")}
+				<a href="/recipes" class="underline decoration-2 underline-offset-4"
+					>{t('Back to all recipes')}</a
+				>
 			</p>
 		</div>
 	</div>
@@ -52,7 +66,7 @@
 				href="/recipes"
 				class="rise-in font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
 			>
-				← All recipes
+				{t('← All recipes')}
 			</a>
 			<h1
 				class="rise-in mt-5 max-w-3xl font-display text-4xl font-black md:text-5xl"
@@ -63,6 +77,16 @@
 			{#if r.blurb}<p class="rise-in mt-4 max-w-2xl text-lg text-ink/80" style="--delay: 140ms">
 					{r.blurb}
 				</p>{/if}
+			{#if r.family}
+				<div class="rise-in mt-4 flex flex-wrap items-center gap-2" style="--delay: 160ms">
+					<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Versions:')}</span>
+					<span class="brutal-chip" aria-pressed="true">{r.variant ?? r.title}</span>
+					{#each variants as v (v.id)}
+						<a class="brutal-chip" href="/recipes/view#{v.id}">{localize(v).variant ?? tTitle(v)}</a
+						>
+					{/each}
+				</div>
+			{/if}
 			{#if r.mins}
 				<div class="rise-in mt-5" style="--delay: 180ms"><EffortBadge {r} label /></div>
 			{/if}
@@ -70,15 +94,15 @@
 				{#if dt}{#each DIETS.filter((x) => dt[x.key as keyof typeof dt]) as x (x.key)}<DietPill
 							k={x.key}
 						/>{/each}{/if}
-				{#each tags as t (t)}<span class="brutal-tag">{t}</span>{/each}
+				{#each tags as tg (tg)}<span class="brutal-tag">{t(tg)}</span>{/each}
 			</div>
 			<p
 				class="rise-in mt-4 font-mono text-xs font-bold tracking-wide text-ink/70 uppercase"
 				style="--delay: 240ms"
 			>
-				{r.by ? 'From ' + r.by : ''}
+				{r.by ? t('From {name}', { name: r.by }) : ''}
 				{#if r.source}
-					· Adapted from
+					· {t('Adapted from')}
 					<a
 						href={r.source.url}
 						target="_blank"
@@ -87,13 +111,25 @@
 					>
 				{/if}
 			</p>
+			{#if r.story}
+				<blockquote
+					class="rise-in mt-4 max-w-2xl border-l-4 border-ink pl-4 text-lg text-ink/80 italic"
+					style="--delay: 260ms"
+				>
+					“{r.story}”
+				</blockquote>
+			{/if}
 			<div class="rise-in mt-6 flex flex-wrap gap-3" style="--delay: 280ms">
 				<button
 					type="button"
 					class="brutal-btn {inPlan ? 'bg-white' : ''}"
 					onclick={() => togglePlan(id)}
 				>
-					{inPlan ? '✓ In meal plan' : '+ Add to meal plan'}
+					{inPlan
+						? t('✓ In meal plan')
+						: planSibling
+							? t('Swap in for the other version')
+							: t('+ Add to meal plan')}
 				</button>
 			</div>
 		</div>
@@ -102,9 +138,14 @@
 	<div class="mx-auto grid max-w-6xl gap-6 px-5 py-7 md:px-8 lg:grid-cols-[22rem_1fr]">
 		<aside class="flex flex-col gap-4">
 			<div class="brutal-box bg-white p-5">
+				<div class="mb-3 flex items-center justify-between gap-3">
+					<h2 class="font-display text-xl font-black">{t('Ingredients')}</h2>
+					<PrefsBar show="units" />
+				</div>
 				{#if r.swaps?.length}
 					<p class="mb-2 rounded-md bg-lime/40 px-2 py-1 text-xs font-semibold">
-						Swapped for your diet: {r.swaps.map((x) => `${x.from} → ${x.to}`).join(', ')}
+						{t('Swapped for your diet:')}
+						{r.swaps.map((x) => `${x.from} → ${x.to}`).join(', ')}
 					</p>
 				{/if}
 				<ul class="flex flex-col">
@@ -121,7 +162,7 @@
 		</aside>
 
 		<div class="min-w-0">
-			<h2 class="font-display text-3xl font-black">Method</h2>
+			<h2 class="font-display text-3xl font-black">{t('Method')}</h2>
 			<ol class="mt-5 flex flex-col gap-4">
 				{#each r.steps as s, i (i)}
 					<li class="flex gap-4">
@@ -137,14 +178,14 @@
 			</ol>
 
 			{#if r.flavors}
-				<h2 class="mt-12 font-display text-3xl font-black">Flavors</h2>
+				<h2 class="mt-12 font-display text-3xl font-black">{t('Flavors')}</h2>
 				<div class="brutal-box mt-5 overflow-x-auto bg-white">
 					<table class="w-full text-left text-sm">
 						<thead class="border-b-[2.5px] border-ink bg-cream-2 font-mono text-xs uppercase">
 							<tr
-								><th class="p-3">Flavor</th><th class="p-3">Stir in</th><th class="p-3"
-									>Sweetener</th
-								><th class="p-3">Top with</th></tr
+								><th class="p-3">{t('Flavor')}</th><th class="p-3">{t('Stir in')}</th><th
+									class="p-3">{t('Sweetener')}</th
+								><th class="p-3">{t('Top with')}</th></tr
 							>
 						</thead>
 						<tbody>
@@ -162,25 +203,68 @@
 			{/if}
 
 			{#if r.notes?.length}
-				<h2 class="mt-12 font-display text-3xl font-black">Notes</h2>
+				<h2 class="mt-12 font-display text-3xl font-black">{t('Notes')}</h2>
 				<ul class="mt-5 list-disc space-y-2 pl-6">
 					{#each r.notes as n, i (i)}<li>{n}</li>{/each}
 				</ul>
 			{/if}
 
-			<h2 class="mt-12 font-display text-3xl font-black">Photos</h2>
-			<PhotoForm id={r.id} title={r.title} />
+			<div class="mt-12 flex items-baseline justify-between gap-3">
+				<h2 class="font-display text-3xl font-black">{t('Photos')}</h2>
+				{#if !showPhotoForm}
+					<button
+						type="button"
+						class="font-mono text-[0.7rem] font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
+						onclick={() => (showPhotoForm = true)}>{t('+ Add photo')}</button
+					>
+				{/if}
+			</div>
+			{#if r.photos?.length}
+				<div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+					{#each r.photos as ph (ph.src)}
+						<figure class="m-0">
+							<a
+								href={ph.src}
+								target="_blank"
+								rel="noopener"
+								class="brutal-box block overflow-hidden"
+							>
+								<img
+									src={ph.src}
+									alt="{r.title}, {ph.kind === 'dish' ? t('the finished dish') : t('being made')}"
+									loading="lazy"
+									class="aspect-square w-full object-cover"
+								/>
+							</a>
+							<figcaption class="mt-1 font-mono text-[0.65rem] tracking-wide text-ink/70 uppercase">
+								{ph.kind === 'dish' ? t('The dish') : t('Making it')}{ph.by ? ' · ' + ph.by : ''}
+								{#if ph.caption}<span class="block normal-case">{ph.caption}</span>{/if}
+							</figcaption>
+						</figure>
+					{/each}
+				</div>
+			{:else if !showPhotoForm}
+				<p class="mt-2 text-sm text-ink/60">{t('No photos yet.')}</p>
+			{/if}
+			{#if showPhotoForm}
+				<PhotoForm id={r.id} title={r.title} onclose={() => (showPhotoForm = false)} />
+			{/if}
 
 			{#if sim.length}
-				<h2 class="mt-12 font-display text-3xl font-black">Shares ingredients with</h2>
+				<h2 class="mt-12 font-display text-3xl font-black">{t('Shares ingredients with')}</h2>
 				<div class="mt-5 grid gap-4 sm:grid-cols-3">
 					{#each sim as s (s.r.id)}
 						<a
 							href="/recipes/view#{s.r.id}"
 							class="brutal-box flex flex-col gap-1 bg-white p-4 transition-[translate,box-shadow] duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-lg"
 						>
-							<strong class="font-display text-lg font-black">{s.r.title}</strong>
-							<span class="text-xs text-ink/60">{s.shared.slice(0, 4).join(', ')}</span>
+							<strong class="font-display text-lg font-black">{tTitle(byId(s.r.id))}</strong>
+							<span class="text-xs text-ink/60"
+								>{s.shared
+									.slice(0, 4)
+									.map((n) => tIng(n))
+									.join(', ')}</span
+							>
 						</a>
 					{/each}
 				</div>

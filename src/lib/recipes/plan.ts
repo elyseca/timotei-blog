@@ -2,9 +2,17 @@
 import { S, byId, toast } from './store.svelte';
 import { COOK_ICONS } from './cookIcons';
 import { lineText, fmtQty, WEEK_MEALS, comboId, swapRecipe } from './engine';
+import { L, t } from '$lib/i18n.svelte';
+import { tIng } from './words';
+import { tTitle } from './localize';
 import type { PlanItem } from './types';
 
 export const CDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+/** The date/time locale for the chosen language. */
+export const dateLoc = () => (L.lang === 'es' ? 'es' : 'en-US');
+/** Short weekday name (0 = Sunday) in the chosen language. */
+export const dayShort = (i: number) =>
+	new Date(2023, 0, 1 + i).toLocaleDateString(dateLoc(), { weekday: 'short' }).replace('.', '');
 // Cooking tiles use the site's palette; the meals eaten later use a light tint of the same colour.
 const PALETTE = ['purple', 'mustard', 'coral', 'teal', 'blue', 'lime'];
 export const STRONG = PALETTE.map((c) => `var(--color-${c})`);
@@ -22,20 +30,22 @@ export const GORDER = [
 	'other'
 ];
 
-export const ppl = (n: number) => n + (n === 1 ? ' person' : ' people');
+export const ppl = (n: number) => (n === 1 ? t('1 person') : t('{n} people', { n }));
 export const mealsOf = (servings: number): number => Math.floor(servings / S.household + 1e-9);
 export const daysText = (meals: number): string => {
 	const d = meals / 2;
-	return fmtQty(d) + (d <= 1 ? ' day' : ' days');
+	const n = fmtQty(d);
+	return d <= 1 ? t('{n} day', { n }) : t('{n} days', { n });
 };
-const shortOne = (t: string) =>
-	t
+const shortOne = (title: string) =>
+	title
 		.replace(/\(.*?\)/g, '')
 		.replace(/^(One-Pot|Instant Pot|Frozen|Simple)\s+/i, '')
+		.replace(/\s+en (una sola olla|la Instant Pot)$/i, '')
 		.replace(/[:,].*$/, '')
 		.trim();
 // A combo's title is its parts joined with " + ": shorten each part.
-export const shortName = (t: string) => t.split(' + ').map(shortOne).join(' + ');
+export const shortName = (title: string) => title.split(' + ').map(shortOne).join(' + ');
 export const cookOf = (id: string) => S.cooks.find((c) => c.id === id) ?? S.cooks[0];
 
 export function planItems(): PlanItem[] {
@@ -55,7 +65,7 @@ export const slotDay = (slot: number) => Math.floor(slot / 2);
 export const MAX_WEEKS = 8;
 export const HORIZON = WEEK_MEALS * MAX_WEEKS;
 export const weekOf = (slot: number) => Math.floor(slot / WEEK_MEALS);
-export const slotName = (slot: number) => (slot % 2 ? 'Dinner' : 'Lunch');
+export const slotName = (slot: number) => (slot % 2 ? t('Dinner') : t('Lunch'));
 
 /** Give every planned recipe a cook slot and eating slots, and keep them matching the servings. */
 export function ensureSched() {
@@ -133,14 +143,18 @@ export function moveCook(id: string, slot: number): string | null {
 	ensureSched();
 	const notes: string[] = [];
 	if (eatsBefore)
-		notes.push(`${eatsBefore} meal${eatsBefore === 1 ? '' : 's'} shifted to after cooking`);
-	if (S.shop !== shopBefore) notes.push('grocery run moved earlier');
-	return notes.length ? 'Moved. ' + notes.join(', ') : null;
+		notes.push(
+			eatsBefore === 1
+				? t('1 meal shifted to after cooking')
+				: t('{n} meals shifted to after cooking', { n: eatsBefore })
+		);
+	if (S.shop !== shopBefore) notes.push(t('grocery run moved earlier'));
+	return notes.length ? t('Moved. {notes}', { notes: notes.join(', ') }) : null;
 }
 /** The grocery run must come on or before the first cook. */
 export function moveShop(slot: number): string | null {
 	const first = firstCook();
-	if (first != null && slot > first) return "Can't shop after the first cook";
+	if (first != null && slot > first) return t("Can't shop after the first cook");
 	S.shop = slot;
 	return null;
 }
@@ -148,9 +162,9 @@ export function moveEat(id: string, from: number, to: number): string | null {
 	if (from === to) return null;
 	const mine = S.sched[id];
 	if (!mine) return null;
-	if (to < mine.slot) return "Can't eat it before it's cooked";
+	if (to < mine.slot) return t("Can't eat it before it's cooked");
 	const other = Object.entries(S.sched).find(([k, v]) => k !== id && v.eats.includes(to));
-	if (other && from < other[1].slot) return "Can't swap: that meal isn't cooked yet by then";
+	if (other && from < other[1].slot) return t("Can't swap: that meal isn't cooked yet by then");
 	mine.eats = mine.eats.map((e) => (e === from ? to : e === to ? from : e));
 	if (other) other[1].eats = other[1].eats.map((e) => (e === to ? from : e));
 	return null;
@@ -188,20 +202,24 @@ export function togglePlan(id: string) {
 	const i = S.plan.findIndex((p) => p.id === id);
 	if (i >= 0) {
 		S.plan.splice(i, 1);
-		toast('Removed from plan');
+		toast(t('Removed from plan'));
 	} else {
+		// A variation of a dish already planned takes its place: never two versions in one week.
+		const fam = byId(id)?.family;
+		const sib = fam ? S.plan.findIndex((p) => byId(p.id)?.family === fam) : -1;
+		if (sib >= 0) S.plan.splice(sib, 1);
 		S.plan.push({ id, servings: S.servingsPer });
 		ensureSched();
-		toast('Added to plan');
+		toast(sib >= 0 ? t('Swapped for this version') : t('Added to plan'));
 	}
 }
 /** Add a protein + veg + carb combination (any two or three of them) as one planned meal. */
 export function addCombo(parts: string[]) {
 	const id = comboId(parts);
-	if (S.plan.some((p) => p.id === id)) return toast('Already in plan');
+	if (S.plan.some((p) => p.id === id)) return toast(t('Already in plan'));
 	S.plan.push({ id, servings: S.servingsPer });
 	ensureSched();
-	toast('Added to plan');
+	toast(t('Added to plan'));
 }
 export function removeFromPlan(id: string) {
 	S.plan = S.plan.filter((p) => p.id !== id);
@@ -260,7 +278,10 @@ export function groceryText(
 	list: { dept: string; qty: number | null; unit: string; name: string }[],
 	deptLabel: (k: string) => string
 ) {
-	const out = ['Grocery list for ' + items.map((x) => x.r.title).join(', '), ''];
+	const out = [
+		t('Grocery list for {titles}', { titles: items.map((x) => tTitle(x.r)).join(', ') }),
+		''
+	];
 	GORDER.forEach((k) => {
 		const rows = list.filter((e) => e.dept === k);
 		if (!rows.length) return;
@@ -269,7 +290,7 @@ export function groceryText(
 			out.push(
 				'- ' +
 					(e.qty == null
-						? e.name + ' (to taste)'
+						? t('{name} (to taste)', { name: tIng(e.name) })
 						: lineText({ qty: e.qty, unit: e.unit, name: e.name }))
 			)
 		);

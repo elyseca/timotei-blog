@@ -5,6 +5,8 @@
 	import DietPill from './DietPill.svelte';
 	import type { Recipe } from '$lib/recipes/types';
 	import RecipeCard from './RecipeCard.svelte';
+	import { t } from '$lib/i18n.svelte';
+	import { localize } from '$lib/recipes/localize';
 
 	const F = ui.F;
 	const chips = [
@@ -62,12 +64,17 @@
 		const d = diet(swapRecipe(r, S.filters));
 		for (const x of DIETS) if (on(x.key) && !d[x.key as keyof typeof d]) return false;
 		if (F.q) {
+			// Match the English text and the Spanish text, so either language finds the recipe.
+			const lr = localize(r);
 			const hay = [
 				r.title,
 				r.blurb,
 				r.by,
 				(r.tags ?? []).join(' '),
-				r.ing.map((x) => x.name).join(' ')
+				r.ing.map((x) => x.name).join(' '),
+				lr.title,
+				lr.blurb,
+				lr.ing.map((x) => x.name).join(' ')
 			]
 				.join(' ')
 				.toLowerCase();
@@ -82,7 +89,20 @@
 		return true;
 	}
 
-	const list = $derived(allRecipes().filter(matches));
+	// Versions of one dish show as a single card: the first that matches, with a count of versions.
+	const list = $derived.by(() => {
+		const seen = new Set<string>();
+		return allRecipes()
+			.filter(matches)
+			.filter((r) => {
+				if (!r.family) return true;
+				if (seen.has(r.family)) return false;
+				seen.add(r.family);
+				return true;
+			});
+	});
+	const versionCount = (r: Recipe) =>
+		r.family ? allRecipes().filter((x) => x.family === r.family).length : 0;
 	const sections = $derived(
 		SECTIONS.concat([...new Set(list.map((r) => r.section))].filter((s) => !SECTIONS.includes(s)))
 	);
@@ -94,9 +114,9 @@
 			<input
 				type="search"
 				class="brutal-field"
-				placeholder="Search recipes"
+				placeholder={t('Search recipes')}
 				bind:value={F.q}
-				aria-label="Search recipes"
+				aria-label={t('Search recipes')}
 			/>
 			<button
 				type="button"
@@ -104,19 +124,23 @@
 				aria-expanded={showFilters}
 				onclick={() => (showFilters = !showFilters)}
 			>
-				Filters{activeCount ? ` · ${activeCount}` : ''}
+				{t('Filters')}{activeCount ? ` · ${activeCount}` : ''}
 			</button>
 		</div>
 		<div class="mt-3 {showFilters ? 'block' : 'hidden'} md:block">
-			<div class="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="Dietary needs">
-				<span class="font-mono text-xs font-bold tracking-wide uppercase">Dietary</span>
+			<div
+				class="mb-3 flex flex-wrap items-center gap-2"
+				role="group"
+				aria-label={t('Dietary needs')}
+			>
+				<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Dietary')}</span>
 				{#each DIETS as x (x.key)}
 					{@const k = x.key as 'gf' | 'nf' | 'df' | 'veg' | 'garlic'}
 					<DietPill {k} pressed={on(k)} onclick={() => flip(k)} />
 				{/each}
 			</div>
-			<div class="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="Effort">
-				<span class="font-mono text-xs font-bold tracking-wide uppercase">Effort</span>
+			<div class="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label={t('Effort')}>
+				<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Effort')}</span>
 				{#each EFFORT_SCALE as l (l.level)}
 					<button
 						type="button"
@@ -133,16 +157,16 @@
 								></span>
 							{/each}
 						</span>
-						{l.name}
+						{t(l.name)}
 					</button>
 				{/each}
 			</div>
 			<p class="mb-3 text-xs text-ink/60">
-				Vegetarian swaps broth for vegetable broth, and gluten-free swaps pasta for chickpea pasta,
-				in recipes, plans and the grocery list. Flags come from the ingredient names, so check
-				labels on packaged foods.
+				{t(
+					'Vegetarian swaps broth for vegetable broth, and gluten-free swaps pasta for chickpea pasta, in recipes, plans and the grocery list. Flags come from the ingredient names, so check labels on packaged foods.'
+				)}
 			</p>
-			<div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Meal type">
+			<div class="mt-3 flex flex-wrap gap-2" role="group" aria-label={t('Meal type')}>
 				{#each chips as c (c[0])}
 					<button
 						type="button"
@@ -150,27 +174,28 @@
 						aria-pressed={F.meal === c[0]}
 						onclick={() => (F.meal = c[0])}
 					>
-						{c[1]}
+						{t(c[1])}
 					</button>
 				{/each}
 			</div>
 			<div class="mt-3 flex flex-wrap items-end gap-x-5 gap-y-2">
 				<label class="flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase">
-					Contributor
+					{t('Contributor')}
 					<select class="brutal-field w-auto" bind:value={F.by}>
-						<option value="">Anyone</option>
+						<option value="">{t('Anyone')}</option>
 						{#each contributors as b (b)}<option value={b}>{b}</option>{/each}
 					</select>
 				</label>
 				<label class="flex flex-col gap-1 font-mono text-xs font-bold tracking-wide uppercase">
-					Equipment
+					{t('Equipment')}
 					<select class="brutal-field w-auto" bind:value={F.equip}>
-						<option value="">Any</option>
-						{#each equipment as b (b)}<option value={b}>{b}</option>{/each}
+						<option value="">{t('Any')}</option>
+						{#each equipment as b (b)}<option value={b}>{t(b)}</option>{/each}
 					</select>
 				</label>
 				<label class="flex items-center gap-2 pb-2 text-sm">
-					<input type="checkbox" class="brutal-check" bind:checked={F.freezer} /> Freezer-friendly
+					<input type="checkbox" class="brutal-check" bind:checked={F.freezer} />
+					{t('Freezer-friendly')}
 				</label>
 			</div>
 			{#if activeCount}
@@ -179,7 +204,7 @@
 					class="mt-3 font-mono text-xs font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
 					onclick={clearFilters}
 				>
-					Clear filters
+					{t('Clear filters')}
 				</button>
 			{/if}
 		</div>
@@ -189,7 +214,7 @@
 <section class="mx-auto max-w-6xl px-5 py-6 md:px-8">
 	{#if !list.length}
 		<div class="brutal-box bg-white p-12 text-center text-ink/60">
-			<p class="font-mono text-sm uppercase">No recipes match.</p>
+			<p class="font-mono text-sm uppercase">{t('No recipes match.')}</p>
 		</div>
 	{:else}
 		{#each sections as sec (sec)}
@@ -197,11 +222,11 @@
 			{#if rs.length}
 				<div class="mb-8 last:mb-0">
 					<h2 class="flex items-baseline gap-3 font-display text-3xl font-black">
-						{sec}
+						{t(sec)}
 						<span class="brutal-tag bg-lime">{rs.length}</span>
 					</h2>
 					<div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-						{#each rs as r (r.id)}<RecipeCard {r} />{/each}
+						{#each rs as r (r.id)}<RecipeCard {r} versions={versionCount(r)} />{/each}
 					</div>
 				</div>
 			{/if}

@@ -4,9 +4,12 @@
 	import Nav from '$lib/components/Nav.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import { onNavigate } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { initPrefs } from '$lib/i18n.svelte';
 	import { prefersReducedMotion } from 'svelte/motion';
 
 	let { children } = $props();
+	onMount(initPrefs);
 
 	// Cross-fade between pages where the browser supports view transitions.
 	onNavigate((navigation) => {

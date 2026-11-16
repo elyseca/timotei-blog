@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n.svelte';
 	// Same hero band the Travel / Wedding pages use, so the recipe pages feel like part of the site.
 	let {
 		tag,
@@ -10,12 +11,12 @@
 
 <section class="grid-bg border-b-[2.5px] border-ink {bg}">
 	<div class="mx-auto max-w-6xl px-5 py-8 md:px-8">
-		<span class="rise-in brutal-tag bg-cream">{tag}</span>
+		<span class="rise-in brutal-tag bg-cream">{t(tag)}</span>
 		<h1 class="rise-in mt-3 font-display text-4xl font-black md:text-5xl" style="--delay: 80ms">
-			{title}
+			{t(title)}
 		</h1>
 		{#if blurb}
-			<p class="rise-in mt-4 max-w-xl text-lg text-ink/80" style="--delay: 160ms">{blurb}</p>
+			<p class="rise-in mt-4 max-w-xl text-lg text-ink/80" style="--delay: 160ms">{t(blurb)}</p>
 		{/if}
 	</div>
 </section>

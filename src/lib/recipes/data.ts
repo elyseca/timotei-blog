@@ -1285,7 +1285,9 @@ export const RECIPES: Recipe[] = [
 		servings: 8,
 		equip: ['Stovetop', 'Mortar and Pestle (optional)'],
 		freezer: false,
-		by: 'Santiago Timotei Rodriguez',
+		by: 'Santi',
+		story:
+			"Shredded beef was one of the first things my mom taught me how to make before leaving for college, as a way to re-use the beef used to make broth. I've since played with the recipe she first gave me and made it my own.",
 		blurb:
 			'Tender shredded beef stewed in a spiced tomato sofrito, made with the beef left over from broth.',
 		ing: [
@@ -1318,9 +1320,7 @@ export const RECIPES: Recipe[] = [
 			'If you have a mortar and pestle and whole spices, grind the allspice, black peppercorns, cumin and cinnamon into a powder. Add the spice blend, bay leaves, salt, and paprika (or guajillo chile with seeds removed) to the stew and mix well. Add dried oregano and thyme now; if using fresh, add them in the final 15 minutes. Partially cover and cook for 30 minutes.',
 			'If you added the whole guajillo, remove it before it disintegrates. Keep cooking until the stew is juicy and tender, but not too wet. When you mix the beef, the liquid should be picked up by the meat and take a few seconds to settle back to the bottom of the pot.'
 		],
-		notes: [
-			'From Santiago: "Shredded beef was one of the first things my mom taught me how to make before leaving for college, as a way to re-use the beef used to make broth. I\'ve since played with the recipe she first gave me and made it my own."'
-		]
+		notes: []
 	},
 	{
 		id: 'sweet-potato-black-bean-chili',
@@ -1365,6 +1365,8 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'buffalo-chicken-mac-slow-cooker',
+		family: 'buffalo-chicken-mac',
+		variant: 'Slow cooker, lighter',
 		mins: { active: 30, total: 180 },
 		title: 'Buffalo Chicken Mac N Cheese (Slow Cooker)',
 		section: 'Easy Weekly Meals',
@@ -1405,6 +1407,8 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'buffalo-chicken-mac-full-yum',
+		family: 'buffalo-chicken-mac',
+		variant: 'Stovetop, full yum',
 		mins: { active: 15, total: 45 },
 		title: 'Buffalo Chicken Mac (Full Yum Version)',
 		section: 'Easy Weekly Meals',
@@ -1453,6 +1457,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Katie',
+		story: "My grandma's recipe!",
 		blurb: 'A baked cheesecake with a sour cream layer and a cooked blueberry topping.',
 		ing: [
 			i(2.5, 'cup', 'graham cracker crumbs', 'dry', 'for the crust'),
@@ -1483,13 +1488,11 @@ export const RECIPES: Recipe[] = [
 			'Make the blueberry topping. Combine the blueberries, 1¾ cups sugar, ⅔ cup flour, ⅛ tsp salt, lime juice, cornstarch and sweet butter. Cook in the top of a double boiler until the sauce begins to thicken. Remove from the heat and cool thoroughly.',
 			'Pour the topping over the slightly chilled cheesecake. Chill overnight before cutting.'
 		],
-		notes: [
-			'Katie: "My grandma\'s recipe!"',
-			'Katie has also made the topping with fresh strawberries, and it turned out very well.'
-		]
+		notes: ['Katie has also made the topping with fresh strawberries, and it turned out very well.']
 	},
 	{
 		id: 'rosquillas',
+		photos: [{ src: '/recipe-photos/rosquillas-1.jpg', kind: 'dish', by: 'Santi' }],
 		mins: { active: 90, total: 100 },
 		title: 'Rosquillas',
 		section: 'Sweet Treats',
@@ -1500,6 +1503,7 @@ export const RECIPES: Recipe[] = [
 		freezer: false,
 		veg: true,
 		by: 'Santi',
+		story: 'This recipe was given to me by my grandmother, Concepción Fortún.',
 		blurb: 'Anise-scented fried dough rings, from a family recipe.',
 		ing: [
 			i(3, '', 'eggs', 'dairy'),
@@ -1517,10 +1521,11 @@ export const RECIPES: Recipe[] = [
 			'Oil a large, clean work surface and your hands. Take a ping-pong-ball-sized piece of dough and roll it into a strand that can wrap around 2 fingers. Press down on the ends of the loop with your fingers or the work surface to seal, and drop it into the oil.',
 			"Fry each rosquilla for roughly 2–3 minutes per side, until evenly browned. Keep an eye on the oil temperature so it doesn't get too high or too low. Drain the finished rosquillas in a bowl lined with paper towels."
 		],
-		notes: ['From Santi: "This recipe was given to me by my grandmother, Concepción Fortún."']
+		notes: []
 	},
 	{
 		id: 'flan',
+		photos: [{ src: '/recipe-photos/flan-1.jpg', kind: 'dish', by: 'Santi' }],
 		mins: { active: 30, total: 75 },
 		title: 'Flan',
 		section: 'Sweet Treats',

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { DIETS } from '$lib/recipes/engine';
+	import { t } from '$lib/i18n.svelte';
 
 	// A coloured dietary pill. With `onclick` it is a filter chip; without, a small tag.
 	let {
@@ -17,8 +18,8 @@
 		data-diet={k}
 		style="--diet:var(--color-{d.color})"
 		aria-pressed={pressed}
-		{onclick}>{d.label}</button
+		{onclick}>{t(d.label)}</button
 	>
 {:else}
-	<span class="brutal-tag diet-pill" style="--diet:var(--color-{d.color})">{d.label}</span>
+	<span class="brutal-tag diet-pill" style="--diet:var(--color-{d.color})">{t(d.label)}</span>
 {/if}

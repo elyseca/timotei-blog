@@ -16,6 +16,8 @@ export interface Recipe {
 	weekly?: boolean;
 	meal: string[];
 	by: string;
+	/** The cook's own note on where the recipe came from, in their words. */
+	story?: string;
 	servings: number;
 	/** Minutes: hands-on work (`active`) and start to table (`total`). */
 	mins?: { active: number; total: number };
@@ -30,6 +32,12 @@ export interface Recipe {
 	flavors?: { name: string; add: string; sweet?: string; top?: string }[];
 	source?: { name: string; url: string };
 	user?: boolean;
+	/** Approved photos shown on the recipe page. `src` is an image under /recipe-photos/. */
+	photos?: { src: string; kind: 'dish' | 'cooking'; by?: string; caption?: string }[];
+	/** Recipes that share a `family` are variations of one dish: a plan never includes two of them. */
+	family?: string;
+	/** Short name for this version within its family, e.g. "Slow cooker". */
+	variant?: string;
 	/** Set on a combo: the ids of the protein, veg and carb recipes it is made from. */
 	parts?: string[];
 	/** Set when ingredients were swapped for the reader's diet (see swapRecipe). */

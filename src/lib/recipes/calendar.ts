@@ -3,6 +3,9 @@
 // Nothing here knows anyone's email address. Google Calendar opens in whatever account the
 // visitor is already signed into, so every event lands in their own calendar.
 import { S } from './store.svelte';
+import { t } from '$lib/i18n.svelte';
+import { localize, tTitle } from './localize';
+import { tIng } from './words';
 import { lineText, groceryList } from './engine';
 import { DEPTS } from './data';
 import { cookOf, dayDate, slotDay, GORDER } from './plan';
@@ -27,22 +30,25 @@ const escHtml = (s: string) =>
 const stepText = (s: string | [string, string]) => (Array.isArray(s) ? s[0] + '. ' + s[1] : s);
 
 function detailsHtml(x: PlanItem) {
-	const r = x.r;
+	const r = localize(x.r);
 	const f = x.servings / r.servings;
 	const ings = r.ing.map((i) => '• ' + lineText(i, f) + (i.note ? ' (' + i.note + ')' : ''));
 	const steps = r.steps.map((s, i) => i + 1 + '. ' + stepText(s));
 	const scaled = r.parts
-		? 'Amounts written inside the steps are for each recipe as written.'
+		? t('Amounts written inside the steps are for each recipe as written.')
 		: f !== 1
-			? `Amounts written inside the steps are for the full recipe (${r.servings} servings).`
+			? t('Amounts written inside the steps are for the full recipe ({n} servings).', {
+					n: r.servings
+				})
 			: '';
 	const notes = (r.notes ?? []).map((n) => '• ' + n);
-	let h = `<b>${escHtml(r.title)}</b><br>Makes ${x.servings} servings<br><br><b>Ingredients</b><br>`;
+	let h = `<b>${escHtml(r.title)}</b><br>${escHtml(t('Makes {n} servings', { n: x.servings }))}<br><br><b>${escHtml(t('Ingredients'))}</b><br>`;
 	h += ings.map(escHtml).join('<br>');
-	h += '<br><br><b>Method</b>';
+	h += `<br><br><b>${escHtml(t('Method'))}</b>`;
 	if (scaled) h += `<br><i>${escHtml(scaled)}</i>`;
 	h += '<br>' + steps.map(escHtml).join('<br>');
-	if (notes.length) h += '<br><br><b>Notes</b><br>' + notes.map(escHtml).join('<br>');
+	if (notes.length)
+		h += `<br><br><b>${escHtml(t('Notes'))}</b><br>` + notes.map(escHtml).join('<br>');
 	return h;
 }
 
@@ -55,26 +61,26 @@ export function shopEventFor(items: PlanItem[]): CalEvent | null {
 		unit: string;
 		name: string;
 	}[];
-	const label = (k: string) => (DEPTS.find((d) => d[0] === k) ?? [k, k])[1];
-	let h = '<b>Grocery list</b>';
+	const label = (k: string) => t((DEPTS.find((d) => d[0] === k) ?? [k, k])[1]);
+	let h = `<b>${escHtml(t('Grocery list'))}</b>`;
 	GORDER.forEach((k) => {
 		const rows = list.filter((e) => e.dept === k);
 		if (!rows.length) return;
 		h += `<br><br><b>${escHtml(label(k))}</b>`;
 		rows.forEach((e) => {
-			const t =
+			const line =
 				e.qty == null
-					? e.name + ' (to taste)'
+					? t('{name} (to taste)', { name: tIng(e.name) })
 					: lineText({ qty: e.qty, unit: e.unit, name: e.name });
-			h += '<br>• ' + escHtml(t);
+			h += '<br>• ' + escHtml(line);
 		});
 	});
-	h += '<br><br>Salt and pepper';
+	h += '<br><br>' + escHtml(t('Salt and pepper'));
 	const d = dayDate(slotDay(S.shop));
 	// Shopping is in the morning before a lunch slot, or in the afternoon before a dinner slot.
 	const hour = S.shop % 2 ? 16 : 10;
 	return {
-		title: 'Grocery run',
+		title: t('Grocery run'),
 		start: new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0),
 		end: new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour + 1, 0),
 		html: h
@@ -89,7 +95,7 @@ export function eventFor(x: PlanItem): CalEvent | null {
 	// Cooking happens at lunch or dinner.
 	const [h, mi] = (sc.slot % 2 ? '17:30' : '11:30').split(':').map(Number);
 	return {
-		title: `${chef.name} cooks ${x.r.title}`,
+		title: t('{chef} cooks {title}', { chef: chef.name, title: tTitle(x.r) }),
 		start: new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, mi),
 		end: new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, mi + 90),
 		html: detailsHtml(x)

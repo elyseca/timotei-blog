@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n.svelte';
 	import { onMount } from 'svelte';
 	import RecipeView from '$lib/components/recipes/RecipeView.svelte';
 
@@ -16,7 +17,7 @@
 </script>
 
 <svelte:head>
-	<title>Recipe — timotei.blog</title>
+	<title>{t('Recipe')} — timotei.blog</title>
 </svelte:head>
 
 <svelte:window onhashchange={read} />

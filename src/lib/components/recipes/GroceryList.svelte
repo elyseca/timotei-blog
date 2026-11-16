@@ -4,6 +4,9 @@
 	import { groceryList, lineText } from '$lib/recipes/engine';
 	import { GORDER, groceryText, shortName } from '$lib/recipes/plan';
 	import type { PlanItem } from '$lib/recipes/types';
+	import { t } from '$lib/i18n.svelte';
+	import { tTitle } from '$lib/recipes/localize';
+	import { tIng } from '$lib/recipes/words';
 
 	let { items }: { items: PlanItem[] } = $props();
 
@@ -22,15 +25,22 @@
 	const checked = $derived(list.filter((e) => S.checks[e.key]));
 	const visible = $derived(list.filter((e) => !S.checks[e.key]));
 
-	const deptLabel = (k: string) => (DEPTS.find((d) => d[0] === k) ?? [k, k])[1];
+	const deptLabel = (k: string) => t((DEPTS.find((d) => d[0] === k) ?? [k, k])[1]);
+	// The list names recipes by their English title: show each in the chosen language.
+	const titleOf = (title: string) => {
+		const it = items.find((x) => x.r.title === title);
+		return it ? tTitle(it.r) : title;
+	};
 	const depts = $derived(
 		GORDER.map((k) => ({
 			k,
-			rows: visible.filter((e) => e.dept === k).sort((a, b) => a.name.localeCompare(b.name))
+			rows: visible
+				.filter((e) => e.dept === k)
+				.sort((a, b) => tIng(a.name).localeCompare(tIng(b.name)))
 		})).filter((d) => d.rows.length)
 	);
 	const rowText = (e: Row) =>
-		e.qty == null ? e.name : lineText({ qty: e.qty, unit: e.unit, name: e.name });
+		e.qty == null ? tIng(e.name) : lineText({ qty: e.qty, unit: e.unit, name: e.name });
 
 	let showChecked = $state(false);
 	let showBox = $state(false);
@@ -42,14 +52,14 @@
 		const fallback = () => {
 			copyText = text;
 			showBox = true;
-			toast('Copy the list');
+			toast(t('Copy the list'));
 			setTimeout(() => {
 				boxEl?.focus();
 				boxEl?.select();
 			}, 0);
 		};
 		try {
-			navigator.clipboard.writeText(text).then(() => toast('List copied'), fallback);
+			navigator.clipboard.writeText(text).then(() => toast(t('List copied')), fallback);
 		} catch {
 			fallback();
 		}
@@ -58,7 +68,7 @@
 
 <section class="mx-auto max-w-6xl px-5 py-8 md:px-8">
 	<div class="flex flex-wrap items-center justify-end gap-3">
-		<button type="button" class="brutal-btn" onclick={copyList}>Copy list</button>
+		<button type="button" class="brutal-btn" onclick={copyList}>{t('Copy list')}</button>
 	</div>
 	{#if showBox}
 		<textarea readonly rows="8" class="brutal-field mt-4" bind:this={boxEl} value={copyText}
@@ -77,8 +87,9 @@
 								<input type="checkbox" class="brutal-check mt-0.5" bind:checked={S.checks[e.key]} />
 								<span class="text-sm">
 									{rowText(e)}{#if e.qty == null}
-										<em class="text-ink/50"> to taste</em>{/if}
-									<small class="block text-xs text-ink/50">{e.from.map(shortName).join(', ')}</small
+										<em class="text-ink/50"> {t('to taste')}</em>{/if}
+									<small class="block text-xs text-ink/50"
+										>{e.from.map((f) => shortName(titleOf(f))).join(', ')}</small
 									>
 								</span>
 							</label>
@@ -87,11 +98,11 @@
 				</ul>
 			</section>
 		{:else}
-			<p class="font-mono text-sm font-bold uppercase">All checked off</p>
+			<p class="font-mono text-sm font-bold uppercase">{t('All checked off')}</p>
 		{/each}
 	</div>
 	<div class="mt-3 flex flex-wrap items-center justify-between gap-3">
-		<p class="text-xs text-ink/60">Salt and pepper</p>
+		<p class="text-xs text-ink/60">{t('Salt and pepper')}</p>
 		{#if checked.length}
 			<button
 				type="button"
@@ -99,7 +110,7 @@
 				aria-expanded={showChecked}
 				onclick={() => (showChecked = !showChecked)}
 			>
-				Checked off ({checked.length})
+				{t('Checked off ({n})', { n: checked.length })}
 			</button>
 		{/if}
 	</div>

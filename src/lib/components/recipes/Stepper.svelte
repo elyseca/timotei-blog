@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n.svelte';
 	let {
 		value,
 		label = '',
@@ -16,7 +17,7 @@
 		type="button"
 		class="px-3 font-mono text-lg font-bold transition-colors hover:bg-lime"
 		onclick={ondec}
-		aria-label="Fewer"
+		aria-label={t('Fewer')}
 	>
 		−
 	</button>
@@ -27,7 +28,7 @@
 		type="button"
 		class="px-3 font-mono text-lg font-bold transition-colors hover:bg-lime"
 		onclick={oninc}
-		aria-label="More"
+		aria-label={t('More')}
 	>
 		+
 	</button>

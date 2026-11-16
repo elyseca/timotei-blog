@@ -1,5 +1,8 @@
 // @ts-nocheck -- ported recipe/grocery/plan engine
 /* Helpers: formatting, scaling, grocery list, similarity, line parsing */
+import { L } from '$lib/i18n.svelte';
+import { convertAmount } from './units';
+import { tIng, unitWord, esPlural } from './words';
 export const FR = [
 	[0, ''],
 	[1 / 8, '⅛'],
@@ -43,15 +46,26 @@ export function isCount(unit) {
 }
 
 export function pluralUnit(unit, q) {
-	if (q != null && q > 1) return unit.replace(/^(cup|can|bag|bunch|pint|clove|stalk)/, '$1s');
-	return unit;
+	return unitWord(unit, q);
 }
 export function pluralName(name, q, unit) {
 	if (unit !== '' || q == null || q <= 1) return name;
+	if (L.lang === 'es') return esPlural(name);
 	if (/ leaf$/.test(name)) return name.replace(/leaf$/, 'leaves');
 	if (/s$/.test(name)) return name;
 	if (/(x|z|ch|sh|o)$/.test(name)) return name + 'es';
 	return name + 's';
+}
+
+/** Metric amounts read as decimals (1.5 kg); US amounts as fractions (1½ cups). */
+export function fmtAmount(q, unit) {
+	if (q == null) return '';
+	if (L.units === 'metric' && /^(g|kg|ml|L)$/.test(unit)) {
+		const s = String(Math.round(q * 10) / 10).replace(/\.0$/, '');
+		return L.lang === 'es' ? s.replace('.', ',') : s;
+	}
+	const s = fmtQty(q);
+	return L.lang === 'es' ? s.replace('.', ',') : s;
 }
 
 export function lineText(x, f = 1) {
@@ -66,11 +80,15 @@ export function lineText(x, f = 1) {
 		q *= 3;
 		u = 'tsp';
 	}
-	x = Object.assign({}, x, { unit: u });
+	const c = convertAmount(q, u);
+	q = c.q;
+	u = c.unit;
 	const parts = [];
-	if (q != null) parts.push(fmtQty(q));
-	if (u) parts.push(pluralUnit(u, q));
-	parts.push(pluralName(x.name, q, x.unit));
+	if (q != null) parts.push(fmtAmount(q, u));
+	if (u) parts.push(unitWord(u, q));
+	let nm = tIng(x.name);
+	if (u === 'clove' && L.lang === 'es') nm = nm.replace(/^dientes? de /i, ''); // '3 dientes de ajo', not '3 dientes diente de ajo'
+	parts.push(pluralName(nm, q, u));
 	return parts.join(' ');
 }
 
@@ -737,8 +755,12 @@ export function buildPlans(all, n, shuffle, opts) {
 		while (chosen.length < n && cand.length) {
 			const soups = chosen.filter(isSoup).length;
 			const combos = chosen.filter((r) => r.parts).length;
+			const fams = new Set(chosen.map((c) => c.family).filter(Boolean));
 			const ok = cand.filter(
-				(r) => !(isSoup(r) && soups >= maxSoups) && !(r.parts && combos >= maxCombos)
+				(r) =>
+					!(isSoup(r) && soups >= maxSoups) &&
+					!(r.parts && combos >= maxCombos) &&
+					!(r.family && fams.has(r.family)) // variations of one dish never share a week
 			);
 			if (!ok.length) break;
 			let best = null,

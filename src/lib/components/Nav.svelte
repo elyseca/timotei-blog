@@ -2,6 +2,8 @@
 	import { page } from '$app/state';
 	import { slide, fly } from 'svelte/transition';
 	import { prefersReducedMotion } from 'svelte/motion';
+	import PrefsBar from './PrefsBar.svelte';
+	import { t } from '$lib/i18n.svelte';
 
 	// Home and Travel are paused for now (not linked here); their pages are still in the project.
 	const links = [
@@ -23,11 +25,8 @@
 	class="sticky top-0 z-40 border-b-[2.5px] border-ink bg-cream [view-transition-name:site-header]"
 >
 	<div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8">
-		<a href="/" class="group font-display text-2xl font-black tracking-tight lowercase">
-			timotei<span
-				class="inline-block text-purple transition-transform duration-300 group-hover:-translate-y-1.5 group-hover:scale-150"
-				>.</span
-			>blog
+		<a href="/" class="font-display text-2xl font-black tracking-tight lowercase">
+			timotei<span class="text-purple">.</span>blog
 		</a>
 
 		<nav class="hidden items-center gap-1 md:flex">
@@ -40,16 +39,17 @@
 						? 'border-ink bg-ink text-cream'
 						: 'border-transparent hover:-translate-y-0.5 hover:border-ink hover:bg-white hover:shadow-hard-sm'}"
 				>
-					{link.label}
+					{t(link.label)}
 				</a>
 			{/each}
+			<span class="ml-2"><PrefsBar /></span>
 		</nav>
 
 		<button
 			class="brutal-btn grid w-[4.5rem] place-items-center overflow-hidden bg-white px-3 py-2 md:hidden"
 			onclick={() => (open = !open)}
 			aria-expanded={open}
-			aria-label="Toggle menu"
+			aria-label={t('Toggle menu')}
 		>
 			{#key open}
 				<span
@@ -57,7 +57,7 @@
 					in:fly={{ y: 10, duration: ms(160) }}
 					out:fly={{ y: -10, duration: ms(160) }}
 				>
-					{open ? 'Close' : 'Menu'}
+					{open ? t('Close') : t('Menu')}
 				</span>
 			{/key}
 		</button>
@@ -79,9 +79,10 @@
 						? 'border-ink bg-ink text-cream'
 						: 'border-ink bg-white'}"
 				>
-					{link.label}
+					{t(link.label)}
 				</a>
 			{/each}
+			<div class="pt-1"><PrefsBar /></div>
 		</nav>
 	{/if}
 </header>
