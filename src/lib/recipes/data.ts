@@ -1273,6 +1273,54 @@ export const RECIPES: Recipe[] = [
 			'Store airtight at room temperature up to 6 days.',
 			'To freeze, scoop the dough, chill the balls about 1 hour, then freeze. Bake from frozen at 340°F, adding 2–3 minutes.'
 		]
+	},
+	{
+		id: 'carne-mechada',
+		mins: { active: 30, total: 130 },
+		title: 'Carne Mechada (Shredded Beef)',
+		section: 'Easy Weekly Meals',
+		kind: 'Main',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 8,
+		equip: ['Stovetop', 'Mortar and Pestle (optional)'],
+		freezer: false,
+		by: 'Santiago Timotei Rodriguez',
+		blurb:
+			'Tender shredded beef stewed in a spiced tomato sofrito, made with the beef left over from broth.',
+		ing: [
+			i(1000, 'g', 'flank or skirt steak', 'meat', 'already used to make broth'),
+			i(1, '', 'onion', 'produce', 'medium, finely chopped'),
+			i(1, '', 'carrot', 'produce', 'medium, finely chopped'),
+			i(1, '', 'celery stalk', 'produce', 'finely chopped'),
+			i(1, '', 'bell pepper', 'produce', 'seeded, cut into long strips'),
+			i(3, 'clove', 'garlic', 'produce', 'finely diced'),
+			i(2.5, 'cup', 'beef broth', 'pantry', '2-3 cups'),
+			i(400, 'g', 'tomato puree', 'pantry', 'Pomi or Mutti'),
+			i(2.5, 'tbsp', 'olive oil', 'oil', '2-3 tbsp'),
+			i(1, 'tbsp', 'white wine vinegar', 'oil'),
+			i(1, 'tsp', 'oregano', 'spice'),
+			i(0.5, 'tsp', 'thyme', 'spice'),
+			i(1, 'tbsp', 'cumin', 'spice'),
+			i(0.25, 'tsp', 'cinnamon', 'spice'),
+			i(0.5, 'tsp', 'black pepper', 'spice'),
+			i(0.25, 'tsp', 'allspice', 'spice', 'also called pimienta de Jamaica'),
+			i(3, '', 'bay leaves', 'spice'),
+			i(0.5, 'tsp', 'paprika', 'spice', 'or 1 guajillo chile, seeds removed'),
+			i(null, '', 'salt', 'spice', 'to taste')
+		],
+		steps: [
+			"Tear the used beef into long shreds. They don't need to be too thin, as they'll come apart while cooking. Set aside.",
+			'Finely chop the onion, celery and carrot. Remove the top and seeds from the bell pepper and cut into long strips.',
+			'Add the olive oil to a large pot and fry the vegetables on medium-low to medium heat until the onions are semi-translucent, stirring to prevent browning.',
+			'Add the finely diced garlic and fry for 1 minute.',
+			'Add the shredded beef, broth, tomato puree and vinegar. Stir and bring to a simmer, then reduce the heat to low and partially cover. Cook for 1 hour, stirring occasionally and adding water if it cooks too quickly.',
+			'If you have a mortar and pestle and whole spices, grind the allspice, black peppercorns, cumin and cinnamon into a powder. Add the spice blend, bay leaves, salt, and paprika (or guajillo chile with seeds removed) to the stew and mix well. Add dried oregano and thyme now; if using fresh, add them in the final 15 minutes. Partially cover and cook for 30 minutes.',
+			'If you added the whole guajillo, remove it before it disintegrates. Keep cooking until the stew is juicy and tender, but not too wet. When you mix the beef, the liquid should be picked up by the meat and take a few seconds to settle back to the bottom of the pot.'
+		],
+		notes: [
+			'From Santiago: "Shredded beef was one of the first things my mom taught me how to make before leaving for college, as a way to re-use the beef used to make broth. I\'ve since played with the recipe she first gave me and made it my own."'
+		]
 	}
 ];
 
