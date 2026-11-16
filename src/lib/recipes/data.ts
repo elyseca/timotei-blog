@@ -1321,6 +1321,203 @@ export const RECIPES: Recipe[] = [
 		notes: [
 			'From Santiago: "Shredded beef was one of the first things my mom taught me how to make before leaving for college, as a way to re-use the beef used to make broth. I\'ve since played with the recipe she first gave me and made it my own."'
 		]
+	},
+	{
+		id: 'sweet-potato-black-bean-chili',
+		mins: { active: 20, total: 45 },
+		title: 'Sweet Potato Black Bean Chili',
+		section: 'Easy Weekly Meals',
+		kind: 'Main',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Stovetop'],
+		freezer: true,
+		veg: true,
+		by: 'Sarah Clayton',
+		blurb: 'A thick, smoky one-pot chili with sweet potato and black beans.',
+		ing: [
+			i(2, 'tbsp', 'olive oil', 'oil'),
+			i(1, 'tsp', 'salt', 'spice'),
+			i(2, 'tbsp', 'chili powder', 'spice'),
+			i(2, 'tsp', 'cumin', 'spice'),
+			i(2, 'tsp', 'smoked paprika', 'spice'),
+			i(1, '', 'sweet onion', 'produce', 'medium, diced'),
+			i(2, 'clove', 'garlic', 'produce', 'minced'),
+			i(1, '', 'sweet potato', 'produce', 'large, peeled, in ½-inch cubes'),
+			i(2, 'cup', 'water', 'pantry'),
+			i(1, 'can (28 oz)', 'diced tomatoes', 'pantry', 'do not drain'),
+			i(2, 'can (15 oz)', 'black beans', 'pantry', 'drained and rinsed')
+		],
+		steps: [
+			'Prep the vegetables and set aside: peel and chop the sweet potato into ½-inch cubes, dice the onion, mince the garlic, drain and rinse the black beans, and open the can of tomatoes (do not drain).',
+			'In a large pot over medium heat, add the oil and onion. Sauté for 3–4 minutes until translucent. Add the garlic and sweet potato and cook for about 2 more minutes.',
+			'Add the spices and mix well.',
+			'Add the black beans, the tomatoes with their juices, and the 2 cups of water.',
+			'Simmer uncovered for 20–25 minutes.',
+			'Check that the sweet potatoes are fully cooked. If they are ready, smash them with a potato masher.',
+			'Serve with avocado, hot sauce, cheese or sour cream.'
+		],
+		notes: [
+			'Fire-roasted tomatoes are a great swap for a bolder chili.',
+			'Freezes really well in single-serving deli containers. To reheat, put it in a pot with a little water at the bottom, cover, and heat on medium, adding more water if it starts to stick as it thaws.'
+		]
+	},
+	{
+		id: 'buffalo-chicken-mac-slow-cooker',
+		mins: { active: 30, total: 180 },
+		title: 'Buffalo Chicken Mac N Cheese (Slow Cooker)',
+		section: 'Easy Weekly Meals',
+		kind: 'Main',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 10,
+		equip: ['Slow cooker', 'Stovetop'],
+		freezer: true,
+		by: 'Katie',
+		blurb: 'Creamy lightened-up buffalo chicken mac with a cottage cheese sauce.',
+		ing: [
+			i(28, 'oz', 'boneless, skinless chicken thighs', 'meat'),
+			i(0.8, 'cup', 'buffalo sauce', 'oil', '⅓ cup for the chicken, the rest for the sauce'),
+			i(2, 'tbsp', 'worcestershire sauce', 'oil'),
+			i(2, 'tsp', 'garlic powder', 'spice'),
+			i(2, 'tsp', 'onion powder', 'spice'),
+			i(1, 'tsp', 'chicken bouillon', 'pantry'),
+			i(0.75, 'cup', 'water', 'pantry'),
+			i(2.5, 'cup', '2% cottage cheese', 'dairy'),
+			i(0.667, 'cup', 'low-fat cream cheese', 'dairy'),
+			i(0.333, 'cup', 'parmigiano reggiano', 'dairy', 'grated'),
+			i(0.5, 'cup', 'cheddar powder', 'spice'),
+			i(3, 'tbsp', 'honey', 'pantry'),
+			i(1.25, 'cup', '1% milk', 'dairy', 'plus up to ½ cup more if needed'),
+			i(24, 'oz', 'pasta', 'dry'),
+			SALT,
+			PEPPER
+		],
+		steps: [
+			'Make the buffalo chicken: add the chicken thighs to a slow cooker with ⅓ cup of the buffalo sauce, the Worcestershire, garlic powder, onion powder, bouillon and water. Stir to coat. Cover and cook on high for 2–3 hours or low for 3–4 hours, until the chicken is tender and easily shredded.',
+			'Bring a large pot of salted water to a boil. Add the pasta and cook for half the time listed on the package. Drain and set aside.',
+			'Blend the cottage cheese until smooth and grate the Parmigiano Reggiano.',
+			'Once the chicken is done, shred it lightly in the slow cooker. Add the partially cooked pasta, cottage cheese, Parmigiano Reggiano, cream cheese, cheddar powder, the remaining buffalo sauce (about ½ cup), honey, milk, salt and pepper. Stir until everything is well combined into a creamy sauce that coats the chicken and pasta.',
+			'Cover and cook on high for an additional 15–20 minutes until the pasta is tender and the sauce thickens. If needed, add up to another ½ cup of milk to adjust the consistency.'
+		],
+		notes: ['No slow cooker? You can use a big pot.']
+	},
+	{
+		id: 'buffalo-chicken-mac-full-yum',
+		mins: { active: 15, total: 45 },
+		title: 'Buffalo Chicken Mac (Full Yum Version)',
+		section: 'Easy Weekly Meals',
+		kind: 'Main',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Dutch oven', 'Stovetop'],
+		freezer: false,
+		by: 'Katie',
+		blurb:
+			'The indulgent version: a classic cheddar and jack sauce, rotisserie chicken and buffalo sauce.',
+		ing: [
+			i(16, 'oz', 'pasta', 'dry'),
+			i(1, '', 'rotisserie chicken', 'meat', 'meat shredded'),
+			i(6, 'tbsp', 'butter', 'dairy'),
+			i(6, 'tbsp', 'flour', 'spice'),
+			i(3, 'cup', 'milk', 'dairy'),
+			i(2, 'cup', 'shredded cheddar cheese', 'dairy'),
+			i(2, 'cup', 'shredded monterey jack cheese', 'dairy'),
+			i(0.5, 'cup', 'buffalo sauce', 'oil', 'start with ½ cup, add to taste'),
+			i(0.5, 'cup', 'blue cheese', 'dairy', 'optional'),
+			PEPPER
+		],
+		steps: [
+			'Bring a large pot of lightly salted water to a boil. Cook the pasta, then drain.',
+			'Shred the meat from the rotisserie chicken and set aside.',
+			'Melt the butter in a Dutch oven over medium heat. Gradually whisk in the flour and cook until golden brown. Pour in the milk slowly, whisking constantly, until thickened and bubbling. The sauce should be thick enough to coat the back of a spoon. Reduce the heat and season with pepper.',
+			'Add the cheddar and monterey jack to the sauce and stir until fully melted.',
+			'Stir in the buffalo sauce to your desired heat, starting with ½ cup.',
+			'Add the blue cheese (if using), chicken and pasta to the sauce and stir to combine.'
+		],
+		notes: [
+			'Sometimes Katie adds a breadcrumb or frosted flake topping for extra yum: toast breadcrumbs or cereal on the stovetop for a few minutes until golden brown, sprinkle over the mac, and broil in the oven for a few minutes.'
+		]
+	},
+	{
+		id: 'cheesecake-blueberry-sauce',
+		mins: { active: 30, total: 200 },
+		title: 'Cheesecake with Homemade Blueberry Sauce',
+		section: 'Sweet Treats',
+		kind: 'Treat',
+		meal: ['dessert'],
+		servings: 10,
+		equip: ['Oven', 'Stand mixer', 'Double boiler'],
+		freezer: false,
+		veg: true,
+		by: 'Katie',
+		blurb: 'A baked cheesecake with a sour cream layer and a cooked blueberry topping.',
+		ing: [
+			i(2.5, 'cup', 'graham cracker crumbs', 'dry', 'for the crust'),
+			i(0.5, 'cup', 'sugar', 'spice', 'for the crust'),
+			i(0.75, 'cup', 'butter', 'dairy', 'for the crust'),
+			i(4, '', 'egg whites', 'dairy'),
+			i(1, 'cup', 'sugar', 'spice', 'for the filling'),
+			i(24, 'oz', 'cream cheese', 'dairy', 'room temperature'),
+			i(1, 'tsp', 'vanilla extract', 'spice', 'for the filling'),
+			i(16, 'oz', 'sour cream', 'dairy'),
+			i(2, 'tbsp', 'sugar', 'spice', 'for the sour cream layer'),
+			i(0.5, 'tsp', 'vanilla extract', 'spice', 'for the sour cream layer'),
+			i(2, 'can', 'Maine wild blueberries', 'pantry', 'one with its juice, one drained'),
+			i(1.75, 'cup', 'sugar', 'spice', 'for the topping'),
+			i(0.667, 'cup', 'flour', 'spice'),
+			i(0.125, 'tsp', 'salt', 'spice'),
+			i(1.5, 'tbsp', 'fresh lime juice', 'produce'),
+			i(0.5, 'tbsp', 'cornstarch', 'spice'),
+			i(2, 'tbsp', 'sweet butter', 'dairy')
+		],
+		steps: [
+			'Make the crust. Mix the graham cracker crumbs, ½ cup sugar and ¾ cup butter together well. Press into an 8x10x2 baking dish to make a thick crust. Chill in the fridge for 45 minutes.',
+			'Set out the cream cheese to come to room temperature and turn the oven on to 325°F.',
+			'Break the cream cheese into pieces. In a stand mixer, beat the egg whites until stiff. Mix in 1 cup sugar, the cream cheese and 1 tsp vanilla until smooth, then pour into the crust.',
+			'Bake for 25 minutes at 325°F.',
+			'Remove from the oven and let cool for 10 minutes. Increase the oven temperature to 475°F.',
+			'Mix the sour cream, 2 tbsp sugar and ½ tsp vanilla until smooth. Spoon over the first layer and bake the whole thing for 5 minutes at 435°F.',
+			'Make the blueberry topping. Combine the blueberries, 1¾ cups sugar, ⅔ cup flour, ⅛ tsp salt, lime juice, cornstarch and sweet butter. Cook in the top of a double boiler until the sauce begins to thicken. Remove from the heat and cool thoroughly.',
+			'Pour the topping over the slightly chilled cheesecake. Chill overnight before cutting.'
+		],
+		notes: [
+			'Katie: "My grandma\'s recipe!"',
+			'Katie has also made the topping with fresh strawberries, and it turned out very well.'
+		]
+	},
+	{
+		id: 'rosquillas',
+		mins: { active: 90, total: 100 },
+		title: 'Rosquillas',
+		section: 'Sweet Treats',
+		kind: 'Treat',
+		meal: ['dessert'],
+		servings: 50,
+		equip: ['Skillet', 'Stovetop'],
+		freezer: false,
+		veg: true,
+		by: 'Santi',
+		blurb: 'Anise-scented fried dough rings, from a family recipe.',
+		ing: [
+			i(3, '', 'eggs', 'dairy'),
+			i(750, 'g', 'self-rising flour', 'spice'),
+			i(99, 'g', 'olive oil', 'oil', 'any neutral oil works'),
+			i(90, 'g', 'anisette', 'other'),
+			i(300, 'g', 'white granulated sugar', 'spice'),
+			i(3, 'tbsp', 'whole aniseeds', 'spice'),
+			i(null, '', 'neutral oil', 'oil', 'for deep frying')
+		],
+		steps: [
+			'Preheat the frying oil in your skillet until it reaches 350°F.',
+			'In a large bowl, whisk the eggs, sugar, anisette, aniseeds and olive oil until the sugar is completely dissolved.',
+			'Slowly whisk in the flour. Once the mixture starts to thicken, switch to a spatula and keep mixing. Cover and rest for 10 minutes.',
+			'Oil a large, clean work surface and your hands. Take a ping-pong-ball-sized piece of dough and roll it into a strand that can wrap around 2 fingers. Press down on the ends of the loop with your fingers or the work surface to seal, and drop it into the oil.',
+			"Fry each rosquilla for roughly 2–3 minutes per side, until evenly browned. Keep an eye on the oil temperature so it doesn't get too high or too low. Drain the finished rosquillas in a bowl lined with paper towels."
+		],
+		notes: ['From Santi: "This recipe was given to me by my grandmother, Concepción Fortún."']
 	}
 ];
 
