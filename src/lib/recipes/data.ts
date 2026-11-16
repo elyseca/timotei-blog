@@ -1484,7 +1484,7 @@ export const RECIPES: Recipe[] = [
 			'Break the cream cheese into pieces. In a stand mixer, beat the egg whites until stiff. Mix in 1 cup sugar, the cream cheese and 1 tsp vanilla until smooth, then pour into the crust.',
 			'Bake for 25 minutes at 325°F.',
 			'Remove from the oven and let cool for 10 minutes. Increase the oven temperature to 475°F.',
-			'Mix the sour cream, 2 tbsp sugar and ½ tsp vanilla until smooth. Spoon over the first layer and bake the whole thing for 5 minutes at 435°F.',
+			'Mix the sour cream, 2 tbsp sugar and ½ tsp vanilla until smooth. Spoon over the first layer and bake the whole thing for 5 minutes at 475°F.',
 			'Make the blueberry topping. Combine the blueberries, 1¾ cups sugar, ⅔ cup flour, ⅛ tsp salt, lime juice, cornstarch and sweet butter. Cook in the top of a double boiler until the sauce begins to thicken. Remove from the heat and cool thoroughly.',
 			'Pour the topping over the slightly chilled cheesecake. Chill overnight before cutting.'
 		],

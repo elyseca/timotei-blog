@@ -303,7 +303,7 @@ export const part4: Record<string, RecipeEs> = {
 			'Corta el queso crema en trozos. En una batidora de pedestal, bate las claras a punto de nieve firme. Agrega 1 taza de azúcar, el queso crema y 1 cucharadita de vainilla y mezcla hasta que quede suave; luego vierte sobre la base.',
 			'Hornea 25 minutos a 325°F.',
 			'Saca del horno y deja enfriar 10 minutos. Sube la temperatura del horno a 475°F.',
-			'Mezcla la crema agria, 2 cucharadas de azúcar y ½ cucharadita de vainilla hasta que quede suave. Extiéndela con una cuchara sobre la primera capa y hornea todo junto 5 minutos a 435°F.',
+			'Mezcla la crema agria, 2 cucharadas de azúcar y ½ cucharadita de vainilla hasta que quede suave. Extiéndela con una cuchara sobre la primera capa y hornea todo junto 5 minutos a 475°F.',
 			'Prepara la cobertura de arándanos. Combina los arándanos, 1¾ tazas de azúcar, ⅔ de taza de harina, ⅛ de cucharadita de sal, el jugo de lima, la maicena y la mantequilla. Cocina en la parte de arriba de un baño María hasta que la salsa empiece a espesar. Retira del fuego y deja enfriar por completo.',
 			'Vierte la cobertura sobre el cheesecake ya ligeramente frío. Refrigera toda la noche antes de cortar.'
 		],
