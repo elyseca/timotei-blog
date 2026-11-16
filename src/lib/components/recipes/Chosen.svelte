@@ -54,7 +54,7 @@
 <div class="mx-auto max-w-6xl px-5 pt-5 md:px-8">
 	<button
 		type="button"
-		class="font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
+		class="tap font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
 		onclick={backToPlans}
 	>
 		{t('← Back to plans')}
@@ -104,7 +104,7 @@
 					/>
 					<button
 						type="button"
-						class="font-mono text-xs font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
+						class="tap font-mono text-xs font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
 						onclick={() => removeFromPlan(x.r.id)}
 					>
 						{t('Remove')}

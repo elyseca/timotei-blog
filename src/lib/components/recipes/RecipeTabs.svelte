@@ -32,7 +32,7 @@
 	>
 		<nav
 			bind:this={bar}
-			class="-mx-1.5 flex min-w-0 flex-1 gap-2 overflow-x-auto px-1.5 py-1.5"
+			class="no-scrollbar -mx-1.5 flex min-w-0 flex-1 gap-2 overflow-x-auto px-1.5 py-1.5"
 			aria-label={t('Recipe book')}
 		>
 			{#each tabs as tab (tab.href)}

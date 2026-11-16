@@ -28,8 +28,8 @@ export const browse: Record<string, string> = {
 	Effort: 'Esfuerzo',
 	Diet: 'Dieta',
 	Key: 'Leyenda',
-	'Vegetarian swaps broth for vegetable broth, and gluten-free swaps pasta for chickpea pasta, in recipes, plans and the grocery list. Flags come from the ingredient names, so check labels on packaged foods.':
-		'La opción vegetariana cambia el caldo por caldo de verduras, y la opción sin gluten cambia la pasta por pasta de garbanzos, en las recetas, los planes y la lista de compras. Las etiquetas salen de los nombres de los ingredientes, así que revisa las etiquetas de los alimentos envasados.',
+	'Vegetarian swaps in vegetable broth and gluten-free swaps in chickpea pasta. Flags come from ingredient names, so check packaged labels.':
+		'La opción vegetariana usa caldo de verduras y la sin gluten, pasta de garbanzos. Las etiquetas salen de los ingredientes: revisa los envases.',
 	'Meal type': 'Tipo de comida',
 	All: 'Todas',
 	'Everyday meals': 'Comidas de diario',

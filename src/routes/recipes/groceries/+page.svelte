@@ -19,7 +19,7 @@
 <div class="mx-auto max-w-6xl px-5 pt-10 md:px-8">
 	<a
 		href="/recipes/plan"
-		class="font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
+		class="tap font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
 	>
 		{t('← Back to the plan')}
 	</a>

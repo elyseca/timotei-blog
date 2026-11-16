@@ -10,9 +10,12 @@
 </script>
 
 <section class="grid-bg border-b-[2.5px] border-ink {bg}">
-	<div class="mx-auto max-w-6xl px-5 py-8 md:px-8">
+	<div class="mx-auto max-w-6xl px-5 py-5 md:px-8 md:py-8">
 		<span class="rise-in brutal-tag bg-cream">{t(tag)}</span>
-		<h1 class="rise-in mt-3 font-display text-4xl font-black md:text-5xl" style="--delay: 80ms">
+		<h1
+			class="rise-in mt-2 font-display text-3xl font-black md:mt-3 md:text-5xl"
+			style="--delay: 80ms"
+		>
 			{t(title)}
 		</h1>
 		{#if blurb}

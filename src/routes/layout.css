@@ -133,7 +133,7 @@
 		align-items: center;
 		justify-content: center;
 		line-height: 1.2;
-		white-space: nowrap;
+		text-align: center;
 		font-family: var(--font-mono);
 		font-size: 0.75rem;
 		font-weight: 700;
@@ -285,9 +285,25 @@
 	color: var(--color-ink);
 	box-shadow: var(--shadow-hard-sm);
 }
-.diet-pill {
-	font-size: 0.6rem;
-	padding: 0.085rem 0.45rem 0.115rem;
-	letter-spacing: 0.04em;
-	border-width: 1.5px;
+
+/* Phones: small links and buttons get an invisible bigger tap area (no layout change), chips are taller. */
+.tap {
+	position: relative;
+}
+.tap::after {
+	content: '';
+	position: absolute;
+	inset: -0.6rem -0.4rem;
+}
+@media (max-width: 767px) {
+	.brutal-chip {
+		min-height: 2.25rem;
+	}
+}
+
+.no-scrollbar {
+	scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
 }

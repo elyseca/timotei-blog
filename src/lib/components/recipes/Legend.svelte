@@ -8,7 +8,7 @@
 </script>
 
 <div
-	class="flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-[0.65rem] font-bold tracking-wide text-ink/70 uppercase"
+	class="flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-[0.7rem] font-bold tracking-wide text-ink/70 uppercase"
 	aria-label={t('Key')}
 >
 	<span class="flex flex-wrap items-center gap-x-3 gap-y-1">

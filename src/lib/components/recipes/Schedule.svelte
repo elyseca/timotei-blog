@@ -292,7 +292,7 @@
 			</div>
 			<button
 				type="button"
-				class="self-start font-mono text-[0.65rem] tracking-wide text-ink/50 uppercase underline underline-offset-2 hover:text-ink"
+				class="tap self-start font-mono text-[0.7rem] tracking-wide text-ink/60 uppercase underline underline-offset-2 hover:text-ink"
 				aria-expanded={editChefs}
 				onclick={() => (editChefs = !editChefs)}
 			>
@@ -347,7 +347,7 @@
 					{#if S.cooks.length > 1}
 						<button
 							type="button"
-							class="font-mono text-xs font-bold uppercase underline decoration-2 underline-offset-4"
+							class="tap font-mono text-xs font-bold uppercase underline decoration-2 underline-offset-4"
 							onclick={() => removeChef(c.id)}
 						>
 							{t('Remove')}

@@ -15,7 +15,7 @@
 >
 	<button
 		type="button"
-		class="px-3 font-mono text-lg font-bold transition-colors hover:bg-lime"
+		class="min-h-9 px-3.5 font-mono text-lg font-bold transition-colors hover:bg-lime"
 		onclick={ondec}
 		aria-label={t('Fewer')}
 	>
@@ -26,7 +26,7 @@
 	</output>
 	<button
 		type="button"
-		class="px-3 font-mono text-lg font-bold transition-colors hover:bg-lime"
+		class="min-h-9 px-3.5 font-mono text-lg font-bold transition-colors hover:bg-lime"
 		onclick={oninc}
 		aria-label={t('More')}
 	>

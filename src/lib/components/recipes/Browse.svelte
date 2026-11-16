@@ -128,42 +128,42 @@
 			</button>
 		</div>
 		<div class="mt-3 {showFilters ? 'block' : 'hidden'} md:block">
-			<div
-				class="mb-3 flex flex-wrap items-center gap-2"
-				role="group"
-				aria-label={t('Dietary needs')}
-			>
+			<div class="mb-3" role="group" aria-label={t('Dietary needs')}>
 				<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Dietary')}</span>
-				{#each DIETS as x (x.key)}
-					{@const k = x.key as 'gf' | 'nf' | 'df' | 'veg' | 'garlic'}
-					<DietPill {k} pressed={on(k)} onclick={() => flip(k)} />
-				{/each}
+				<div class="mt-1.5 flex flex-wrap gap-2">
+					{#each DIETS as x (x.key)}
+						{@const k = x.key as 'gf' | 'nf' | 'df' | 'veg' | 'garlic'}
+						<DietPill {k} pressed={on(k)} onclick={() => flip(k)} />
+					{/each}
+				</div>
 			</div>
-			<div class="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label={t('Effort')}>
+			<div class="mb-3" role="group" aria-label={t('Effort')}>
 				<span class="font-mono text-xs font-bold tracking-wide uppercase">{t('Effort')}</span>
-				{#each EFFORT_SCALE as l (l.level)}
-					<button
-						type="button"
-						class="brutal-chip inline-flex items-center gap-2"
-						aria-pressed={F.effort.includes(l.level)}
-						onclick={() => flipEffort(l.level)}
-					>
-						<span class="inline-flex gap-px" aria-hidden="true">
-							{#each [1, 2, 3, 4, 5] as n (n)}
-								<span
-									class="h-1.5 w-1.5 rounded-full border border-current {n <= l.level
-										? 'bg-current'
-										: 'bg-transparent'}"
-								></span>
-							{/each}
-						</span>
-						{t(l.name)}
-					</button>
-				{/each}
+				<div class="mt-1.5 flex flex-wrap gap-2">
+					{#each EFFORT_SCALE as l (l.level)}
+						<button
+							type="button"
+							class="brutal-chip inline-flex items-center gap-2"
+							aria-pressed={F.effort.includes(l.level)}
+							onclick={() => flipEffort(l.level)}
+						>
+							<span class="inline-flex gap-px" aria-hidden="true">
+								{#each [1, 2, 3, 4, 5] as n (n)}
+									<span
+										class="h-1.5 w-1.5 rounded-full border border-current {n <= l.level
+											? 'bg-current'
+											: 'bg-transparent'}"
+									></span>
+								{/each}
+							</span>
+							{t(l.name)}
+						</button>
+					{/each}
+				</div>
 			</div>
 			<p class="mb-3 text-xs text-ink/60">
 				{t(
-					'Vegetarian swaps broth for vegetable broth, and gluten-free swaps pasta for chickpea pasta, in recipes, plans and the grocery list. Flags come from the ingredient names, so check labels on packaged foods.'
+					'Vegetarian swaps in vegetable broth and gluten-free swaps in chickpea pasta. Flags come from ingredient names, so check packaged labels.'
 				)}
 			</p>
 			<div class="mt-3 flex flex-wrap gap-2" role="group" aria-label={t('Meal type')}>

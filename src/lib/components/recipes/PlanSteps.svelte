@@ -13,7 +13,7 @@
 </script>
 
 <nav class="border-b-[2.5px] border-ink bg-white" aria-label={t('Planning steps')}>
-	<ol class="mx-auto flex max-w-6xl gap-x-5 gap-y-1 overflow-x-auto px-5 py-2 md:px-8">
+	<ol class="no-scrollbar mx-auto flex max-w-6xl gap-x-5 gap-y-1 overflow-x-auto px-5 py-2 md:px-8">
 		{#each steps as s (s.n)}
 			<li class="shrink-0 font-mono text-[0.7rem] font-bold tracking-wide uppercase">
 				{#if s.n === step}
@@ -22,7 +22,7 @@
 						{t(s.label)}
 					</span>
 				{:else if reachable(s.n)}
-					<a href={s.href} class="flex items-center gap-1.5 text-ink/70 hover:text-ink">
+					<a href={s.href} class="tap flex items-center gap-1.5 text-ink/70 hover:text-ink">
 						<span class="grid size-5 place-items-center rounded-full border-2 border-ink"
 							>{s.n}</span
 						>

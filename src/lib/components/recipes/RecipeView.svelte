@@ -61,20 +61,23 @@
 	</div>
 {:else}
 	<section class="grid-bg border-b-[2.5px] border-ink bg-coral">
-		<div class="mx-auto max-w-6xl px-5 py-7 md:px-8">
+		<div class="mx-auto max-w-6xl px-5 py-5 md:px-8 md:py-7">
 			<a
 				href="/recipes"
-				class="rise-in font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
+				class="tap rise-in font-mono text-sm font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
 			>
 				{t('← All recipes')}
 			</a>
 			<h1
-				class="rise-in mt-5 max-w-3xl font-display text-4xl font-black md:text-5xl"
+				class="rise-in mt-3 max-w-3xl font-display text-3xl font-black md:mt-5 md:text-5xl"
 				style="--delay: 80ms"
 			>
 				{r.title}
 			</h1>
-			{#if r.blurb}<p class="rise-in mt-4 max-w-2xl text-lg text-ink/80" style="--delay: 140ms">
+			{#if r.blurb}<p
+					class="rise-in mt-3 max-w-2xl text-base text-ink/80 md:mt-4 md:text-lg"
+					style="--delay: 140ms"
+				>
 					{r.blurb}
 				</p>{/if}
 			{#if r.family}
@@ -90,11 +93,17 @@
 			{#if r.mins}
 				<div class="rise-in mt-5" style="--delay: 180ms"><EffortBadge {r} label /></div>
 			{/if}
-			<div class="rise-in mt-5 flex flex-wrap gap-2" style="--delay: 200ms">
-				{#if dt}{#each DIETS.filter((x) => dt[x.key as keyof typeof dt]) as x (x.key)}<DietPill
-							k={x.key}
-						/>{/each}{/if}
-				{#each tags as tg (tg)}<span class="brutal-tag">{t(tg)}</span>{/each}
+			<div class="rise-in mt-5 flex flex-col gap-2" style="--delay: 200ms">
+				{#if dt}
+					<div class="flex flex-wrap gap-2">
+						{#each DIETS.filter((x) => dt[x.key as keyof typeof dt]) as x (x.key)}<DietPill
+								k={x.key}
+							/>{/each}
+					</div>
+				{/if}
+				<div class="flex flex-wrap gap-2">
+					{#each tags as tg (tg)}<span class="brutal-tag">{t(tg)}</span>{/each}
+				</div>
 			</div>
 			<p
 				class="rise-in mt-4 font-mono text-xs font-bold tracking-wide text-ink/70 uppercase"
@@ -214,7 +223,7 @@
 				{#if !showPhotoForm}
 					<button
 						type="button"
-						class="font-mono text-[0.7rem] font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
+						class="tap font-mono text-[0.7rem] font-bold tracking-wide uppercase underline decoration-2 underline-offset-4"
 						onclick={() => (showPhotoForm = true)}>{t('+ Add photo')}</button
 					>
 				{/if}

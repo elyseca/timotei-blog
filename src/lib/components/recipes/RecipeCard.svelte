@@ -41,9 +41,9 @@
 				{t('{n} versions', { n: versions })}
 			</span>
 		{/if}
-		{#if blurb}<p class="line-clamp-3 flex-1 text-sm text-ink/75">{blurb}</p>{:else}<span
-				class="flex-1"
-			></span>{/if}
+		{#if blurb}<p class="line-clamp-2 flex-1 text-sm text-ink/75 md:line-clamp-3">
+				{blurb}
+			</p>{:else}<span class="flex-1"></span>{/if}
 		{#if r.mins}<EffortBadge {r} />{/if}
 	</a>
 	<div

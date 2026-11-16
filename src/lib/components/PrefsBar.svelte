@@ -5,7 +5,7 @@
 	let { show = 'lang' }: { show?: 'lang' | 'units' } = $props();
 
 	const seg =
-		'px-2 py-1 font-mono text-xs font-bold tracking-wide uppercase transition-colors aria-pressed:bg-ink aria-pressed:text-cream';
+		'px-2.5 py-1.5 font-mono text-xs font-bold tracking-wide uppercase transition-colors aria-pressed:bg-ink aria-pressed:text-cream';
 </script>
 
 {#if show === 'lang'}
