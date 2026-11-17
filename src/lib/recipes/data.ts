@@ -1557,6 +1557,212 @@ export const RECIPES: Recipe[] = [
 			'To serve, run a small knife around the edge of the flan to separate it from the mold. Place a serving dish over the top, flip, and wiggle until the flan overcomes the suction and settles onto the plate.'
 		],
 		notes: []
+	},
+	{
+		id: 'crema-de-calabacines',
+		mins: { active: 25, total: 40 },
+		title: 'Zucchini Cream Soup',
+		section: 'Easy Weekly Meals',
+		kind: 'Main',
+		meal: ['everyday'],
+		servings: 2,
+		equip: ['Stovetop', 'Blender'],
+		freezer: false,
+		veg: true,
+		by: 'Cristi',
+		blurb: 'Silky blended zucchini soup with a little potato for body and fresh mint.',
+		ing: [
+			i(1, 'cup', 'hot vegetable broth', 'pantry', 'plus a little more if needed'),
+			i(500, 'g', 'zucchini', 'produce', 'washed well, cut into slices or small cubes'),
+			i(0.5, '', 'yellow onion', 'produce', 'medium, finely chopped'),
+			i(3, '', 'chive stalk', 'produce', 'finely chopped'),
+			i(2, 'tbsp', 'olive oil', 'oil', 'or 2 level tbsp unsalted butter'),
+			i(
+				1,
+				'',
+				'potato',
+				'produce',
+				'small, thinly sliced, for body; can be replaced with a chayote cut into small pieces'
+			),
+			SALT,
+			PEPPER,
+			i(12, '', 'fresh mint leaf', 'produce')
+		],
+		steps: [
+			'In a nonstick pot, heat the olive oil (or butter) over medium-low heat.',
+			'Add the chopped onion and chives. Stir, making sure they do not burn.',
+			'When the onion turns translucent, add the potato (or chayote). Mix well and cook for about 5 minutes, making sure they do not burn. If needed, add a little hot vegetable broth.',
+			'Add the zucchini and mix everything very well. Cook for a few minutes so the flavors come together, then add the cup of broth, salt and pepper to taste. Be careful with the salt: you can always add more in the blender. If the mixture dries out, add a little more hot broth.',
+			'Add the mint when the mixture is almost ready.',
+			'Blend until smooth. If the cream is too thick, add a little broth until it reaches the consistency you like.'
+		],
+		notes: []
+	},
+	{
+		id: 'crema-de-espinacas',
+		mins: { active: 25, total: 40 },
+		title: 'Spinach Cream Soup',
+		section: 'Easy Weekly Meals',
+		kind: 'Main',
+		meal: ['everyday'],
+		servings: 2,
+		equip: ['Stovetop', 'Blender'],
+		freezer: false,
+		veg: true,
+		by: 'Cristi',
+		blurb: 'Blended spinach soup; sweet potato gives it body and softens the spinach bitterness.',
+		ing: [
+			i(1, 'cup', 'hot vegetable broth', 'pantry', 'plus a little more if needed'),
+			i(1, '', 'bag spinach leaves', 'produce'),
+			i(0.5, '', 'white onion', 'produce', 'medium, finely chopped'),
+			i(3, '', 'chive stalk', 'produce', 'finely chopped'),
+			i(2, 'tbsp', 'olive oil', 'oil', 'or 2 level tbsp unsalted butter'),
+			i(
+				1,
+				'',
+				'sweet potato',
+				'produce',
+				'small, thinly sliced, for body and to take the bitterness out of the spinach'
+			),
+			SALT,
+			PEPPER,
+			i(1, 'tbsp', 'grated parmigiano reggiano', 'dairy', 'optional')
+		],
+		steps: [
+			'In a nonstick pot, heat the olive oil (or butter) over medium-low heat.',
+			'Add the chopped onion and chives. Stir, making sure they do not burn (medium heat).',
+			'When the onion turns translucent, add the thinly sliced sweet potato. Mix well and cook for about 5 minutes, making sure they do not burn. If needed, add a little hot vegetable broth.',
+			'Add the spinach leaves and mix everything very well. Cook for a few minutes so the flavors come together, then add the cup of broth, salt and pepper to taste. Be careful with the salt: you can always add more in the blender. If the mixture dries out, add a little more hot broth.',
+			'Blend until smooth. If the cream is too thick, add a little broth until it reaches the consistency you like.',
+			'While blending, you can add 1 tablespoon of grated Parmigiano Reggiano and blend a few more minutes, until the cheese is fully mixed in.'
+		],
+		notes: []
+	},
+	{
+		id: 'sopa-de-lentejas',
+		mins: { active: 30, total: 75 },
+		title: 'Lentil Soup',
+		section: 'Easy Weekly Meals',
+		kind: 'Main',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 8,
+		equip: ['Stovetop'],
+		freezer: true,
+		veg: true,
+		by: 'Cristi',
+		blurb: 'Soupy lentils simmered with carrot, celery and onion, freezer friendly.',
+		ing: [
+			i(454, 'g', 'lentil', 'dry', 'one 1 lb package'),
+			i(3, '', 'carrot', 'produce', 'large, peeled and chopped'),
+			i(
+				4,
+				'',
+				'celery stalk',
+				'produce',
+				'leaves removed, chopped, strings pulled off before using'
+			),
+			i(1, '', 'white onion', 'produce', 'medium-large, chopped'),
+			i(3, 'clove', 'garlic', 'produce', 'peeled, center removed, chopped'),
+			i(1, '', 'bay leaf', 'spice'),
+			i(4, 'tbsp', 'olive oil', 'oil'),
+			i(1, 'tsp', 'baking soda', 'pantry', 'small'),
+			i(2, 'tbsp', 'parsley leaves', 'produce', 'washed and finely chopped'),
+			SALT,
+			PEPPER
+		],
+		steps: [
+			'On a white plate, sort through the lentils little by little to remove any sticks, pebbles or other bits. Set the sorted lentils aside.',
+			'In a medium-large pot, heat water and keep it hot. You will use it once the lentils have absorbed their liquid.',
+			'In a nonstick pot, heat the oil over medium-low heat. When hot, add the finely chopped onion and garlic. Cook, stirring with a wooden spoon and making sure nothing burns.',
+			'When the onion and garlic are translucent, add the carrots and celery and stir well to combine with the onion. Cook everything for about 10 minutes.',
+			'While the vegetables cook, wash the lentils very well to release any dirt. Drain them and add them to the vegetable sofrito. Stir to combine.',
+			'Cover the lentils with warm water, two fingers above the level of the lentils, and stir well. Keep the heat rather low so the lentils soften little by little without losing their skins. Add the bay leaf and cover the pot.',
+			'As the lentils absorb the water, add hot water with a ladle, always keeping the liquid above the lentils, and stir a little.',
+			'After about 15 minutes, remove the bay leaf and add 1 small teaspoon of baking soda. It will foam. This is normal. Stir well and let it keep cooking.',
+			'When the foam disappears, add the finely chopped parsley, salt and pepper and finish cooking. Taste the lentils as they cook to see if they are soft and ready. They should not end up dry: it should be an "asopado" (soupy).',
+			'This amount makes enough to freeze. Freeze in small containers sized to the number of people who will eat them, since food should not be frozen, thawed and frozen again.'
+		],
+		notes: []
+	},
+	{
+		id: 'risotto-funghi',
+		mins: { active: 40, total: 45 },
+		title: 'Mushroom Risotto',
+		section: 'Easy Weekly Meals',
+		kind: 'Main',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 2,
+		equip: ['Stovetop'],
+		freezer: false,
+		veg: true,
+		by: 'Cristi',
+		blurb:
+			'Creamy arborio risotto with browned mushrooms, finished with butter, parmesan and parsley.',
+		ing: [
+			i(160, 'g', 'arborio rice', 'dry'),
+			i(
+				null,
+				'',
+				'hot vegetable broth',
+				'pantry',
+				'store-bought from a carton is fine if not homemade'
+			),
+			i(2, 'clove', 'garlic', 'produce', 'crushed'),
+			i(1, 'tbsp', 'olive oil', 'oil'),
+			SALT,
+			PEPPER,
+			i(200, 'g', 'mushroom', 'produce'),
+			i(0.5, '', 'yellow onion', 'produce', 'small or medium, not sweet, very finely chopped'),
+			i(15, 'g', 'unsalted butter', 'dairy', 'for cooking the onion'),
+			i(25, 'g', 'parmesan', 'dairy', 'approx., for the end'),
+			i(1, 'tbsp', 'parsley', 'produce', 'finely chopped, for the end'),
+			i(10, 'g', 'unsalted butter', 'dairy', 'for the end')
+		],
+		steps: [
+			'Have the hot vegetable broth ready. The rice takes about 20 minutes to cook.',
+			'Clean the mushrooms well. Important: do NOT submerge the mushrooms in water. Clean them preferably with a damp clean cloth, or pass them quickly under running water.',
+			'Cut the mushrooms to the size you like. In a pot, heat the olive oil and sauté the crushed garlic, being careful not to burn it. As soon as it is golden, take it out and add the mushrooms. Cook the mushrooms over high heat for a few minutes, until they take on a little color. Add salt and pepper to taste. When ready, set aside.',
+			'Cut the onion very finely. In a pot, melt the 15 g of butter, add the onion and cook over LOW heat for about 10 minutes, making sure it does not burn. If it looks very dry, add a splash of hot vegetable broth.',
+			'When the onion is ready, add the rice over MEDIUM heat. Mix everything very well and keep stirring in a circular motion so it does not stick.',
+			'When the rice looks a little translucent, add the hot vegetable broth little by little with a ladle. Stir often in a circular motion so the rice releases some of its starch. Add the mushrooms.',
+			'As the rice absorbs the broth, keep adding more LITTLE BY LITTLE as needed, until the rice is ready.',
+			'With the heat OFF, add the 10 g of butter and the parmesan. Mix very well so everything comes together, and finally add the parsley. Mix a little. Serve.'
+		],
+		notes: []
+	},
+	{
+		id: 'salsa-de-tomate',
+		mins: { active: 15, total: 55 },
+		title: 'Tomato Sauce for Pasta',
+		section: 'Carbs',
+		kind: 'Carb',
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Stovetop', 'Electric chopper'],
+		freezer: true,
+		veg: true,
+		by: 'Cristi',
+		blurb: 'Simple tomato sauce with carrot to cut the acidity and fresh basil.',
+		ing: [
+			i(1, '', 'jar tomato purée', 'pantry', 'Pomi brand'),
+			i(1, '', 'carrot', 'produce', 'medium, peeled and cut into several pieces'),
+			i(0.5, '', 'onion', 'produce', 'medium, chopped very fine (use the electric chopper)'),
+			i(2, 'tbsp', 'extra virgin olive oil', 'oil'),
+			i(6, '', 'fresh basil leaf', 'produce'),
+			SALT,
+			PEPPER
+		],
+		steps: [
+			'In a pot, heat the oil and sauté the onion over low heat until it looks translucent, being very careful not to burn it.',
+			'Add the tomato purée and stir to combine the onion with the tomato. Add the carrot; it takes the acidity out of the tomato. Cook over medium-low heat for 15 minutes with the pot covered.',
+			'After 15 minutes, add the fresh basil and salt and pepper to taste (careful with the salt: add a little, and add more at the end if needed). Keep cooking for 20 to 25 more minutes with the pot covered, stirring from time to time.',
+			'Taste the sauce and add more salt and pepper if needed.'
+		],
+		notes: [
+			'One jar of tomato purée makes several portions. If you freeze it, do it in small containers so it is never frozen, thawed and frozen again.'
+		]
 	}
 ];
 

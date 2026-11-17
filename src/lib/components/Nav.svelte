@@ -82,7 +82,7 @@
 					{t(link.label)}
 				</a>
 			{/each}
-			<div class="pt-1"><PrefsBar /></div>
+			<div class="pt-1 [&_button]:flex-1 [&_button]:text-center [&>div]:w-full"><PrefsBar /></div>
 		</nav>
 	{/if}
 </header>
