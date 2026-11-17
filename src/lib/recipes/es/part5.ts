@@ -118,14 +118,16 @@ export const part5: Record<string, RecipeEs> = {
 		notes: []
 	},
 	'salsa-de-tomate': {
-		title: 'Salsa de tomate para pasta',
-		blurb: 'Salsa de tomate sencilla con zanahoria para quitarle el ácido y albahaca fresca.',
+		title: 'Pasta con salsa de tomate',
+		blurb:
+			'Salsa de tomate sencilla con zanahoria para quitarle el ácido y albahaca fresca, mezclada con pasta.',
 		ing: [
 			{ name: 'pote de puré de tomate', note: 'marca Pomi' },
 			{ name: 'zanahoria', note: 'mediana, pelada y cortada en varios pedazos' },
 			{ name: 'cebolla', note: 'mediana, picada muy fina (usar el "electric chopper")' },
 			{ name: 'aceite de oliva extra virgen' },
 			{ name: 'hoja de albahaca fresca' },
+			{ name: 'pasta', note: 'espagueti, penne o la que prefieras' },
 			{ name: 'sal' },
 			{ name: 'pimienta negra' }
 		],
@@ -133,10 +135,11 @@ export const part5: Record<string, RecipeEs> = {
 			'En una olla poner el aceite y sofreír la cebolla a fuego bajo, hasta que se vea transparente, con mucho cuidado de que no se queme.',
 			'Incorporar el puré de tomate y revolver para integrar la cebolla al tomate. Agregar la zanahoria pelada y cortada en varios pedazos; la zanahoria sirve para quitarle el ácido al tomate. Cocinar a fuego medio/bajo por 15 minutos con la olla tapada.',
 			'A los 15 minutos, agregar la albahaca fresca y sal/pimienta al gusto (cuidado con la sal: agregar poca y, al final, si hace falta, puedes agregar más). Continuar cocinando por 20/25 minutos más, con la olla tapada, revolviendo de vez en cuando.',
-			'Probar la salsa. Agregar más sal/pimienta si hace falta.'
+			'Mientras tanto, cocinar la pasta en agua con bastante sal hasta que esté al dente y colarla, guardando un poquito del agua de la cocción.',
+			'Probar la salsa. Agregar más sal/pimienta si hace falta. Mezclar la pasta con la salsa, aflojándola con un poco del agua de la pasta si hace falta, y servir enseguida.'
 		],
 		notes: [
-			'Tener en cuenta que el pote de tomate rendirá para varias porciones. Por lo tanto, si vas a congelar, hazlo en envases pequeños para que no se congele, descongele y vuelva a congelar.'
+			'Tener en cuenta que el pote de tomate rendirá para varias porciones. Por lo tanto, si quieres guardar sobras, congela solo la salsa (no la pasta) en envases pequeños para que no se congele, descongele y vuelva a congelar.'
 		]
 	}
 };

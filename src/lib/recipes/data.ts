@@ -1734,8 +1734,8 @@ export const RECIPES: Recipe[] = [
 	},
 	{
 		id: 'salsa-de-tomate',
-		mins: { active: 15, total: 55 },
-		title: 'Tomato Sauce for Pasta',
+		mins: { active: 20, total: 60 },
+		title: 'Pasta with Tomato Sauce',
 		section: 'Carbs',
 		kind: 'Carb',
 		meal: ['everyday'],
@@ -1744,13 +1744,15 @@ export const RECIPES: Recipe[] = [
 		freezer: true,
 		veg: true,
 		by: 'Cristi',
-		blurb: 'Simple tomato sauce with carrot to cut the acidity and fresh basil.',
+		blurb:
+			'Simple tomato sauce with carrot to cut the acidity and fresh basil, tossed through pasta.',
 		ing: [
 			i(1, '', 'jar tomato purée', 'pantry', 'Pomi brand'),
 			i(1, '', 'carrot', 'produce', 'medium, peeled and cut into several pieces'),
 			i(0.5, '', 'onion', 'produce', 'medium, chopped very fine (use the electric chopper)'),
 			i(2, 'tbsp', 'extra virgin olive oil', 'oil'),
 			i(6, '', 'fresh basil leaf', 'produce'),
+			i(12, 'oz', 'pasta', 'dry', 'spaghetti, penne or your favorite shape'),
 			SALT,
 			PEPPER
 		],
@@ -1758,10 +1760,11 @@ export const RECIPES: Recipe[] = [
 			'In a pot, heat the oil and sauté the onion over low heat until it looks translucent, being very careful not to burn it.',
 			'Add the tomato purée and stir to combine the onion with the tomato. Add the carrot; it takes the acidity out of the tomato. Cook over medium-low heat for 15 minutes with the pot covered.',
 			'After 15 minutes, add the fresh basil and salt and pepper to taste (careful with the salt: add a little, and add more at the end if needed). Keep cooking for 20 to 25 more minutes with the pot covered, stirring from time to time.',
-			'Taste the sauce and add more salt and pepper if needed.'
+			'Meanwhile, cook the pasta in well-salted water until al dente and drain, saving a splash of the pasta water.',
+			'Taste the sauce and add more salt and pepper if needed. Toss the pasta through the sauce, loosening it with a little pasta water if needed, and serve right away.'
 		],
 		notes: [
-			'One jar of tomato purée makes several portions. If you freeze it, do it in small containers so it is never frozen, thawed and frozen again.'
+			'One jar of tomato purée makes several portions. If you want leftovers, freeze the sauce on its own (not the pasta) in small containers so it is never frozen, thawed and frozen again.'
 		]
 	}
 ];
