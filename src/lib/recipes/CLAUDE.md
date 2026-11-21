@@ -24,7 +24,8 @@ Never run planner or diet logic on a localized recipe.
 ```
 
 - `kind` → `section`: Main→Easy Weekly Meals, Protein→Protein, Side→Veggies, Carb→Carbs, Breakfast→Breakfast, Treat→Sweet Treats.
-  `weekly: true` only for everyday mains (the planner draws from them). Desserts: `meal: ['dessert']`, `kind: 'Treat'`.
+  `weekly: true` puts a recipe in the planner's pools: everyday Mains, and the Protein/Side/Carb combo pools. Set it for any
+  easy everyday main, protein, side or carb; leave it off for special-occasion dishes, breakfasts and treats. Desserts: `meal: ['dessert']`, `kind: 'Treat'`.
 - `dept` is one of produce, meat, dairy, bakery, pantry, dry, spice, oil, frozen, other. Units: tsp, tbsp, cup, oz, lb, g, ml, 'can (14.5 oz)', clove, bunch, pinch.
 - Same recipe family: shared `family`, each gets a `variant`; a plan never contains two versions; the list shows one card.
 - Ingredient names singular and lowercase (the site pluralizes). Fix typos and format only; keep the cook's wording.

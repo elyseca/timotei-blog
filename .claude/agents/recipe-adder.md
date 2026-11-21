@@ -17,7 +17,7 @@ Steps for each recipe in the pasted text:
 2. If the paste says a recipe is another version of an existing dish, set `family`/`variant` on both (ask only if unclear).
 3. Photo links: if the submission includes a photo link and the user asked to include it, save it per CLAUDE.md into
    `static/recipe-photos/<id>-1.jpg` (view the image to confirm it is the dish) and add `photos`. Otherwise leave links alone and mention it.
-4. Add the Spanish entry in the newest `src/lib/recipes/es/part*.ts` (create `part5.ts` and register it in `es/index.ts` if part4 is long).
+4. Add the Spanish entry in the newest `src/lib/recipes/es/part*.ts` (if it passes ~350 lines, create the next `partN.ts` and register it in `es/index.ts`).
 5. Run the checks from `src/lib/recipes/CLAUDE.md` (prettier, svelte-check, check-i18n, build). Fix what you broke.
 
 Do NOT commit or push. Reply in at most 8 lines: recipe ids added, anything you changed beyond typos, oddities in the source the
