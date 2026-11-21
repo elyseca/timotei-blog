@@ -141,5 +141,32 @@ export const part5: Record<string, RecipeEs> = {
 		notes: [
 			'Tener en cuenta que el pote de tomate rendirá para varias porciones. Por lo tanto, si quieres guardar sobras, congela solo la salsa (no la pasta) en envases pequeños para que no se congele, descongele y vuelva a congelar.'
 		]
+	},
+	'buttermilk-biscuits': {
+		title: 'Buttermilk Biscuits',
+		blurb: 'Buttermilk biscuits hojaldrados, con vetas de mantequilla.',
+		story:
+			'"The Joy of Cooking" tiene muchas buenas recetas de repostería, pero a la mayoría les falta sal, azúcar o especias. Esta es una versión modificada de una de ellas.',
+		ing: [
+			{ name: 'harina de trigo todo uso' },
+			{ name: 'sal' },
+			{ name: 'azúcar' },
+			{ name: 'polvo de hornear de doble acción' },
+			{ name: 'bicarbonato de sodio' },
+			{ name: 'mantequilla sin sal' },
+			{ name: 'suero de leche' },
+			{ name: 'leche', note: 'para pincelar' }
+		],
+		steps: [
+			'Precalienta el horno a 450 °F.',
+			'Disuelve la sal y el azúcar en el suero de leche y déjalo a un lado por ahora.',
+			'En un bol grande, mezcla la harina, el bicarbonato y el polvo de hornear.',
+			'Corta la mantequilla en cubitos pequeños y agrégala a la mezcla de harina. Revuelve hasta que los cubitos queden cubiertos de harina.',
+			'Agrega poco a poco el suero de leche mientras mezclas con una espátula. La masa solo debe unirse de forma suelta.',
+			'Espolvorea una encimera limpia con harina, coloca la masa encima y extiéndela con un rodillo enharinado. Dobla la masa sobre sí misma en 3 partes, como si doblaras un folleto. Repite 2-3 veces más. Todavía deben verse algunas vetas de mantequilla. Espolvorea la masa con harina según haga falta para que no se pegue a la encimera ni al rodillo.',
+			'Extiende la masa hasta que tenga ½ pulgada de grosor. Con un cortador de galletas, corta los biscuits y colócalos en una bandeja forrada con papel de hornear. Vuelve a extender los restos de masa para hacer más biscuits. En este punto, los biscuits se pueden congelar con cuidado para comerlos más adelante.',
+			'Si usas biscuits congelados, déjalos descongelar durante 30 minutos primero. De lo contrario, pincela la parte de arriba de los biscuits con leche.',
+			'Hornea durante 12-15 minutos, o hasta que la parte de arriba esté bien dorada.'
+		]
 	}
 };

@@ -1766,6 +1766,45 @@ export const RECIPES: Recipe[] = [
 		notes: [
 			'One jar of tomato purée makes several portions. If you want leftovers, freeze the sauce on its own (not the pasta) in small containers so it is never frozen, thawed and frozen again.'
 		]
+	},
+	{
+		id: 'buttermilk-biscuits',
+		mins: { active: 20, total: 38 },
+		title: 'Buttermilk Biscuits',
+		section: 'Breakfast',
+		kind: 'Breakfast',
+		meal: ['breakfast'],
+		servings: 8,
+		equip: ['Oven', 'Sheet pan', 'Biscuit cutter', 'Rolling pin'],
+		freezer: true,
+		veg: true,
+		by: 'Santi',
+		story:
+			'"The Joy of Cooking" has a lot of good baking recipes, but most of them need more salt, sugar, or spices. This is a modified version of one of those recipes.',
+		blurb: 'Flaky buttermilk biscuits with visible streaks of butter.',
+		photos: [{ src: '/recipe-photos/buttermilk-biscuits-1.jpg', kind: 'dish', by: 'Santi' }],
+		ing: [
+			i(1.75, 'cup', 'all-purpose flour', 'dry'),
+			i(1.5, 'tsp', 'salt', 'spice'),
+			i(1, 'tsp', 'sugar', 'dry'),
+			i(2, 'tsp', 'double-acting baking powder', 'spice'),
+			i(0.5, 'tsp', 'baking soda', 'spice'),
+			i(5, 'tbsp', 'unsalted butter', 'dairy'),
+			i(0.75, 'cup', 'buttermilk', 'dairy'),
+			i(null, '', 'milk', 'dairy', 'for brushing')
+		],
+		steps: [
+			'Preheat the oven to 450 degrees Fahrenheit.',
+			'Dissolve the salt and sugar into the buttermilk and set to one side for now.',
+			'In a large bowl, mix together the flour, baking soda, and baking powder.',
+			'Cut the butter into small cubes and add to the flour mixture. Stir until the cubes are covered in flour.',
+			'Slowly add in the buttermilk while mixing with a spatula. The dough should just loosely come together.',
+			'Dust a clean countertop with flour, lay your dough onto it, and roll out your dough with a floured rolling pin. Fold the dough onto itself in 3 parts, as if folding a pamphlet. Repeat 2-3 more times. There should still be some streaks of butter visible. Dust your dough with flour as needed to prevent it from sticking to the countertop or your rolling pin.',
+			"Roll out your dough until it's ½ inch thick. Using a biscuit cutter, cut out your biscuits and place onto a sheet pan lined with baking paper. Re-roll any leftover dough to make more biscuits. At this point, the biscuits can be gently placed in the freezer for later consumption.",
+			'If using frozen biscuits, allow to thaw for 30 minutes first. Otherwise, brush the tops of your biscuits with milk.',
+			'Bake for 12-15 minutes, or until the tops of your biscuits are nicely browned.'
+		],
+		notes: []
 	}
 ];
 
