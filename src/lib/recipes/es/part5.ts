@@ -194,5 +194,23 @@ export const part5: Record<string, RecipeEs> = {
 			'Agrega sal y pimienta.',
 			'Hornea a 275 °F durante 3 horas.'
 		]
+	},
+	'grundy-green-beans': {
+		title: 'Grundy Green Beans',
+		blurb:
+			'Ejotes enlatados cocidos en su propio líquido hasta que se evapora y empiezan a tronar.',
+		story:
+			'Lo encontré en internet. Mi mamá siempre me decía que los hirviera hasta que se redujeran, pero no entendí a qué se refería hasta que vi el video.',
+		ing: [
+			{ name: 'ejote enlatado', note: 'con su líquido, sin escurrir' },
+			{ name: 'aceite de oliva' },
+			{ name: 'azúcar' }
+		],
+		steps: [
+			'Vierte los ejotes enlatados con su líquido en una olla grande. No los escurras.',
+			'Agrega el aceite de oliva y el azúcar.',
+			'Cocina a fuego alto todo el tiempo, revolviendo de vez en cuando y, al final, revolviendo constantemente.',
+			'Escucha cuándo los ejotes se quedan sin líquido mientras revuelves constantemente. Empezarán a tronar como Rice Krispies. Entonces están listos.'
+		]
 	}
 };

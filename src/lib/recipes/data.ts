@@ -1839,6 +1839,35 @@ export const RECIPES: Recipe[] = [
 			'Bake at 275°F for 3 hours.'
 		],
 		notes: []
+	},
+	{
+		id: 'grundy-green-beans',
+		mins: { active: 3, total: 20 },
+		title: 'Grundy Green Beans',
+		section: 'Veggies',
+		kind: 'Side',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 4,
+		equip: ['Stovetop'],
+		freezer: false,
+		veg: true,
+		by: 'Bobby Slone',
+		story:
+			'Found it on the internet. Mommy always told me to boil them down but I did not understand what she meant until I watched the video',
+		blurb: 'Canned green beans boiled down in their own liquid until they pop.',
+		ing: [
+			i(4, 'can (14.5 oz)', 'canned green bean', 'pantry', 'with their liquid, do not drain'),
+			i(1, 'tsp', 'olive oil', 'oil'),
+			i(1, 'tsp', 'sugar', 'dry')
+		],
+		steps: [
+			'Pour the canned green beans and their liquid into a large pot. Do not drain.',
+			'Add olive oil and sugar.',
+			'Cook on high the entire time, stirring occasionally until the end, when you need to stir constantly.',
+			'Listen for the beans to boil dry while stirring constantly. They will start to pop like Rice Krispies. Then they are done.'
+		],
+		notes: []
 	}
 ];
 
