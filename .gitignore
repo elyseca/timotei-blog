@@ -21,3 +21,6 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Original honeymoon export (the site uses the compressed copy in static/story-video/)
+/Honeymoon.mp4

@@ -4,5 +4,13 @@ import { browse } from './browse';
 import { plan } from './plan';
 import { forms } from './forms';
 import { wedding } from './wedding';
+import { story } from './story';
 
-export const ES: Record<string, string> = { ...common, ...browse, ...plan, ...forms, ...wedding };
+export const ES: Record<string, string> = {
+	...common,
+	...browse,
+	...plan,
+	...forms,
+	...wedding,
+	...story
+};
