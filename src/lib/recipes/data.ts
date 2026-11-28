@@ -1805,6 +1805,40 @@ export const RECIPES: Recipe[] = [
 			'Bake for 12-15 minutes, or until the tops of your biscuits are nicely browned.'
 		],
 		notes: []
+	},
+	{
+		id: 'chicken-and-rice-casserole',
+		mins: { active: 15, total: 195 },
+		title: 'Chicken and Rice Casserole',
+		section: 'Easy Weekly Meals',
+		kind: 'Main',
+		weekly: true,
+		meal: ['everyday'],
+		servings: 6,
+		equip: ['Oven'],
+		freezer: false,
+		veg: false,
+		by: 'Liesl',
+		blurb: 'Rice, three creamy soups and bone-in chicken baked low and slow in one pan.',
+		ing: [
+			i(1, 'can (10.5 oz)', 'cream of mushroom soup', 'pantry'),
+			i(1, 'can (10.5 oz)', 'cream of celery soup', 'pantry'),
+			i(1, 'can (10.5 oz)', 'cream of chicken soup', 'pantry'),
+			i(8, 'tbsp', 'butter', 'dairy', '1 stick'),
+			i(1.5, 'cup', 'rice', 'dry', 'no Minute Rice'),
+			i(1, '', 'whole chicken, cut up, or 6-8 chicken thighs', 'meat', 'bone-in chicken is best'),
+			SALT,
+			PEPPER
+		],
+		steps: [
+			'Dump all three cans of soup in a 9x13 baking dish. Add about an inch of water to each soup can to rinse it out and dump it in the pan also.',
+			'Add the rice and mix it all together real well.',
+			'Lay the chicken on top of the rice mixture.',
+			'Melt the stick of butter and pour it over the entire pan.',
+			'Add salt and pepper.',
+			'Bake at 275°F for 3 hours.'
+		],
+		notes: []
 	}
 ];
 

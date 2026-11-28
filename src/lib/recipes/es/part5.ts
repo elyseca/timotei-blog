@@ -168,5 +168,31 @@ export const part5: Record<string, RecipeEs> = {
 			'Si usas biscuits congelados, déjalos descongelar durante 30 minutos primero. De lo contrario, pincela la parte de arriba de los biscuits con leche.',
 			'Hornea durante 12-15 minutos, o hasta que la parte de arriba esté bien dorada.'
 		]
+	},
+	'chicken-and-rice-casserole': {
+		title: 'Cazuela de pollo con arroz',
+		blurb:
+			'Arroz, tres sopas cremosas y pollo con hueso horneados a fuego lento en una sola fuente.',
+		ing: [
+			{ name: 'sopa crema de champiñones' },
+			{ name: 'sopa crema de apio' },
+			{ name: 'sopa crema de pollo' },
+			{ name: 'mantequilla', note: '1 barra' },
+			{ name: 'arroz', note: 'no instantáneo' },
+			{
+				name: 'pollo entero troceado o 6-8 muslos de pollo',
+				note: 'el pollo con hueso es lo mejor'
+			},
+			{ name: 'sal' },
+			{ name: 'pimienta negra' }
+		],
+		steps: [
+			'Vierte las tres latas de sopa en una fuente para hornear de 9x13. Agrega aproximadamente una pulgada de agua a cada lata para enjuagarla y vierte también eso en la fuente.',
+			'Agrega el arroz y mezcla todo muy bien.',
+			'Coloca el pollo encima de la mezcla de arroz.',
+			'Derrite la barra de mantequilla y viértela sobre toda la fuente.',
+			'Agrega sal y pimienta.',
+			'Hornea a 275 °F durante 3 horas.'
+		]
 	}
 };
